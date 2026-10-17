@@ -335,8 +335,10 @@ def cinematic_sections(eager=False):
   <div class="h-sticky">
     <div class="h-intro">
       <i class="h-rule" aria-hidden="true"></i>
-      <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
-      <p>Buildings, hospitality, contracting, offices, and the household.</p>
+      <div class="h-copy">
+        <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
+        <p>Buildings, hospitality, contracting, offices, and the household.</p>
+      </div>
     </div>
     <div class="h-track">{''.join(slides)}</div>
   </div>
