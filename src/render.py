@@ -17,15 +17,16 @@ ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h
 CRED = json.load(open(os.path.join(ROOT, "src", "photo_credits.json"), encoding="utf-8"))
 for _c in CRED.values():
     _c["artist"] = _c["artist"].replace("firstdorsal.eu", "").strip()
-    _title = _c["title"].replace(" ", "_")
-    _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
+    if "unsplash.com" not in _c.get("page", ""):
+        _title = _c["title"].replace(" ", "_")
+        _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
 
 DIMS = {
-    "hero": (1600, 982),
-    "estate": (1600, 1090),
-    "hospitality": (1600, 1205),
+    "hero": (1600, 1067),
+    "estate": (1600, 1067),
+    "hospitality": (1600, 1067),
     "construction": (1600, 1067),
-    "professional": (1600, 998),
+    "professional": (1600, 1067),
     "personal": (1600, 1067),
 }
 
@@ -81,10 +82,7 @@ def arcs():
 
 
 def figure_block(key, sizes, eager=False, cls="photo-block"):
-    return (
-        f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div>'
-        f"<figcaption>{cred(key)}</figcaption></figure>"
-    )
+    return f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div></figure>'
 
 
 def photo_attrs(key):
@@ -130,12 +128,12 @@ def schema(path):
 COVER = [
     ("/coverage/real-estate/", "Real estate", "Buildings and landlords", "estate"),
     ("/coverage/hospitality/", "Hospitality", "Restaurants and bars", "hospitality"),
-    ("/coverage/construction/", "Construction", "Contractors and trades", "construction"),
-    ("/coverage/professional/", "Professional", "Offices and services", "professional"),
-    ("/coverage/personal/", "Personal lines", "Home, auto, and umbrella", "personal"),
+    ("/coverage/construction/", "Contractors", "Trades and job sites", "construction"),
+    ("/coverage/professional/", "Offices", "Professional firms", "professional"),
+    ("/coverage/personal/", "Personal", "Household, home, and auto", "personal"),
 ]
 FIRM = [
-    ("/about/", "About", "The practice"),
+    ("/about/", "The firm", "The practice"),
     ("/client-center/", "Client service", "What to expect"),
     ("/switching/", "Switching brokers", "The order of work"),
     ("/partners/", "Partners", "Attorneys, managers, CPAs"),
@@ -163,16 +161,13 @@ def sheet_links(current):
         ("/resources/", "Resources"),
         ("/switching/", "Switching brokers"),
         ("/client-center/", "Client service"),
-        ("/about/", "About"),
+        ("/about/", "The firm"),
+        ("/contact/", "Contact"),
         ("/partners/", "Partners"),
         ("/legal/", "Licenses and disclosures"),
     ):
         cur = ' aria-current="page"' if current == href else ""
         parts.append(f'<a href="{href}"{cur}>{label}</a>')
-    parts.append(
-        f'<div class="sheet-cta"><a class="btn" href="/quote/">Request a review</a>'
-        f'<a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>'
-    )
     return "".join(parts)
 
 
@@ -186,7 +181,7 @@ def header(current):
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <header class="site-header">
   <div class="bar">
-    <a class="logo" href="/" aria-label="SimpleINSURE home"><img class="logo-color" src="/img/simpleinsure-wordmark-560.png" alt="SimpleINSURE" width="148" height="32"><img class="logo-light" src="/img/simpleinsure-wordmark-white-560.png" alt="" width="148" height="32"></a>
+    <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
     <nav class="nav-desk" aria-label="Primary">
       <div class="drop{cov_here}">
         <button type="button" aria-expanded="false" aria-controls="menu-coverage">Coverage</button>
@@ -203,6 +198,7 @@ def header(current):
         <button type="button" aria-expanded="false" aria-controls="menu-firm">Firm</button>
         <div class="drop-panel" id="menu-firm">{nav_links(FIRM, current)}</div>
       </div>
+      {top("/contact/", "Contact")}
     </nav>
     <div class="nav-actions">
       <a class="phone-full" href="{TEL}">{PHONE}</a>
@@ -213,16 +209,16 @@ def header(current):
 </header>
 <div class="sheet" id="sheet" hidden>
   <nav aria-label="Mobile">{sheet_links(current)}</nav>
+  <div class="sheet-cta"><a class="btn" href="/quote/">Request a review</a><a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>
 </div>'''
 
 
 def footer():
     cov = "".join(f'<li><a href="{href}">{h(title)}</a></li>' for href, title, _s, *_r in COVER)
     return f'''<footer class="site-footer">
-  {arcs()}
   <div class="wrap foot-grid">
     <div>
-      <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-white-560.png" alt="SimpleINSURE" width="132" height="28"></a>
+      <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
       <p class="addr">Commercial and personal insurance.</p>
       <p class="addr">{ADDR}</p>
     </div>
@@ -235,7 +231,8 @@ def footer():
       <li><a href="/client-center/">Client service</a></li>
     </ul></div>
     <div><h2>Firm</h2><ul>
-      <li><a href="/about/">About</a></li>
+      <li><a href="/about/">The firm</a></li>
+      <li><a href="/contact/">Contact</a></li>
       <li><a href="/partners/">Partners</a></li>
       <li><a href="/legal/">Licenses and disclosures</a></li>
       <li><a href="/photo-credits/">Photo credits</a></li>
@@ -250,13 +247,17 @@ def footer():
 </footer>'''
 
 
-def document(title, desc, path, main, current=None, canonical=None, extra=""):
+def document(title, desc, path, main, current=None, canonical=None, extra="", show_footer=True):
     cur = path if current is None else current
     canon = SITE + (path if canonical is None else canonical)
     if path == "/":
         canon = SITE + "/"
-    preload = ""
-    body = "page-home" if path == "/" else "page-inner"
+    cinematic = path in ("/", "/style-preview/")
+    preload = '<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>'
+    if cinematic:
+        preload += '''
+<link rel="preload" as="image" href="/photos/hero-1600.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">'''
+    body = "page-home" if cinematic else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -287,7 +288,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 <body class="{body}">
 {header(cur)}
 <main id="main">{main}</main>
-{footer()}
+{footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/vendor/lenis.min.js" defer></script>
@@ -296,55 +297,76 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 </html>'''
 
 
-def home():
+def cinematic_sections(eager=False):
     blurbs = {
         "estate": "Buildings, schedules, lenders.",
         "hospitality": "Restaurants, bars, the lease.",
-        "construction": "Contracts and certificates.",
-        "professional": "Offices, retail, advice.",
-        "personal": "Home, auto, umbrella.",
+        "construction": "Trades, contracts, certificates.",
+        "professional": "Offices and professional firms.",
+        "personal": "Home, auto, and the household.",
     }
-    rows = []
-    for i, (href, title, _sub, key) in enumerate(COVER, 1):
-        on = " is-on" if i == 1 else ""
-        rows.append(
-            f'<a href="{href}" class="{on.strip()}" {photo_attrs(key)}>'
-            f'<span class="num">{i:02d}</span><span class="pt"><strong>{h(title)}</strong><em>{h(blurbs[key])}</em></span>'
-            f'{ARROW}</a>'
+    slides = []
+    for href, title, _sub, key in COVER:
+        slides.append(
+            f'<div class="slide{" slide-hospitality" if key == "hospitality" else ""}">'
+            f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
+            f'<span class="slide-shade" aria-hidden="true"></span>'
+            f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
+            f'<span class="slide-copy"><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
+            f'</div>'
         )
-    rail = "  ·  ".join(title for _, title, _, _ in COVER)
+    return f'''
+<section class="hero" aria-label="Introduction">
+  <div class="hero-media">
+    <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+  </div>
+  <div class="hero-copy wrap">
+    <h1 class="rise"><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span><em>already meet.</em></span></span></h1>
+    <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
+    <div class="cta-row">
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="text-link on-dark" href="/policy-review/">Review a current policy</a>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
+</section>
+<section class="h-pin" id="practices" aria-labelledby="practices-h">
+  <div class="h-sticky">
+    <div class="h-intro">
+      <div class="h-copy">
+        <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
+        <p>Buildings, hospitality, contracting, offices, and the household.</p>
+      </div>
+    </div>
+    <div class="h-track">{''.join(slides)}</div>
+  </div>
+</section>
+<section class="case" id="case-study" aria-labelledby="case-h">
+  <figure class="case-bleed">
+    {pic("hospitality", eager=eager, sizes="(max-width: 980px) 100vw, 58vw")}
+  </figure>
+  <div class="case-copy">
+    <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span><em>A wider umbrella.</em></span></span></h2>
+    <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
+    <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
+      <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
+      <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
+      <p class="delta">$49,887 less a year.</p>
+      <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
+    </div>
+    <div class="cta-row"><a class="btn btn-light magnet" href="/policy-review/">Send a policy for review {ARROW}</a></div>
+  </div>
+</section>
+'''
+
+
+def home():
     return document(
         "Commercial and Personal Insurance | SimpleINSURE",
         "SimpleINSURE places commercial and personal insurance. Send the policy you have. We read it, approach A-rated markets when there is a reason, and stay after it is bound.",
         "/",
-        f'''
-<section class="hero" aria-label="Introduction">
-  {arcs()}
-  <div class="hero-copy">
-    <div class="hero-lead">
-      <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span class="tone">made simple.</span></span></h1>
-      <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
-      <div class="cta-row"><a class="btn magnet" href="/quote/">Request a review {ARROW}</a></div>
-    </div>
-    <div class="entry">
-      <a class="glass" href="/coverage/personal/"><span><b>Personal</b><em>Home, auto, umbrella</em></span>{ARROW}</a>
-      <a class="glass" href="/coverage/"><span><b>Business</b><em>Buildings, restaurants, trades</em></span>{ARROW}</a>
-    </div>
-  </div>
-</section>
-<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>{rail}  ·  </span><span>{rail}  ·  </span></div></div>
-<section class="section practices" id="practices" aria-labelledby="practices-h">
-  <div class="wrap">
-    <div class="practice-head">
-      <h2 class="rise" id="practices-h"><span class="line"><span>Five practices.</span></span><span class="line"><span>One way of reading a policy.</span></span></h2>
-      <p>Buildings, hospitality, contracting, offices, and the household.</p>
-    </div>
-    <div class="practice-pin">
-      {figure_block("estate", "(max-width: 980px) 100vw, 42vw", cls="stage")}
-      <div class="plist">{''.join(rows)}</div>
-    </div>
-  </div>
-</section>
+        cinematic_sections() + f'''
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
@@ -353,43 +375,54 @@ def home():
       <a class="text-link" href="/switching/">How the handover works {ARROW}</a>
     </div>
     <ol class="work-steps">
-      <li data-reveal><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
-      <li data-reveal><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
-      <li data-reveal><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
-      <li data-reveal><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+      <li><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
+      <li><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
+      <li><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
+      <li><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
     </ol>
   </div>
 </section>
-<section class="section case" id="case-study" aria-labelledby="case-h">
-  <div class="wrap case-layout">
-    {figure_block("hospitality", "(max-width: 980px) 100vw, 42vw", cls="case-photo")}
-    <div class="case-copy">
-      <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span>A wider umbrella.</span></span></h2>
-      <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
-      <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
-        <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
-        <div class="track"><i style="--w:100%"></i></div>
-        <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
-        <div class="track"><i class="after" style="--w:30%"></i></div>
-        <p class="delta">$49,887 less a year.</p>
-        <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
-      </div>
-      <div class="cta-row"><a class="btn magnet" href="/policy-review/">Send a policy for review {ARROW}</a></div>
-    </div>
-  </div>
-</section>
 <section class="close" aria-labelledby="close-h">
-  {arcs()}
+  <div class="hero-media">
+    <div class="ken">{pic("personal", sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+  </div>
   <div class="wrap close-inner">
-    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span class="tone">you have.</span></span></h2>
+    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
     <p>We will tell you what it does, including when the right answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
 </section>
 ''',
+    )
+
+
+def style_preview():
+    return document(
+        "Style preview | SimpleINSURE",
+        "A preview of the SimpleINSURE home: the opening photograph, the practices, and a case study.",
+        "/style-preview/",
+        cinematic_sections(eager=True) + '''
+<section class="method" id="method" aria-labelledby="method-h">
+  <div class="wrap method-grid">
+    <div class="method-lead">
+      <h2 class="rise" id="method-h"><span class="line"><span>Read it first.</span></span></h2>
+      <p class="lede">We read what you have before anyone is asked to sign a broker of record letter.</p>
+    </div>
+    <div class="method-steps">
+      <p><b>Read.</b> Declarations, forms, and the endorsements behind them.</p>
+      <p><b>Say so.</b> If the current program is already right, we say so.</p>
+      <p><b>Market.</b> Only when there is a reason to move the account.</p>
+      <p><b>Hand over.</b> Dates, certificates, and the renewal calendar.</p>
+    </div>
+  </div>
+</section>
+''',
+        current="/style-preview/",
+        show_footer=False,
     )
 
 
@@ -497,13 +530,13 @@ def aside():
 
 def page_head(kicker, title, lede=""):
     lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
-    return f'<header class="page-head">{arcs()}<div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
+    return f'<header class="page-head"><div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
 
 
 def continue_to(links):
     cards = "".join(
-        f'<a href="{href}"><span>{n}</span><b>{h(title)}</b><em>{h(text)}</em></a>'
-        for href, n, title, text in links
+        f'<a href="{href}"><b>{h(title)}</b><em>{h(text)}</em></a>'
+        for href, _n, title, text in links
     )
     return f'<nav class="next" aria-label="Continue"><div class="wrap">{cards}</div></nav>'
 
@@ -598,7 +631,7 @@ INDUSTRIES = [
     {
         "slug": "construction",
         "key": "construction",
-        "nav": "Construction",
+        "nav": "Contractors",
         "title": "Contractor and Trade Insurance | SimpleINSURE",
         "desc": "Contractor insurance written to the contract: general liability, workers compensation, auto, umbrella, and certificates.",
         "h1": "Coverage written to the contract, not to a guess.",
@@ -641,7 +674,7 @@ INDUSTRIES = [
     {
         "slug": "professional",
         "key": "professional",
-        "nav": "Professional",
+        "nav": "Offices",
         "title": "Professional, Office, and Retail Insurance | SimpleINSURE",
         "desc": "Insurance for offices, retailers, and firms that give advice: package policies, professional liability, cyber, and umbrella.",
         "h1": "For firms whose work is a lease, advice, or client data.",
@@ -684,7 +717,7 @@ INDUSTRIES = [
     {
         "slug": "personal",
         "key": "personal",
-        "nav": "Personal lines",
+        "nav": "Personal",
         "title": "Home, Auto, and Umbrella Insurance | SimpleINSURE",
         "desc": "Homeowners, auto, and personal umbrella for owners and families, including rental property held in a personal name.",
         "h1": "Home, auto, and umbrella, in the same conversation as the business.",
@@ -758,18 +791,20 @@ def industry(ind, path=None, canonical=None):
         ],
     }, ensure_ascii=True)
     main = f'''
-<header class="page-head">{arcs()}<div class="wrap">
-  <p class="kicker">{h(ind["nav"])}</p>
-  <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
-  <p class="lede">{h(ind["lede"])}</p>
-  <div class="cta-row"><a class="btn magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
-</div></header>
-<section class="section" style="padding-top:48px"><div class="wrap split">
-  <div class="prose"><h2>How we look at it</h2>{essay}</div>
-  <div>
-    {figure_block(ind["key"], "(max-width: 980px) 100vw, 46vw", eager=True)}
-    <div class="panel"><h2>What we ask first</h2><ul class="prose">{asks}</ul></div>
+<header class="photo-hero">
+  <div class="hero-media">
+    <div class="ken">{pic(ind["key"], eager=True, sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
   </div>
+  <div class="wrap">
+    <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
+    <p class="lede">{h(ind["lede"])}</p>
+    <div class="cta-row"><a class="btn btn-light magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
+  </div>
+</header>
+<section class="section" style="padding-top:64px"><div class="wrap split">
+  <div class="prose"><h2>How we look at it</h2>{essay}</div>
+  <div class="ask"><h2>What we ask first</h2><ul>{asks}</ul></div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap">
   <div class="intro"><p class="kicker">Coverage</p><h2>What a careful program usually includes.</h2></div>
@@ -797,7 +832,7 @@ def coverage_index():
     for i, (href, title, sub, key) in enumerate(COVER, 1):
         on = "is-on" if i == 1 else ""
         rows.append(
-            f'<a class="{on}" href="{href}" {photo_attrs(key)}><span class="num">{i:02d}</span>'
+            f'<a class="{on}" href="{href}" {photo_attrs(key)}>'
             f"<span><strong>{h(title)}</strong><em>{h(sub)}</em></span><span class=\"go\" aria-hidden=\"true\">→</span></a>"
         )
     main = page_head(
@@ -805,9 +840,8 @@ def coverage_index():
         "Commercial and personal, handled as one account.",
         "Choose a practice for the coverage we place, the questions we ask, and a checklist you can mark.",
     ) + f'''
-<section class="section" style="padding-top:20px"><div class="wrap practice-grid">
-  <div class="plist">{"".join(rows)}</div>
-  {figure_block("estate", "(max-width: 980px) 100vw, 40vw", cls="stage")}
+<section class="section" style="padding-top:12px"><div class="wrap">
+  <div class="index-list">{"".join(rows)}</div>
 </div></section>
 ''' + continue_to([
         ("/needs/", "01", "Coverage guide", "Not sure which practice fits? Answer a few questions."),
@@ -816,7 +850,7 @@ def coverage_index():
     ])
     return document(
         "Coverage | SimpleINSURE",
-        "Commercial and personal insurance practices: real estate, hospitality, construction, professional firms, and personal lines.",
+        "Commercial and personal insurance practices: real estate, hospitality, contractors, offices, and household.",
         "/coverage/",
         main,
     )
@@ -1037,7 +1071,7 @@ def switching_page():
         ("A conversation, not a commitment", "You tell us what the account is and what is not working. Price, a contract, a nonrenewal, a claim, or a broker you rarely hear from. No one is appointed yet."),
         ("We read the current program", "Send the declarations page and, if you have them, the forms list and the endorsements. The declarations page is the cover. The forms decide the coverage."),
         ("An opinion before a market", "We tell you what is solid, what is thin, and whether moving is worth it. If the program should stay where it is, that is the recommendation."),
-        ("A market, only if there is a reason", "We approach carriers that write this kind of risk, including specialty markets when the standard market is a poor fit. Access to A-rated carriers is the point of that work. We do not scatter an account for the sake of activity."),
+        ("A market, only if there is a reason", "We approach carriers that write this kind of risk, including specialty markets when the standard market is a poor fit. Access to A-rated carriers is the point of that work. The account goes to market with a purpose."),
         ("You choose, with the current program still in view", "Options sit beside what you have: price, limits, exclusions, and the wording a lender or a contract requires. You can keep the policy you have."),
         ("The broker of record letter, if you appoint us on an existing policy", "A broker of record letter is a short written appointment. It tells the insurance company that you want SimpleINSURE to service a policy that is already in force. It names you, the policy, and the broker, and you sign it. It does not, by itself, cancel coverage, change limits, or erase a claim. The carrier decides whether to honor it. Some accept a change during the term. Some will not act until renewal. We tell you which case applies before you sign. If the right path is a replacement policy instead of an appointment, we coordinate the effective date so one program ends as the next begins."),
         ("The handover", "Certificates, mortgagee and landlord notices, open claims, and the renewal date move onto our calendar. You should not have to introduce yourself twice."),
@@ -1106,7 +1140,7 @@ ESSAYS = [
     ("broker-of-record", "The broker of record letter", [
         "A broker of record letter is a signed note from you to the insurance company. It says that SimpleINSURE, or whichever broker you name, is the broker you want servicing a policy that already exists. The letter identifies you, the policy number, and the new broker.",
         "It does not cancel the policy. It does not change your limits, your deductibles, or your exclusions. It does not settle a claim. The insurer decides whether to accept the appointment. Some carriers honor a change in the middle of the term. Others will not move until the renewal. Commission usually follows the appointment once it is accepted, which is why the prior broker notices.",
-        "Because of that, we do not ask anyone to sign a letter at the first meeting. We read the program, tell you whether a move is even useful, and tell you whether the carrier is likely to accept an appointment now or only at renewal. If a replacement policy is the cleaner path, we set the effective dates so you are not uncovered between them.",
+        "The letter comes after that reading. We tell you whether a move is useful, and whether the carrier is likely to accept an appointment now or only at renewal. If a replacement policy is the cleaner path, we set the effective dates so coverage continues from one program to the next.",
         "You can ask us for the letter before you sign it. You should. If a broker will not explain the appointment in plain language, that is information about the broker.",
     ]),
     ("declarations", "How to read a declarations page", [
@@ -1197,7 +1231,7 @@ def client_page():
       <li><span>02</span><p>Certificates go out when the policy supports them. If it does not, we say what is missing.</p></li>
       <li><span>03</span><p>Changes in payroll, vehicles, locations, or ownership are endorsed, not remembered.</p></li>
       <li><span>04</span><p>Renewal work starts before the expiration date, with a comparison, not only a bill.</p></li>
-      <li><span>05</span><p>If a loss happens, you call us. We help you notify the carrier. We do not promise how a claim will end.</p></li>
+      <li><span>05</span><p>If a loss happens, you call us. We help you notify the carrier and we follow the claim through to the carrier's decision.</p></li>
       <li><span>06</span><p>If your current program is already right, we will tell you to keep it.</p></li>
     </ol>
   </div>
@@ -1211,7 +1245,7 @@ def client_page():
 <section class="section" style="padding-top:0"><div class="wrap prose narrow">
   <h2>If a loss happens</h2>
   <p>Call {PHONE}. Note the date, the place, and who was involved. Photograph what you safely can. Do not guess at fault in a written statement to anyone but your broker and, through us, the carrier. Send the suit papers the day you receive them. Late notice is an avoidable way to damage a claim.</p>
-  <p>We help you report the claim and follow it. The insurer decides coverage under the policy. We will not tell you a claim is covered before the carrier does.</p>
+  <p>We report the claim and stay with it. Coverage is the carrier's decision under the policy, and that is the decision we bring back to you.</p>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap layout">{cert}{aside()}</div></section>
 '''
@@ -1227,15 +1261,15 @@ def about_page():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We are not an insurance company. We place coverage and stay with the account.",
+        "We place coverage for the client and stay with the account.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
-    <h2>What independent means here</h2>
-    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. We approach admitted and specialty markets, including surplus lines when the standard market is not a fit, and we have access to A-rated carriers.</p>
-    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. We do not publish a headcount or a founding year. The work is the standard on the <a href="/client-center/">client service</a> page.</p>
-    <h2>Where the license lives</h2>
-    <p>We place coverage where we are licensed. The license we hold today is on the <a href="/legal/">licenses page</a>. We do not describe licenses we do not hold.</p>
+    <h2>An independent practice</h2>
+    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. Admitted markets, specialty markets, and surplus lines are all in reach, with access to A-rated carriers when the risk calls for them.</p>
+    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. That standard is on the <a href="/client-center/">client service</a> page: one broker for the account, a policy read against the lease or the contract, and a direct answer when the program already in force should stay.</p>
+    <h2>Where we are licensed</h2>
+    <p>Each placement follows the license that covers it. The license on record is on the <a href="/legal/">licenses page</a>.</p>
     <h2>How we are paid</h2>
     <p>Usually by commission from the insurer. The plain version is on the licenses page, including how to ask about compensation on your own policy.</p>
     <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
@@ -1284,7 +1318,7 @@ def partners_page():
     <div><b>Accountants</b><span>When a client hires, or buys a building, the insurance should be ready before the deadline is.</span></div>
     <div><b>What you can expect</b><span>A prompt call to your client, a copy to you if they agree, and a note when the account is placed. Their information is not shared beyond that.</span></div>
   </div>
-  <div class="note"><b>Referral policy.</b> We do not pay referral fees or share commissions with unlicensed persons. New York Insurance Law § 2116 is the rule we follow. Partners get a responsive broker and, where it fits, a referral back.</div>
+  <div class="note"><b>Referral policy.</b> Compensation for a referral follows the license. New York Insurance Law § 2116 limits referral fees and commission sharing to licensed persons. Partners get a responsive broker and, where it fits, a referral back.</div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap layout">{form}{aside()}</div></section>
 '''
@@ -1329,7 +1363,7 @@ def credits_page():
         )
     main = page_head("Photo credits", "Every photograph on this site, with the author and the license.") + f'''
 <section class="section" style="padding-top:12px"><div class="wrap prose">
-  <p>Photographs are used under the Creative Commons licenses linked below. We do not claim ownership of them. Titles are the authors' file titles.</p>
+  <p>Photographs are used under the Unsplash License. Credit is optional. It is listed here and is not shown on the other pages.</p>
   <table class="credits" style="width:100%;border-collapse:collapse;margin-top:18px">
     <thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Used as</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">File</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Author</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">License</th></tr></thead>
     <tbody>{"".join(rows)}</tbody>
@@ -1345,15 +1379,36 @@ def credits_page():
     )
 
 
+def contact_page():
+    steps = f'''
+<div data-step="1" data-label="Message" data-error="Add your name, and an email or a phone number.">
+  <h2 style="font-size:32px;margin-bottom:14px">Send a note</h2>
+  <p class="quiet">The button opens an email draft to {EMAIL}. This page does not store what you type.</p>
+  <div class="fields" style="margin-top:16px">{contact_fields("c")}</div>
+  <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
+</div>'''
+    main = page_head(
+        "Contact",
+        "Call, or send a note.",
+        "A broker replies by phone or email. If it is urgent, call. The form opens a draft in your own mail program.",
+    ) + f'''<section class="section" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
+    return document(
+        "Contact | SimpleINSURE",
+        "Call SimpleINSURE or send a note. The form opens an email to the brokerage. Nothing is stored on the website.",
+        "/contact/",
+        main,
+    )
+
+
 def not_found():
     main = page_head(
         "Missing page",
         "That page is not on this site.",
         "The address may be old. The pages below are current.",
     ) + '''<section class="section" style="padding-top:0"><div class="wrap ress">
-      <a href="/"><span class="n">01</span><h3>Home</h3><p>The firm, the case study, and the practices.</p></a>
-      <a href="/policy-review/"><span class="n">02</span><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
-      <a href="/quote/"><span class="n">03</span><h3>Request a review</h3><p>Start with the account.</p></a>
+      <a href="/"><h3>Home</h3><p>The firm, the case study, and the practices.</p></a>
+      <a href="/policy-review/"><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
+      <a href="/contact/"><h3>Contact</h3><p>Call, or send a note.</p></a>
     </div></section>'''
     return document("Page not found | SimpleINSURE", "That page is not on the SimpleINSURE site.", "/404.html", main)
 
@@ -1361,6 +1416,7 @@ def not_found():
 def pages():
     out = {
         "index.html": home(),
+        "style-preview/index.html": style_preview(),
         "quote/index.html": quote_page(),
         "policy-review/index.html": policy_page(),
         "coverage/index.html": coverage_index(),
@@ -1370,6 +1426,7 @@ def pages():
         "resources/index.html": resources_page(),
         "client-center/index.html": client_page(),
         "about/index.html": about_page(),
+        "contact/index.html": contact_page(),
         "partners/index.html": partners_page(),
         "legal/index.html": legal_page(),
         "photo-credits/index.html": credits_page(),
