@@ -22,7 +22,7 @@ for _c in CRED.values():
         _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
 
 DIMS = {
-    "hero": (1600, 982),
+    "hero": (1600, 1067),
     "estate": (1600, 1067),
     "hospitality": (1600, 1067),
     "construction": (1600, 1067),
@@ -326,11 +326,17 @@ def cinematic_sections(eager=False):
     <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
-      <a class="btn btn-line magnet" href="/policy-review/">Review a current policy</a>
+      <a class="text-link on-dark" href="/policy-review/">Review a current policy</a>
     </div>
   </div>
   <a class="scroll-cue" href="#practices"><span>Practices</span><i aria-hidden="true"></i></a>
 </section>
+<div class="band" aria-hidden="true">
+  <div class="band-track">
+    <p>Property<span>Liability</span><span>Umbrella</span><span>Workers compensation</span><span>Employment practices</span><span>Cyber</span><span>Business income</span><span>Directors and officers</span></p>
+    <p>Property<span>Liability</span><span>Umbrella</span><span>Workers compensation</span><span>Employment practices</span><span>Cyber</span><span>Business income</span><span>Directors and officers</span></p>
+  </div>
+</div>
 <section class="h-pin" id="practices" aria-labelledby="practices-h">
   <div class="h-sticky">
     <div class="h-intro">
@@ -406,7 +412,20 @@ def style_preview():
         "Style preview | SimpleINSURE",
         "A preview of the SimpleINSURE home: the opening photograph, the practices, and a case study.",
         "/style-preview/",
-        cinematic_sections(eager=True),
+        cinematic_sections(eager=True) + '''
+<section class="method" id="method" aria-labelledby="method-h">
+  <div class="wrap">
+    <h2 class="rise" id="method-h"><span class="line"><span>Read it first.</span></span></h2>
+    <p class="lede">We read what you have before anyone is asked to sign a broker of record letter.</p>
+    <ol>
+      <li><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
+      <li><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
+      <li><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
+      <li><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+    </ol>
+  </div>
+</section>
+''',
         current="/style-preview/",
         show_footer=False,
     )

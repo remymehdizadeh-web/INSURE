@@ -1,19 +1,19 @@
 {
  "hero": {
-  "title": "A modern tower from below",
-  "page": "https://unsplash.com/@lanceanderson",
-  "artist": "Lance Anderson",
-  "license": "Unsplash License",
-  "license_url": "https://unsplash.com/license",
-  "alt": "Looking up a modern tower against a pale sky"
- },
- "estate": {
   "title": "Glass office towers",
   "page": "https://unsplash.com/@seanpollock",
   "artist": "Sean Pollock",
   "license": "Unsplash License",
   "license_url": "https://unsplash.com/license",
-  "alt": "Glass office towers rising into a pale sky"
+  "alt": "Glass office towers against a pale sky"
+ },
+ "estate": {
+  "title": "A modern tower from below",
+  "page": "https://unsplash.com/@lanceanderson",
+  "artist": "Lance Anderson",
+  "license": "Unsplash License",
+  "license_url": "https://unsplash.com/license",
+  "alt": "Looking up a modern white tower"
  },
  "hospitality": {
   "title": "An upscale dining room",
@@ -32,12 +32,12 @@
   "alt": "Tower cranes over a building site in low evening light"
  },
  "professional": {
-  "title": "A glass-lined office hall",
+  "title": "A glass conference room",
   "page": "https://unsplash.com/@sunday_digital",
   "artist": "Nastuh Abootalebi",
   "license": "Unsplash License",
   "license_url": "https://unsplash.com/license",
-  "alt": "A sleek office interior lined with glass"
+  "alt": "A glass conference room in a modern office"
  },
  "personal": {
   "title": "A modern house at dusk",
