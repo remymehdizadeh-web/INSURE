@@ -100,14 +100,19 @@
 
     function money(el) {
       var n = +el.getAttribute("data-count");
+      var finalText = "$" + n.toLocaleString("en-US");
       var start = null;
       var dur = 1100;
       function frame(ts) {
         if (!start) start = ts;
         var k = Math.min(1, (ts - start) / dur);
+        if (k >= 1) {
+          el.textContent = finalText;
+          return;
+        }
         var v = 1 - Math.pow(1 - k, 3);
         el.textContent = "$" + Math.round(n * v).toLocaleString("en-US");
-        if (k < 1) requestAnimationFrame(frame);
+        requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
     }

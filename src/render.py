@@ -340,7 +340,6 @@ def cinematic_sections(eager=False):
 <section class="h-pin" id="practices" aria-labelledby="practices-h">
   <div class="h-sticky">
     <div class="h-intro">
-      <i class="h-rule" aria-hidden="true"></i>
       <div class="h-copy">
         <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
         <p>Buildings, hospitality, contracting, offices, and the household.</p>
