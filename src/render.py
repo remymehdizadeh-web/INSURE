@@ -35,13 +35,21 @@ def h(value):
     return html_lib.escape(str(value), quote=True)
 
 
+# Same file family at every width. The query busts a cached estate-800 that was a different photograph.
+PHOTO_V = "4"
+
+
+def photo_src(key, width):
+    return f"/photos/{key}-{width}.webp?v={PHOTO_V}"
+
+
 def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw"):
     c = CRED[key]
     w, height = DIMS[key]
     load = 'fetchpriority="high" decoding="async"' if eager else 'loading="lazy" decoding="async"'
     return (
-        f'<img src="/photos/{key}-800.webp" '
-        f'srcset="/photos/{key}-800.webp 800w, /photos/{key}-1200.webp 1200w, /photos/{key}-1600.webp 1600w" '
+        f'<img src="{photo_src(key, 800)}" '
+        f'srcset="{photo_src(key, 800)} 800w, {photo_src(key, 1200)} 1200w, {photo_src(key, 1600)} 1600w" '
         f'sizes="{sizes}" alt="{h(c["alt"])}" width="{w}" height="{height}" {load}>'
     )
 
@@ -178,7 +186,6 @@ def header(current):
         cur = ' aria-current="page"' if current == href else ""
         return f'<a href="{href}"{cur}>{label}</a>'
     return f'''<a class="skip" href="#main">Skip to content</a>
-<div class="scroll-progress" aria-hidden="true"><span></span></div>
 <header class="site-header">
   <div class="bar">
     <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
@@ -202,7 +209,7 @@ def header(current):
     </nav>
     <div class="nav-actions">
       <a class="phone-full" href="{TEL}">{PHONE}</a>
-      <a class="btn btn-sm" href="/quote/"><span class="long">Request a review</span><span class="short">Review</span></a>
+      <a class="btn btn-sm" href="/quote/">Request a review</a>
       <button class="nav-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="nav-ic" aria-hidden="true"></span><span class="sr">Menu</span></button>
     </div>
   </div>
@@ -255,14 +262,14 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
     cinematic = path in ("/", "/style-preview/")
     preload = '<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>'
     if cinematic:
-        preload += '''
-<link rel="preload" as="image" href="/photos/hero-1600.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">'''
+        preload += f'''
+<link rel="preload" as="image" href="{photo_src("hero", 1600)}" imagesrcset="{photo_src("hero", 800)} 800w, {photo_src("hero", 1200)} 1200w, {photo_src("hero", 1600)} 1600w" imagesizes="100vw" fetchpriority="high">'''
     body = "page-home" if cinematic else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{h(title)}</title>
 <meta name="description" content="{h(desc)}">
 <meta name="robots" content="noindex, nofollow">
@@ -279,8 +286,25 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css">
-<script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
+<link rel="stylesheet" href="/site.css?v=4">
+<style>
+@media (max-width:980px){{
+  .site-header{{position:fixed !important;top:max(12px,env(safe-area-inset-top)) !important;left:0 !important;right:0 !important;padding-top:0 !important;z-index:80 !important;transform:translate3d(0,var(--header-shift,0px),0)}}
+  .site-header:before{{content:"";position:absolute;left:0;right:0;bottom:100%;height:max(12px,env(safe-area-inset-top));background:#071018;pointer-events:none}}
+  html.veil .site-header:before{{background:#fff;height:max(12px,env(safe-area-inset-top));top:auto;bottom:100%}}
+  .h-pin{{height:auto !important}}
+  .h-sticky{{position:static !important;height:auto !important;display:block !important;overflow:visible !important}}
+  .h-intro{{width:auto !important;display:block !important;padding:48px 20px 16px !important;box-sizing:border-box !important}}
+  .h-track{{display:block !important;transform:none !important;height:auto !important;width:auto !important}}
+  .slide{{position:relative !important;display:block !important;width:100% !important;height:72vh !important;min-height:420px !important;overflow:hidden !important;color:#fff !important;flex:none !important}}
+  .slide img{{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;max-width:none !important;object-fit:cover !important}}
+  .slide-shade{{position:absolute !important;inset:0 !important}}
+  .slide-copy{{position:absolute !important;left:20px !important;right:20px !important;bottom:22px !important;z-index:2 !important;color:#fff !important}}
+  .slide-copy strong,.slide-copy small{{display:block !important;color:#fff !important}}
+  .slide-copy small{{margin-top:8px !important}}
+}}
+</style>
+<script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
 {extra}
@@ -292,7 +316,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/vendor/lenis.min.js" defer></script>
-<script src="/site.js" defer></script>
+<script src="/site.js?v=4" defer></script>
 </body>
 </html>'''
 
@@ -312,7 +336,7 @@ def cinematic_sections(eager=False):
             f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
             f'<span class="slide-shade" aria-hidden="true"></span>'
             f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
-            f'<span class="slide-copy"><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
+            f'<span class="slide-copy"><strong>{h(title)}</strong> <small>{h(blurbs[key])}</small></span>'
             f'</div>'
         )
     return f'''

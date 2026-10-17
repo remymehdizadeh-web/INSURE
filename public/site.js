@@ -85,6 +85,49 @@
     }
   });
 
+  var mobileQ = matchMedia("(max-width: 980px)");
+  var headerShift = 0;
+
+  function safeTop() {
+    var probe = d.getElementById("safe-top-probe");
+    if (!probe) {
+      probe = d.createElement("div");
+      probe.id = "safe-top-probe";
+      probe.setAttribute("aria-hidden", "true");
+      probe.style.cssText = "position:fixed;left:0;width:0;top:0;height:constant(safe-area-inset-top);height:env(safe-area-inset-top);pointer-events:none;visibility:hidden";
+      d.body.appendChild(probe);
+    }
+    return Math.max(12, probe.getBoundingClientRect().height || 0);
+  }
+
+  function pinHeader() {
+    if (!header) return;
+    if (!mobileQ.matches) {
+      if (headerShift) {
+        headerShift = 0;
+        d.documentElement.style.setProperty("--header-shift", "0px");
+      }
+      return;
+    }
+    var want = safeTop();
+    var top = header.getBoundingClientRect().top;
+    var delta = want - top;
+    if (Math.abs(delta) < 1.5) return;
+    var next = headerShift + delta;
+    if (Math.abs(next) > 280) return;
+    headerShift = next;
+    d.documentElement.style.setProperty("--header-shift", headerShift.toFixed(2) + "px");
+    requestAnimationFrame(pinHeader);
+  }
+
+  function flattenRail() {
+    if (!mobileQ.matches) return;
+    var pin = d.querySelector(".h-pin");
+    var track = d.querySelector(".h-track");
+    if (pin) pin.style.setProperty("height", "auto", "important");
+    if (track) track.style.setProperty("transform", "none", "important");
+  }
+
   function syncHeader() {
     var y = window.scrollY || 0;
     if (d.body.style.position === "fixed") y = scrollLock || 0;
@@ -103,14 +146,28 @@
       veil = !(probe && probe.closest && probe.closest(".page-head, .hero, .photo-hero, .site-footer"));
     }
     d.documentElement.classList.toggle("veil", veil);
-    var bar = d.querySelector(".scroll-progress span");
-    if (bar) {
-      var max = d.documentElement.scrollHeight - innerHeight;
-      bar.style.transform = "scaleX(" + (max > 0 ? scrollY / max : 0) + ")";
-    }
+    pinHeader();
   }
+  flattenRail();
   syncHeader();
   addEventListener("scroll", syncHeader, { passive: true });
+  addEventListener("resize", function () { flattenRail(); pinHeader(); });
+  addEventListener("orientationchange", function () { flattenRail(); pinHeader(); });
+  if (window.visualViewport) {
+    visualViewport.addEventListener("scroll", pinHeader);
+    visualViewport.addEventListener("resize", pinHeader);
+  }
+  if (mobileQ.addEventListener) {
+    mobileQ.addEventListener("change", function () {
+      flattenRail();
+      if (mobileQ.matches && window.ScrollTrigger) {
+        ScrollTrigger.getAll().forEach(function (st) {
+          if (st.trigger && st.trigger.classList && st.trigger.classList.contains("h-pin")) st.kill();
+        });
+      }
+      pinHeader();
+    });
+  }
 
   if (!reduce && "IntersectionObserver" in window) {
     d.documentElement.classList.add("motion");
@@ -553,7 +610,7 @@
     var track = d.querySelector(".h-track");
     var sticky = d.querySelector(".h-sticky");
     var intro = d.querySelector(".h-intro");
-    if (pin && track && sticky && intro && matchMedia("(min-width: 981px)").matches) {
+    if (pin && track && sticky && intro && matchMedia("(min-width: 981px)").matches && !mobileQ.matches) {
       var dist = function () {
         return Math.max(0, track.scrollWidth - (sticky.clientWidth - intro.offsetWidth));
       };
