@@ -1,50 +1,50 @@
 {
  "hero": {
-  "title": "Manhattan skyline in 2023.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Manhattan_skyline_in_2023.jpg",
-  "artist": "rboed*",
-  "license": "CC BY 2.0",
-  "license_url": "https://creativecommons.org/licenses/by/2.0",
-  "date": "2023-10-15 16:01:45"
- },
- "building": {
-  "title": "Park Place Brooklyn Jan 2010.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Park_Place_Brooklyn_Jan_2010.jpg",
-  "artist": "Chris Pruitt",
-  "license": "CC BY-SA 2.0",
-  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
-  "date": "Taken on\u00a018 January "
- },
- "restaurant": {
-  "title": "Interior of Malibu Diner (New York City) May 2023.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Interior_of_Malibu_Diner_(New_York_City)_May_2023.jpg",
-  "artist": "Beno\u00eet Prieur",
-  "license": "CC0",
-  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-  "date": "2023-05-21 11:02:49"
- },
- "contractor": {
-  "title": "47 St sidewalk shed work 2020 jeh.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:47_St_sidewalk_shed_work_2020_jeh.jpg",
-  "artist": "Jim.henderson",
+  "title": "Upward view of a gridded high-rise facade in Frankfurt (2025).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AUpward_view_of_a_gridded_high-rise_facade_in_Frankfurt_%282025%29.jpg",
+  "artist": "Paul Colin Hennig firstdorsal.eu",
   "license": "CC BY-SA 4.0",
   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-  "date": "2020-01-21 13:21:19"
+  "alt": "Looking up a glass and metal high-rise facade"
  },
- "business": {
-  "title": "Greenlight Bookstore (55267412177).jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Greenlight_Bookstore_(55267412177).jpg",
-  "artist": "ajay_suresh",
-  "license": "CC BY 4.0",
-  "license_url": "https://creativecommons.org/licenses/by/4.0",
-  "date": "2026-04-23 11:57:23"
+ "estate": {
+  "title": "Seattle - Wallingford - old apartment building with shop on corner.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASeattle_-_Wallingford_-_old_apartment_building_with_shop_on_corner.jpg",
+  "artist": "Joe Mabel",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "alt": "A mixed-use brick apartment building with shops at the street"
  },
- "state": {
-  "title": "Lower Manhattan Skyline 2024 005.jpg",
-  "page": "https://commons.wikimedia.org/wiki/File:Lower_Manhattan_Skyline_2024_005.jpg",
-  "artist": "Kidfly182",
-  "license": "CC BY 4.0",
-  "license_url": "https://creativecommons.org/licenses/by/4.0",
-  "date": "2024-08-13 13:54:47"
+ "hospitality": {
+  "title": "Bistro Remedios Interior, May 2025 (1).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3ABistro_Remedios_Interior%2C_May_2025_%281%29.jpg",
+  "artist": "Ralff Nestor Nacor",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "alt": "A quiet dining room with wood tables and warm light"
+ },
+ "construction": {
+  "title": "Steel Frame Commercial Building Under Construction, Ann Arbor Township, Michigan.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File%3ASteel_Frame_Commercial_Building_Under_Construction%2C_Ann_Arbor_Township%2C_Michigan.JPG",
+  "artist": "Dwight Burdette",
+  "license": "CC BY 3.0",
+  "license_url": "https://creativecommons.org/licenses/by/3.0",
+  "alt": "Steel framing of a commercial building under construction"
+ },
+ "professional": {
+  "title": "Hallidie Building, San Francisco (1) 2023-07-18.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AHallidie_Building%2C_San_Francisco_%281%29_2023-07-18.jpg",
+  "artist": "The wub",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "alt": "A glass curtain-wall office building"
+ },
+ "personal": {
+  "title": "Modern-home-dusk (Creative Commons).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File%3AModern-home-dusk_%28Creative_Commons%29.jpg",
+  "artist": "vcmxnajg1",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "alt": "A modern house exterior at dusk"
  }
 }
