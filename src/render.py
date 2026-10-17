@@ -55,6 +55,38 @@ def cred(key):
     )
 
 
+def arcs():
+    rings = [
+        (280, 90, 0.16, "#5BA4E5"),
+        (280, 2.4, 0.8, "#C5E6FA"),
+        (430, 70, 0.13, "#3D86C4"),
+        (430, 2, 0.7, "#9ED4F8"),
+        (590, 110, 0.14, "#7EBFEE"),
+        (590, 2.6, 0.85, "#E7F6FF"),
+        (770, 64, 0.11, "#5BA4E5"),
+        (770, 1.8, 0.6, "#8ECAF5"),
+        (980, 86, 0.12, "#2F6FB0"),
+        (980, 2.2, 0.75, "#B9DFF8"),
+        (1200, 48, 0.1, "#5BA4E5"),
+    ]
+    circles = "".join(
+        f'<circle cx="120" cy="430" r="{r}" style="fill:none;stroke:{c};stroke-width:{sw};opacity:{op}"/>'
+        for r, sw, op, c in rings
+    )
+    return (
+        '<div class="arcs" aria-hidden="true"><div class="arc-glow"></div>'
+        '<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">'
+        f'<g class="arc-drift"><g class="arc-spin">{circles}</g></g></svg></div>'
+    )
+
+
+def figure_block(key, sizes, eager=False, cls="photo-block"):
+    return (
+        f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div>'
+        f"<figcaption>{cred(key)}</figcaption></figure>"
+    )
+
+
 def photo_attrs(key):
     c = CRED[key]
     srcset = f"/photos/{key}-800.webp 800w, /photos/{key}-1200.webp 1200w, /photos/{key}-1600.webp 1600w"
@@ -187,6 +219,7 @@ def header(current):
 def footer():
     cov = "".join(f'<li><a href="{href}">{h(title)}</a></li>' for href, title, _s, *_r in COVER)
     return f'''<footer class="site-footer">
+  {arcs()}
   <div class="wrap foot-grid">
     <div>
       <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-white-560.png" alt="SimpleINSURE" width="132" height="28"></a>
@@ -223,9 +256,6 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
     if path == "/":
         canon = SITE + "/"
     preload = ""
-    if path == "/":
-        preload = '''<link rel="preload" as="image" href="/photos/hero-800.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" media="(max-width: 980px)" fetchpriority="high">
-<link rel="preload" as="image" href="/photos/hero-1600.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" media="(min-width: 981px)" fetchpriority="high">'''
     body = "page-home" if path == "/" else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
@@ -289,20 +319,18 @@ def home():
         "/",
         f'''
 <section class="hero" aria-label="Introduction">
-  <figure class="hero-media">
-    {pic("hero", eager=True, sizes="100vw")}
-    <div class="hero-shade" aria-hidden="true"></div>
-    <figcaption class="hero-credit">{cred("hero")}</figcaption>
-  </figure>
+  {arcs()}
   <div class="hero-copy">
-    <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span>reviewed</span></span><span class="line"><span>properly.</span></span></h1>
-    <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
-    <div class="cta-row">
-      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
-      <a class="btn btn-line magnet" href="/policy-review/">Review a current policy</a>
+    <div class="hero-lead">
+      <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span class="tone">made simple.</span></span></h1>
+      <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
+      <div class="cta-row"><a class="btn magnet" href="/quote/">Request a review {ARROW}</a></div>
+    </div>
+    <div class="entry">
+      <a class="glass" href="/coverage/personal/"><span><b>Personal</b><em>Home, auto, umbrella</em></span>{ARROW}</a>
+      <a class="glass" href="/coverage/"><span><b>Business</b><em>Buildings, restaurants, trades</em></span>{ARROW}</a>
     </div>
   </div>
-  <a class="scroll-cue" href="#practices"><span>Practices</span><i aria-hidden="true"></i></a>
 </section>
 <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>{rail}  ·  </span><span>{rail}  ·  </span></div></div>
 <section class="section practices" id="practices" aria-labelledby="practices-h">
@@ -312,10 +340,7 @@ def home():
       <p>Buildings, hospitality, contracting, offices, and the household.</p>
     </div>
     <div class="practice-pin">
-      <figure class="stage">
-        {pic("estate", sizes="(max-width: 980px) 100vw, 42vw")}
-        <figcaption>{cred("estate")}</figcaption>
-      </figure>
+      {figure_block("estate", "(max-width: 980px) 100vw, 42vw", cls="stage")}
       <div class="plist">{''.join(rows)}</div>
     </div>
   </div>
@@ -337,10 +362,7 @@ def home():
 </section>
 <section class="section case" id="case-study" aria-labelledby="case-h">
   <div class="wrap case-layout">
-    <figure class="case-photo">
-      {pic("hospitality", sizes="(max-width: 980px) 100vw, 42vw")}
-      <figcaption>{cred("hospitality")}</figcaption>
-    </figure>
+    {figure_block("hospitality", "(max-width: 980px) 100vw, 42vw", cls="case-photo")}
     <div class="case-copy">
       <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span>A wider umbrella.</span></span></h2>
       <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
@@ -357,11 +379,12 @@ def home():
   </div>
 </section>
 <section class="close" aria-labelledby="close-h">
+  {arcs()}
   <div class="wrap close-inner">
-    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span>you have.</span></span></h2>
+    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span class="tone">you have.</span></span></h2>
     <p>We will tell you what it does, including when the right answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn magnet" href="/quote/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
@@ -474,7 +497,7 @@ def aside():
 
 def page_head(kicker, title, lede=""):
     lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
-    return f'<header class="page-head"><div class="wrap"><h1>{h(title)}</h1>{lead}</div></header>'
+    return f'<header class="page-head">{arcs()}<div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
 
 
 def continue_to(links):
@@ -735,18 +758,18 @@ def industry(ind, path=None, canonical=None):
         ],
     }, ensure_ascii=True)
     main = f'''
-<header class="page-head"><div class="wrap page-hero">
-  <div>
-    <p class="kicker">{h(ind["nav"])}</p>
-    <h1>{h(ind["h1"])}</h1>
-    <p class="lede">{h(ind["lede"])}</p>
-    <div class="cta-row"><a class="btn" href="/quote/?type={ind["slug"]}">Start with this account <span class="arr" aria-hidden="true">→</span></a></div>
-  </div>
-  <figure>{pic(ind["key"], eager=True, sizes="(max-width: 980px) 100vw, 46vw")}<figcaption>{cred(ind["key"])}</figcaption></figure>
+<header class="page-head">{arcs()}<div class="wrap">
+  <p class="kicker">{h(ind["nav"])}</p>
+  <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
+  <p class="lede">{h(ind["lede"])}</p>
+  <div class="cta-row"><a class="btn magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
 </div></header>
 <section class="section" style="padding-top:48px"><div class="wrap split">
   <div class="prose"><h2>How we look at it</h2>{essay}</div>
-  <div class="panel"><h2>What we ask first</h2><ul class="prose">{asks}</ul></div>
+  <div>
+    {figure_block(ind["key"], "(max-width: 980px) 100vw, 46vw", eager=True)}
+    <div class="panel"><h2>What we ask first</h2><ul class="prose">{asks}</ul></div>
+  </div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap">
   <div class="intro"><p class="kicker">Coverage</p><h2>What a careful program usually includes.</h2></div>
@@ -784,7 +807,7 @@ def coverage_index():
     ) + f'''
 <section class="section" style="padding-top:20px"><div class="wrap practice-grid">
   <div class="plist">{"".join(rows)}</div>
-  <figure class="stage">{pic("estate", sizes="(max-width: 980px) 100vw, 40vw")}<figcaption>{cred("estate")}</figcaption></figure>
+  {figure_block("estate", "(max-width: 980px) 100vw, 40vw", cls="stage")}
 </div></section>
 ''' + continue_to([
         ("/needs/", "01", "Coverage guide", "Not sure which practice fits? Answer a few questions."),
@@ -1217,7 +1240,7 @@ def about_page():
     <p>Usually by commission from the insurer. The plain version is on the licenses page, including how to ask about compensation on your own policy.</p>
     <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
   </div>
-  <figure>{pic("professional", sizes="(max-width: 980px) 100vw, 40vw")}<figcaption>{cred("professional")}</figcaption></figure>
+  {figure_block("hero", "(max-width: 980px) 100vw, 40vw")}
 </div></section>
 ''' + continue_to([
         ("/policy-review/", "01", "Policy review", "Bring the policy you have."),

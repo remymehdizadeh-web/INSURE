@@ -527,15 +527,31 @@
       if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 84%" };
       gsap.fromTo(lines, { yPercent: 110 }, vars);
     });
-    var heroImg = d.querySelector(".hero-media img");
-    if (heroImg) {
-      gsap.fromTo(heroImg, { yPercent: -8, scale: 1.12 }, {
-        yPercent: 10,
-        scale: 1.12,
+    d.querySelectorAll(".arcs").forEach(function (el) {
+      var host = el.parentElement || el;
+      gsap.fromTo(el, { yPercent: -6 }, {
+        yPercent: 8,
         ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
       });
-    }
+    });
+    d.querySelectorAll(".arc-glow").forEach(function (el) {
+      var host = el.closest("section, header, footer") || el;
+      gsap.fromTo(el, { opacity: 0.28 }, {
+        opacity: 0.72,
+        ease: "none",
+        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
+    d.querySelectorAll(".arc-drift").forEach(function (el) {
+      var host = el.closest("section, header, footer") || el;
+      gsap.fromTo(el, { rotation: -10 }, {
+        rotation: 16,
+        ease: "none",
+        svgOrigin: "120 430",
+        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
     gsap.utils.toArray(".case-photo img, .stage img").forEach(function (img) {
       gsap.fromTo(img, { clipPath: "inset(16% 0 0 0)" }, {
         clipPath: "inset(0% 0 0 0)",
