@@ -82,10 +82,7 @@ def arcs():
 
 
 def figure_block(key, sizes, eager=False, cls="photo-block"):
-    return (
-        f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div>'
-        f"<figcaption>{cred(key)}</figcaption></figure>"
-    )
+    return f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div></figure>'
 
 
 def photo_attrs(key):
@@ -187,7 +184,7 @@ def header(current):
 <div class="scroll-progress" aria-hidden="true"><span></span></div>
 <header class="site-header">
   <div class="bar">
-    <a class="logo" href="/" aria-label="SimpleINSURE home"><img class="logo-color" src="/img/simpleinsure-wordmark-560.png" alt="SimpleINSURE" width="148" height="32"><img class="logo-light" src="/img/simpleinsure-wordmark-white-560.png" alt="" width="148" height="32"></a>
+    <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
     <nav class="nav-desk" aria-label="Primary">
       <div class="drop{cov_here}">
         <button type="button" aria-expanded="false" aria-controls="menu-coverage">Coverage</button>
@@ -222,7 +219,7 @@ def footer():
     return f'''<footer class="site-footer">
   <div class="wrap foot-grid">
     <div>
-      <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-white-560.png" alt="SimpleINSURE" width="132" height="28"></a>
+      <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
       <p class="addr">Commercial and personal insurance.</p>
       <p class="addr">{ADDR}</p>
     </div>
@@ -316,14 +313,13 @@ def cinematic_sections(eager=False):
             f'<span class="slide-shade" aria-hidden="true"></span>'
             f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
             f'<span class="slide-copy"><em>{i:02d}</em><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
-            f'<span class="slide-credit">{cred(key)}</span></div>'
+            f'</div>'
         )
     return f'''
 <section class="hero" aria-label="Introduction">
   <div class="hero-media">
     <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
-    <p class="hero-credit">{cred("hero")}</p>
   </div>
   <div class="hero-copy wrap">
     <h1 class="rise"><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span><em>already meet.</em></span></span></h1>
@@ -348,7 +344,6 @@ def cinematic_sections(eager=False):
 <section class="case" id="case-study" aria-labelledby="case-h">
   <figure class="case-bleed">
     {pic("hospitality", eager=eager, sizes="(max-width: 980px) 100vw, 58vw")}
-    <figcaption>{cred("hospitality")}</figcaption>
   </figure>
   <div class="case-copy">
     <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span><em>A wider umbrella.</em></span></span></h2>
@@ -390,7 +385,6 @@ def home():
   <div class="hero-media">
     <div class="ken">{pic("personal", sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
-    <p class="hero-credit">{cred("personal")}</p>
   </div>
   <div class="wrap close-inner">
     <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
@@ -785,7 +779,6 @@ def industry(ind, path=None, canonical=None):
   <div class="hero-media">
     <div class="ken">{pic(ind["key"], eager=True, sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
-    <p class="hero-credit">{cred(ind["key"])}</p>
   </div>
   <div class="wrap">
     <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
@@ -1354,7 +1347,7 @@ def credits_page():
         )
     main = page_head("Photo credits", "Every photograph on this site, with the author and the license.") + f'''
 <section class="section" style="padding-top:12px"><div class="wrap prose">
-  <p>Photographs are used under the licenses linked below. We do not claim ownership of them.</p>
+  <p>Photographs are used under the Unsplash License. Credit is optional. It is listed here and is not shown on the other pages.</p>
   <table class="credits" style="width:100%;border-collapse:collapse;margin-top:18px">
     <thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Used as</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">File</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Author</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">License</th></tr></thead>
     <tbody>{"".join(rows)}</tbody>
