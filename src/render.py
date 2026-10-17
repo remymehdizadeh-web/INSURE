@@ -17,15 +17,16 @@ ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h
 CRED = json.load(open(os.path.join(ROOT, "src", "photo_credits.json"), encoding="utf-8"))
 for _c in CRED.values():
     _c["artist"] = _c["artist"].replace("firstdorsal.eu", "").strip()
-    _title = _c["title"].replace(" ", "_")
-    _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
+    if "unsplash.com" not in _c.get("page", ""):
+        _title = _c["title"].replace(" ", "_")
+        _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
 
 DIMS = {
     "hero": (1600, 982),
-    "estate": (1600, 1090),
-    "hospitality": (1600, 1205),
+    "estate": (1600, 1067),
+    "hospitality": (1600, 1067),
     "construction": (1600, 1067),
-    "professional": (1600, 998),
+    "professional": (1600, 1067),
     "personal": (1600, 1067),
 }
 
@@ -310,7 +311,7 @@ def cinematic_sections(eager=False):
     slides = []
     for i, (href, title, _sub, key) in enumerate(COVER, 1):
         slides.append(
-            f'<div class="slide">'
+            f'<div class="slide{" slide-hospitality" if key == "hospitality" else ""}">'
             f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
             f'<span class="slide-shade" aria-hidden="true"></span>'
             f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
@@ -337,6 +338,7 @@ def cinematic_sections(eager=False):
 <section class="h-pin" id="practices" aria-labelledby="practices-h">
   <div class="h-sticky">
     <div class="h-intro">
+      <i class="h-rule" aria-hidden="true"></i>
       <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
       <p>Buildings, hospitality, contracting, offices, and the household.</p>
     </div>
@@ -1352,7 +1354,7 @@ def credits_page():
         )
     main = page_head("Photo credits", "Every photograph on this site, with the author and the license.") + f'''
 <section class="section" style="padding-top:12px"><div class="wrap prose">
-  <p>Photographs are used under the Creative Commons licenses linked below. We do not claim ownership of them. Titles are the authors' file titles.</p>
+  <p>Photographs are used under the licenses linked below. We do not claim ownership of them.</p>
   <table class="credits" style="width:100%;border-collapse:collapse;margin-top:18px">
     <thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Used as</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">File</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Author</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">License</th></tr></thead>
     <tbody>{"".join(rows)}</tbody>

@@ -492,12 +492,18 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
 .scroll-cue i{width:1px;height:28px;background:rgba(247,245,240,.8);display:block}
 .h-pin{position:relative;height:280vh;background:#f6f4f0}
 .h-sticky{position:sticky;top:0;height:100vh;display:flex;overflow:hidden;background:#f6f4f0}
-.h-intro{width:min(340px,32vw);flex:none;display:flex;flex-direction:column;justify-content:flex-end;padding:0 36px 72px;position:relative;z-index:2;background:#f6f4f0}
-.h-intro h2{font-size:clamp(48px,5vw,76px);line-height:.95;color:var(--navy)}
+.h-intro{width:min(500px,40vw);flex:none;display:flex;flex-direction:column;justify-content:flex-end;padding:0 36px 64px;position:relative;z-index:2;background:#f6f4f0}
+.h-rule{display:block;width:1px;height:84px;margin:0 0 22px;background:var(--navy);transform-origin:bottom}
+html.motion .h-rule{animation:rule 1.3s var(--ease) both}
+html.motion .h-intro h2{animation:introfloat 7s ease-in-out 1.1s infinite alternate}
+@keyframes rule{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes introfloat{from{transform:translateY(6px)}to{transform:translateY(-6px)}}
+.h-intro h2{font-size:clamp(68px,5.4vw,80px);line-height:.88;color:var(--navy);letter-spacing:-.035em}
 .h-intro p{margin:16px 0 0;color:var(--muted);max-width:16em}
 .h-track{display:flex;height:100%;flex:none}
-.slide{position:relative;flex:0 0 58vw;min-width:0;height:100%;overflow:hidden;color:#fff;text-decoration:none;display:block}
+.slide{position:relative;flex:0 0 52vw;min-width:0;height:100%;overflow:hidden;color:#fff;text-decoration:none;display:block}
 .slide img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover}
+.slide-hospitality img{object-position:12% 40%}
 .slide-shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,16,24,.82),rgba(6,16,24,.05) 52%)}
 .slide-hit{position:absolute;inset:0;z-index:1}
 .slide-copy{position:absolute;left:36px;right:36px;bottom:36px;z-index:2;pointer-events:none}
@@ -507,8 +513,8 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
 .slide-credit{position:absolute;z-index:3;top:92px;left:28px;right:28px;max-width:46%;font-size:11px;line-height:1.35;color:rgba(247,245,240,.88);text-shadow:0 1px 8px rgba(0,0,0,.55)}
 .case{display:grid;grid-template-columns:1.15fr .85fr;min-height:100vh;background:#07131c;color:#f4f1ea;position:relative;overflow:hidden}
 .case-bleed{position:relative;margin:0;min-height:100%;overflow:hidden}
-.case-bleed img{width:100%;height:100%;min-height:100vh;object-fit:cover;max-width:none}
-.case-bleed:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,19,28,0) 4%,rgba(7,19,28,.78) 36%,#07131c 58%)}
+.case-bleed img{width:100%;height:100%;min-height:100vh;object-fit:cover;object-position:12% 40%;max-width:none}
+.case-bleed:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,19,28,0) 0%,rgba(7,19,28,.06) 38%,rgba(7,19,28,.62) 64%,#07131c 80%)}
 .case-bleed figcaption{position:absolute;z-index:1;left:16px;bottom:14px;margin:0;max-width:280px;font-size:11px;line-height:1.35;color:rgba(247,245,240,.86)}
 .case-copy{position:relative;z-index:1;margin-left:-7vw;padding:12vh 6vw 12vh 0;align-self:center}
 .case h2{color:#fff;font-size:clamp(48px,5vw,78px);line-height:.96;max-width:8em}
@@ -553,6 +559,8 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .h-pin{height:auto !important}
   .h-sticky{position:static;height:auto;display:block;overflow:visible}
   .h-intro{width:auto;padding:48px 20px 8px}
+  .h-intro h2{font-size:clamp(56px,15vw,76px)}
+  .h-rule{height:48px;margin-bottom:14px}
   .h-track{display:block;transform:none !important}
   .slide{width:100%;height:78vh;flex:none}
   .case{display:block}
