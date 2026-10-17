@@ -12,6 +12,7 @@ EMAIL = "info@simpleinsure.co"
 MAIL = "mailto:info@simpleinsure.co"
 ADDR = "900 Stewart Ave Ste 210, Garden City, NY 11530"
 SITE = "https://www.simpleinsure.co"
+ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 
 CRED = json.load(open(os.path.join(ROOT, "src", "photo_credits.json"), encoding="utf-8"))
 for _c in CRED.values():
@@ -150,6 +151,7 @@ def header(current):
         cur = ' aria-current="page"' if current == href else ""
         return f'<a href="{href}"{cur}>{label}</a>'
     return f'''<a class="skip" href="#main">Skip to content</a>
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
 <header class="site-header">
   <div class="bar">
     <a class="logo" href="/" aria-label="SimpleINSURE home"><img class="logo-color" src="/img/simpleinsure-wordmark-560.png" alt="SimpleINSURE" width="148" height="32"><img class="logo-light" src="/img/simpleinsure-wordmark-white-560.png" alt="" width="148" height="32"></a>
@@ -188,7 +190,8 @@ def footer():
   <div class="wrap foot-grid">
     <div>
       <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-white-560.png" alt="SimpleINSURE" width="132" height="28"></a>
-      <p class="addr">Commercial and personal insurance brokerage. Headquarters at {ADDR}.</p>
+      <p class="addr">Commercial and personal insurance.</p>
+      <p class="addr">{ADDR}</p>
     </div>
     <div><h2>Coverage</h2><ul>{cov}<li><a href="/checklists/">Checklists</a></li><li><a href="/needs/">Coverage guide</a></li></ul></div>
     <div><h2>Advisory</h2><ul>
@@ -245,9 +248,8 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/site.css">
-<script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8)</script>
+<script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
 {extra}
@@ -256,6 +258,9 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 {header(cur)}
 <main id="main">{main}</main>
 {footer()}
+<script src="/vendor/gsap.min.js" defer></script>
+<script src="/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/vendor/lenis.min.js" defer></script>
 <script src="/site.js" defer></script>
 </body>
 </html>'''
@@ -263,34 +268,24 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 
 def home():
     blurbs = {
-        "estate": "Buildings, schedules, and the lenders behind them.",
-        "hospitality": "Restaurants and bars, and the leases that govern them.",
-        "construction": "Contracts, certificates, and the work between them.",
-        "professional": "Offices, retail, and firms that give advice.",
-        "personal": "Home, auto, and umbrella for owners and families.",
+        "estate": "Buildings, schedules, lenders.",
+        "hospitality": "Restaurants, bars, the lease.",
+        "construction": "Contracts and certificates.",
+        "professional": "Offices, retail, advice.",
+        "personal": "Home, auto, umbrella.",
     }
     rows = []
     for i, (href, title, _sub, key) in enumerate(COVER, 1):
         on = " is-on" if i == 1 else ""
         rows.append(
             f'<a href="{href}" class="{on.strip()}" {photo_attrs(key)}>'
-            f'<span class="num">{i:02d}</span><span><strong>{h(title)}</strong><em>{h(blurbs[key])}</em></span>'
-            f'<span class="go" aria-hidden="true">→</span></a>'
+            f'<span class="num">{i:02d}</span><span class="pt"><strong>{h(title)}</strong><em>{h(blurbs[key])}</em></span>'
+            f'{ARROW}</a>'
         )
-    promises = [
-        "We read the policy you already have before we recommend another.",
-        "If the program is already right, we say so.",
-        "One broker stays on placement, certificates, changes, and claims questions.",
-        "A broker of record letter is explained before anyone is asked to sign it.",
-        "Renewal work starts before the expiration date.",
-        "We describe coverage in plain language. The policy still governs.",
-    ]
-    promise_html = "".join(
-        f'<li data-reveal><span>{i:02d}</span><p>{h(text)}</p></li>' for i, text in enumerate(promises, 1)
-    )
+    rail = "  ·  ".join(title for _, title, _, _ in COVER)
     return document(
         "Commercial and Personal Insurance | SimpleINSURE",
-        "SimpleINSURE is a commercial and personal insurance brokerage headquartered in Garden City, New York. Policy reviews, placement with access to A-rated carriers, and service after the policy is bound.",
+        "SimpleINSURE places commercial and personal insurance. Send the policy you have. We read it, approach A-rated markets when there is a reason, and stay after it is bound.",
         "/",
         f'''
 <section class="hero" aria-label="Introduction">
@@ -300,119 +295,74 @@ def home():
     <figcaption class="hero-credit">{cred("hero")}</figcaption>
   </figure>
   <div class="hero-copy">
-    <p class="kicker light">Commercial and personal insurance</p>
-    <h1><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span>already meet.</span></span></h1>
-    <p class="lede"><span class="desk">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York. We read the policy you have, approach carriers with access to A-rated markets, and stay with the account after it is bound.</span><span class="mob">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York.</span></p>
+    <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span>reviewed</span></span><span class="line"><span>properly.</span></span></h1>
+    <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
     <div class="cta-row">
-      <a class="btn btn-light" href="/quote/">Request a coverage review <span class="arr" aria-hidden="true">→</span></a>
-      <a class="btn btn-line" href="/policy-review/">Review a current policy</a>
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-line magnet" href="/policy-review/">Review a current policy</a>
     </div>
   </div>
-  <a class="scroll-cue" href="#practices">Practices <i aria-hidden="true"></i></a>
+  <a class="scroll-cue" href="#practices"><span>Practices</span><i aria-hidden="true"></i></a>
 </section>
-<section class="facts" aria-label="At a glance"><div class="wrap">
-  <div><b>Headquarters</b><span>Garden City, New York</span></div>
-  <div><b>Commercial and personal</b><span>One brokerage, both sides of the account</span></div>
-  <div><b>A-rated markets</b><span>Access to admitted and specialty carriers</span></div>
-  <div><b>After the binder</b><span>Certificates, changes, renewals, claims questions</span></div>
-</div></section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>{rail}  ·  </span><span>{rail}  ·  </span></div></div>
 <section class="section practices" id="practices" aria-labelledby="practices-h">
-  <div class="wrap practice-grid">
-    <div>
-      <div class="intro"><p class="kicker">Practices</p><h2 id="practices-h">Five practices. One standard of care.</h2></div>
+  <div class="wrap">
+    <div class="practice-head">
+      <h2 class="rise" id="practices-h"><span class="line"><span>Five practices.</span></span><span class="line"><span>One way of reading a policy.</span></span></h2>
+      <p>Buildings, hospitality, contracting, offices, and the household.</p>
+    </div>
+    <div class="practice-pin">
+      <figure class="stage">
+        {pic("estate", sizes="(max-width: 980px) 100vw, 42vw")}
+        <figcaption>{cred("estate")}</figcaption>
+      </figure>
       <div class="plist">{''.join(rows)}</div>
     </div>
-    <figure class="stage">
-      {pic("estate", sizes="(max-width: 980px) 100vw, 40vw")}
-      <figcaption>{cred("estate")}</figcaption>
-    </figure>
+  </div>
+</section>
+<section class="section work" id="work" aria-labelledby="work-h">
+  <div class="wrap work-grid">
+    <div class="work-intro">
+      <h2 class="rise" id="work-h"><span class="line"><span>Switching is</span></span><span class="line"><span>a sequence.</span></span></h2>
+      <p>We read what you have before anyone is asked to sign a broker of record letter. If it should stay, that is the answer.</p>
+      <a class="text-link" href="/switching/">How the handover works {ARROW}</a>
+    </div>
+    <ol class="work-steps">
+      <li data-reveal><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
+      <li data-reveal><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
+      <li data-reveal><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
+      <li data-reveal><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+    </ol>
   </div>
 </section>
 <section class="section case" id="case-study" aria-labelledby="case-h">
-  <div class="wrap case-grid">
-    <div>
-      <p class="kicker light">An anonymized placement</p>
-      <h2 id="case-h">Same liability limits. A wider umbrella. Far less premium.</h2>
-      <p class="story">A Manhattan restaurant came to us from another broker. We did not cut the liability limits. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
-      <ul class="case-points">
-        <li><b>Same</b> general liability limits</li>
-        <li><b>Umbrella</b> from $1 million to $5 million</li>
-        <li><b>Employment practices</b> added</li>
-      </ul>
-      <div class="cta-row"><a class="btn-light" href="/policy-review/">Send a policy for review <span class="arr" aria-hidden="true">→</span></a></div>
-    </div>
-    <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
-      <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
-      <div class="track"><i style="--w:100%"></i></div>
-      <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
-      <div class="track"><i class="after" style="--w:30%"></i></div>
-      <p class="delta">$49,887 less a year.</p>
-      <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
-    </div>
-  </div>
-</section>
-<section class="section standard" aria-labelledby="std-h">
-  <div class="wrap standard-grid">
-    <div class="standard-intro">
-      <p class="kicker">Service</p>
-      <h2 id="std-h">What our clients can count on.</h2>
-      <p class="lede">The list is short on purpose. It is also the reason a client with a broker still calls.</p>
-      <div class="cta-row"><a class="text-link" href="/client-center/">The full standard of service</a></div>
-    </div>
-    <ol class="standard-list">{promise_html}</ol>
-  </div>
-</section>
-<section class="section ink" aria-labelledby="guide-h">
-  <div class="wrap tool-grid">
-    <div>
-      <p class="kicker light">Coverage guide</p>
-      <h2 id="guide-h">Five questions. A list for this business, not a generic one.</h2>
-      <p class="lede">Answer a short set of questions about the operation. Leave with a coverage memo you can email to us, or take into a quote.</p>
-      <div class="cta-row"><a class="btn-light" href="/needs/">Open the coverage guide <span class="arr" aria-hidden="true">→</span></a></div>
-    </div>
-    <ol class="qpreview">
-      <li>Employees <span>01</span></li>
-      <li>Alcohol, vehicles, or a building <span>02</span></li>
-      <li>A lease or a lender <span>03</span></li>
-      <li>Contracts that name other parties <span>04</span></li>
-      <li>Advice, data, or personal lines <span>05</span></li>
-    </ol>
-  </div>
-</section>
-<section class="section" aria-labelledby="switch-h">
-  <div class="wrap">
-    <div class="intro">
-      <p class="kicker">Changing brokers</p>
-      <h2 id="switch-h">A change of broker is a process, not a gap in coverage.</h2>
-      <p class="lede">We read what you have before anyone talks about a broker of record letter. If the current program should stay, that is the recommendation.</p>
-    </div>
-    <ol class="steps">
-      <li data-reveal><span class="n">01</span><h3>A conversation</h3><p>What the account is, and what is not working.</p></li>
-      <li data-reveal><span class="n">02</span><h3>A reading</h3><p>Declarations, forms, and the endorsements behind them.</p></li>
-      <li data-reveal><span class="n">03</span><h3>A market, if needed</h3><p>Only when there is a reason to move.</p></li>
-      <li data-reveal><span class="n">04</span><h3>A clean handover</h3><p>Effective dates, certificates, and the renewal calendar.</p></li>
-    </ol>
-    <div class="cta-row"><a class="text-link" href="/switching/">How switching brokers works</a></div>
-  </div>
-</section>
-<section class="section" style="padding-top:0" aria-labelledby="read-h">
-  <div class="wrap">
-    <div class="intro"><p class="kicker">Resources</p><h2 id="read-h">Read the words the industry hides in the back of the form.</h2></div>
-    <div class="ress">
-      <a href="/resources/#broker-of-record"><span class="n">01</span><h3>The broker of record letter</h3><p>What it appoints, what it does not cancel, and when a carrier will wait for renewal.</p></a>
-      <a href="/resources/#declarations"><span class="n">02</span><h3>How to read a declarations page</h3><p>The cover sheet is not the policy. Here is what to check before you rely on it.</p></a>
-      <a href="/resources/#additional-insured"><span class="n">03</span><h3>Additional insured, loss payee, waiver</h3><p>Three phrases that show up in leases and contracts, and do not mean the same thing.</p></a>
+  <div class="wrap case-layout">
+    <figure class="case-photo">
+      {pic("hospitality", sizes="(max-width: 980px) 100vw, 42vw")}
+      <figcaption>{cred("hospitality")}</figcaption>
+    </figure>
+    <div class="case-copy">
+      <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span>A wider umbrella.</span></span></h2>
+      <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
+      <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
+        <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
+        <div class="track"><i style="--w:100%"></i></div>
+        <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
+        <div class="track"><i class="after" style="--w:30%"></i></div>
+        <p class="delta">$49,887 less a year.</p>
+        <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
+      </div>
+      <div class="cta-row"><a class="btn magnet" href="/policy-review/">Send a policy for review {ARROW}</a></div>
     </div>
   </div>
 </section>
 <section class="close" aria-labelledby="close-h">
-  <div class="wrap">
-    <p class="kicker">A second opinion</p>
-    <h2 id="close-h">Bring the policy you have.</h2>
-    <p class="lede">We will tell you what it actually does, including when the right answer is to keep it.</p>
+  <div class="wrap close-inner">
+    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span>you have.</span></span></h2>
+    <p>We will tell you what it does, including when the right answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn" href="/policy-review/">Request a policy review <span class="arr" aria-hidden="true">→</span></a>
-      <a class="text-link" href="{TEL}">Or call {PHONE}</a>
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
 </section>
@@ -524,15 +474,15 @@ def aside():
 
 def page_head(kicker, title, lede=""):
     lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
-    return f'<header class="page-head"><div class="wrap"><p class="kicker">{h(kicker)}</p><h1>{h(title)}</h1>{lead}</div></header>'
+    return f'<header class="page-head"><div class="wrap"><h1>{h(title)}</h1>{lead}</div></header>'
 
 
 def continue_to(links):
     cards = "".join(
-        f'<a href="{href}"><span class="n">{n}</span><h3>{h(title)}</h3><p>{h(text)}</p></a>'
+        f'<a href="{href}"><span>{n}</span><b>{h(title)}</b><em>{h(text)}</em></a>'
         for href, n, title, text in links
     )
-    return f'<section class="section" style="padding-top:0"><div class="wrap"><p class="kicker">Continue</p><div class="ress">{cards}</div></div></section>'
+    return f'<nav class="next" aria-label="Continue"><div class="wrap">{cards}</div></nav>'
 
 
 INDUSTRIES = [
@@ -1232,8 +1182,7 @@ def client_page():
     <h2>Reach us</h2>
     <div class="row"><span>Call</span><a href="{TEL}">{PHONE}</a></div>
     <div class="row"><span>Email</span><a href="{MAIL}">{EMAIL}</a></div>
-    <div class="row"><span>Mail</span><span>{ADDR}</span></div>
-    <p class="quiet">Call ahead if you plan to visit the Garden City office. Most of the work is by phone, email, and video.</p>
+    <p class="quiet">Most of the work is by phone, email, and video.</p>
   </div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap prose narrow">
@@ -1245,7 +1194,7 @@ def client_page():
 '''
     return document(
         "Client Service | SimpleINSURE",
-        "Certificates, changes, renewals, and what to do when a loss happens. SimpleINSURE client service, headquartered in Garden City, New York.",
+        "Certificates, changes, renewals, and what to do when a loss happens.",
         "/client-center/",
         main,
     )
@@ -1254,29 +1203,21 @@ def client_page():
 def about_page():
     main = page_head(
         "The firm",
-        "An independent brokerage, headquartered in Garden City.",
+        "An independent brokerage.",
         "We are not an insurance company. We place coverage and stay with the account.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
     <h2>What independent means here</h2>
     <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. We approach admitted and specialty markets, including surplus lines when the standard market is not a fit, and we have access to A-rated carriers.</p>
-    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. We do not publish a headcount or a founding myth. The work is the standard on the <a href="/client-center/">client service</a> page.</p>
-    <h2>Where we work</h2>
-    <p>Our headquarters is {ADDR}. Clients work with us by phone, email, and video, which is how an account is actually handled. Call ahead if you plan to visit. We place coverage where we are licensed. The license we hold today is described on the <a href="/legal/">licenses page</a>. We do not describe a national office network we do not have.</p>
+    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. We do not publish a headcount or a founding year. The work is the standard on the <a href="/client-center/">client service</a> page.</p>
+    <h2>Where the license lives</h2>
+    <p>We place coverage where we are licensed. The license we hold today is on the <a href="/legal/">licenses page</a>. We do not describe licenses we do not hold.</p>
     <h2>How we are paid</h2>
     <p>Usually by commission from the insurer. The plain version is on the licenses page, including how to ask about compensation on your own policy.</p>
+    <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
   </div>
-  <div>
-    <figure>{pic("professional", sizes="(max-width: 980px) 100vw, 40vw")}<figcaption>{cred("professional")}</figcaption></figure>
-    <div class="panel" style="margin-top:16px">
-      <h2>Headquarters</h2>
-      <div class="row"><span>Address</span><span>{ADDR}</span></div>
-      <div class="row"><span>Phone</span><a href="{TEL}">{PHONE}</a></div>
-      <div class="row"><span>Email</span><a href="{MAIL}">{EMAIL}</a></div>
-      <div class="row"><span>Licenses</span><a href="/legal/">View disclosures</a></div>
-    </div>
-  </div>
+  <figure>{pic("professional", sizes="(max-width: 980px) 100vw, 40vw")}<figcaption>{cred("professional")}</figcaption></figure>
 </div></section>
 ''' + continue_to([
         ("/policy-review/", "01", "Policy review", "Bring the policy you have."),
@@ -1285,7 +1226,7 @@ def about_page():
     ])
     return document(
         "About SimpleINSURE",
-        "SimpleINSURE is an independent commercial and personal insurance brokerage headquartered in Garden City, New York.",
+        "SimpleINSURE places commercial and personal insurance and stays with the account after it is bound.",
         "/about/",
         main,
     )
@@ -1337,7 +1278,7 @@ def legal_page():
 <section class="section" style="padding-top:12px"><div class="wrap prose narrow">
   <h2 id="licensing">Licensing</h2>
   <p>SimpleINSURE Brokerage LLC is a licensed property and casualty insurance broker. New York DFS license number BR-1984615. You can confirm that record on the <a href="https://myportal.dfs.ny.gov/nylinxext/elsearch.alice" rel="noopener">New York DFS licensee search</a>.</p>
-  <p>Headquarters: {ADDR}. Phone <a href="{TEL}">{PHONE}</a>. Email <a href="{MAIL}">{EMAIL}</a>.</p>
+  <p>{ADDR}. Phone <a href="{TEL}">{PHONE}</a>. Email <a href="{MAIL}">{EMAIL}</a>.</p>
   <p>We place insurance where we are licensed to do so. This page states the New York license. It does not claim licenses in other states. If an account requires a license we do not yet hold, we will say so before an appointment or a placement.</p>
   <h2 id="how-we-are-paid">How we are paid</h2>
   <p>We are usually paid a commission by the insurer that issues the policy, as a percentage of premium. We may also receive other compensation from insurers, such as contingent payments based on the overall business placed with them. You may ask what compensation we expect on your policy, and about alternative quotes we presented. We will tell you.</p>

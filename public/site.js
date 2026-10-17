@@ -71,6 +71,11 @@
     var stuck = scrollY > 8;
     if (header) header.classList.toggle("is-stuck", stuck);
     d.documentElement.classList.toggle("scrolled", stuck);
+    var bar = d.querySelector(".scroll-progress span");
+    if (bar) {
+      var max = d.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? scrollY / max : 0) + ")";
+    }
   }
   syncHeader();
   addEventListener("scroll", syncHeader, { passive: true });
@@ -162,11 +167,12 @@
         a.classList.add("is-on");
         var src = a.getAttribute("data-src");
         if (src && stage.getAttribute("src") !== src) {
-          stage.style.opacity = "0.35";
-          stage.onload = function () { stage.style.opacity = "1"; };
           stage.src = src;
           stage.srcset = a.getAttribute("data-srcset") || "";
           stage.alt = a.getAttribute("data-alt") || "";
+          if (!reduce && window.gsap) {
+            gsap.fromTo(stage, { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" });
+          }
         }
         var cap = d.querySelector(".stage figcaption");
         if (cap) {
@@ -500,5 +506,73 @@
       needsApp.appendChild(actions);
     }
     render();
+  }
+
+  d.querySelectorAll(".plist").forEach(function (list) {
+    list.addEventListener("mousemove", function (e) {
+      var a = e.target.closest("a");
+      if (!a) return;
+      var r = a.getBoundingClientRect();
+      a.style.setProperty("--mx", e.clientX - r.left + "px");
+      a.style.setProperty("--my", e.clientY - r.top + "px");
+    });
+  });
+
+  if (!reduce && window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray(".rise").forEach(function (block) {
+      var lines = block.querySelectorAll(".line > span");
+      if (!lines.length) return;
+      var vars = { yPercent: 0, duration: 0.95, stagger: 0.08, ease: "power3.out" };
+      if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 84%" };
+      gsap.fromTo(lines, { yPercent: 110 }, vars);
+    });
+    var heroImg = d.querySelector(".hero-media img");
+    if (heroImg) {
+      gsap.fromTo(heroImg, { yPercent: -8, scale: 1.12 }, {
+        yPercent: 10,
+        scale: 1.12,
+        ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+      });
+    }
+    gsap.utils.toArray(".case-photo img, .stage img").forEach(function (img) {
+      gsap.fromTo(img, { clipPath: "inset(16% 0 0 0)" }, {
+        clipPath: "inset(0% 0 0 0)",
+        duration: 1.15,
+        ease: "power3.out",
+        scrollTrigger: { trigger: img, start: "top 86%" }
+      });
+    });
+    var steps = d.querySelector(".work-steps");
+    if (steps) {
+      ScrollTrigger.create({
+        trigger: steps,
+        start: "top 75%",
+        end: "bottom 55%",
+        scrub: true,
+        onUpdate: function (self) { steps.style.setProperty("--p", self.progress.toFixed(3)); }
+      });
+    }
+    d.querySelectorAll(".magnet").forEach(function (btn) {
+      btn.addEventListener("mousemove", function (e) {
+        var r = btn.getBoundingClientRect();
+        gsap.to(btn, { x: (e.clientX - (r.left + r.width / 2)) * 0.28, y: (e.clientY - (r.top + r.height / 2)) * 0.4, duration: 0.35, ease: "power3.out" });
+      });
+      btn.addEventListener("mouseleave", function () {
+        gsap.to(btn, { x: 0, y: 0, duration: 0.55, ease: "power3.out" });
+      });
+    });
+    if (window.Lenis && matchMedia("(pointer: fine)").matches) {
+      var lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis.on("scroll", function () {
+        ScrollTrigger.update();
+        syncHeader();
+      });
+      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+  } else {
+    d.querySelectorAll(".rise .line > span").forEach(function (el) { el.style.transform = "none"; });
   }
 })();
