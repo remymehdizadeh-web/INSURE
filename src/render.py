@@ -128,12 +128,12 @@ def schema(path):
 COVER = [
     ("/coverage/real-estate/", "Real estate", "Buildings and landlords", "estate"),
     ("/coverage/hospitality/", "Hospitality", "Restaurants and bars", "hospitality"),
-    ("/coverage/construction/", "Construction", "Contractors and trades", "construction"),
-    ("/coverage/professional/", "Professional", "Offices and services", "professional"),
-    ("/coverage/personal/", "Personal lines", "Home, auto, and umbrella", "personal"),
+    ("/coverage/construction/", "Contractors", "Trades and job sites", "construction"),
+    ("/coverage/professional/", "Offices", "Professional firms", "professional"),
+    ("/coverage/personal/", "Personal", "Household, home, and auto", "personal"),
 ]
 FIRM = [
-    ("/about/", "About", "The practice"),
+    ("/about/", "The firm", "The practice"),
     ("/client-center/", "Client service", "What to expect"),
     ("/switching/", "Switching brokers", "The order of work"),
     ("/partners/", "Partners", "Attorneys, managers, CPAs"),
@@ -161,16 +161,13 @@ def sheet_links(current):
         ("/resources/", "Resources"),
         ("/switching/", "Switching brokers"),
         ("/client-center/", "Client service"),
-        ("/about/", "About"),
+        ("/about/", "The firm"),
+        ("/contact/", "Contact"),
         ("/partners/", "Partners"),
         ("/legal/", "Licenses and disclosures"),
     ):
         cur = ' aria-current="page"' if current == href else ""
         parts.append(f'<a href="{href}"{cur}>{label}</a>')
-    parts.append(
-        f'<div class="sheet-cta"><a class="btn" href="/quote/">Request a review</a>'
-        f'<a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>'
-    )
     return "".join(parts)
 
 
@@ -201,6 +198,7 @@ def header(current):
         <button type="button" aria-expanded="false" aria-controls="menu-firm">Firm</button>
         <div class="drop-panel" id="menu-firm">{nav_links(FIRM, current)}</div>
       </div>
+      {top("/contact/", "Contact")}
     </nav>
     <div class="nav-actions">
       <a class="phone-full" href="{TEL}">{PHONE}</a>
@@ -211,6 +209,7 @@ def header(current):
 </header>
 <div class="sheet" id="sheet" hidden>
   <nav aria-label="Mobile">{sheet_links(current)}</nav>
+  <div class="sheet-cta"><a class="btn" href="/quote/">Request a review</a><a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>
 </div>'''
 
 
@@ -232,7 +231,8 @@ def footer():
       <li><a href="/client-center/">Client service</a></li>
     </ul></div>
     <div><h2>Firm</h2><ul>
-      <li><a href="/about/">About</a></li>
+      <li><a href="/about/">The firm</a></li>
+      <li><a href="/contact/">Contact</a></li>
       <li><a href="/partners/">Partners</a></li>
       <li><a href="/legal/">Licenses and disclosures</a></li>
       <li><a href="/photo-credits/">Photo credits</a></li>
@@ -301,9 +301,9 @@ def cinematic_sections(eager=False):
     blurbs = {
         "estate": "Buildings, schedules, lenders.",
         "hospitality": "Restaurants, bars, the lease.",
-        "construction": "Contracts and certificates.",
-        "professional": "Offices, retail, advice.",
-        "personal": "Home, auto, umbrella.",
+        "construction": "Trades, contracts, certificates.",
+        "professional": "Offices and professional firms.",
+        "personal": "Home, auto, and the household.",
     }
     slides = []
     for href, title, _sub, key in COVER:
@@ -535,8 +535,8 @@ def page_head(kicker, title, lede=""):
 
 def continue_to(links):
     cards = "".join(
-        f'<a href="{href}"><span>{n}</span><b>{h(title)}</b><em>{h(text)}</em></a>'
-        for href, n, title, text in links
+        f'<a href="{href}"><b>{h(title)}</b><em>{h(text)}</em></a>'
+        for href, _n, title, text in links
     )
     return f'<nav class="next" aria-label="Continue"><div class="wrap">{cards}</div></nav>'
 
@@ -631,7 +631,7 @@ INDUSTRIES = [
     {
         "slug": "construction",
         "key": "construction",
-        "nav": "Construction",
+        "nav": "Contractors",
         "title": "Contractor and Trade Insurance | SimpleINSURE",
         "desc": "Contractor insurance written to the contract: general liability, workers compensation, auto, umbrella, and certificates.",
         "h1": "Coverage written to the contract, not to a guess.",
@@ -674,7 +674,7 @@ INDUSTRIES = [
     {
         "slug": "professional",
         "key": "professional",
-        "nav": "Professional",
+        "nav": "Offices",
         "title": "Professional, Office, and Retail Insurance | SimpleINSURE",
         "desc": "Insurance for offices, retailers, and firms that give advice: package policies, professional liability, cyber, and umbrella.",
         "h1": "For firms whose work is a lease, advice, or client data.",
@@ -717,7 +717,7 @@ INDUSTRIES = [
     {
         "slug": "personal",
         "key": "personal",
-        "nav": "Personal lines",
+        "nav": "Personal",
         "title": "Home, Auto, and Umbrella Insurance | SimpleINSURE",
         "desc": "Homeowners, auto, and personal umbrella for owners and families, including rental property held in a personal name.",
         "h1": "Home, auto, and umbrella, in the same conversation as the business.",
@@ -832,7 +832,7 @@ def coverage_index():
     for i, (href, title, sub, key) in enumerate(COVER, 1):
         on = "is-on" if i == 1 else ""
         rows.append(
-            f'<a class="{on}" href="{href}" {photo_attrs(key)}><span class="num">{i:02d}</span>'
+            f'<a class="{on}" href="{href}" {photo_attrs(key)}>'
             f"<span><strong>{h(title)}</strong><em>{h(sub)}</em></span><span class=\"go\" aria-hidden=\"true\">→</span></a>"
         )
     main = page_head(
@@ -850,7 +850,7 @@ def coverage_index():
     ])
     return document(
         "Coverage | SimpleINSURE",
-        "Commercial and personal insurance practices: real estate, hospitality, construction, professional firms, and personal lines.",
+        "Commercial and personal insurance practices: real estate, hospitality, contractors, offices, and household.",
         "/coverage/",
         main,
     )
@@ -1379,15 +1379,36 @@ def credits_page():
     )
 
 
+def contact_page():
+    steps = f'''
+<div data-step="1" data-label="Message" data-error="Add your name, and an email or a phone number.">
+  <h2 style="font-size:32px;margin-bottom:14px">Send a note</h2>
+  <p class="quiet">The button opens an email draft to {EMAIL}. This page does not store what you type.</p>
+  <div class="fields" style="margin-top:16px">{contact_fields("c")}</div>
+  <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
+</div>'''
+    main = page_head(
+        "Contact",
+        "Call, or send a note.",
+        "A broker replies by phone or email. If it is urgent, call. The form opens a draft in your own mail program.",
+    ) + f'''<section class="section" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
+    return document(
+        "Contact | SimpleINSURE",
+        "Call SimpleINSURE or send a note. The form opens an email to the brokerage. Nothing is stored on the website.",
+        "/contact/",
+        main,
+    )
+
+
 def not_found():
     main = page_head(
         "Missing page",
         "That page is not on this site.",
         "The address may be old. The pages below are current.",
     ) + '''<section class="section" style="padding-top:0"><div class="wrap ress">
-      <a href="/"><span class="n">01</span><h3>Home</h3><p>The firm, the case study, and the practices.</p></a>
-      <a href="/policy-review/"><span class="n">02</span><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
-      <a href="/quote/"><span class="n">03</span><h3>Request a review</h3><p>Start with the account.</p></a>
+      <a href="/"><h3>Home</h3><p>The firm, the case study, and the practices.</p></a>
+      <a href="/policy-review/"><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
+      <a href="/contact/"><h3>Contact</h3><p>Call, or send a note.</p></a>
     </div></section>'''
     return document("Page not found | SimpleINSURE", "That page is not on the SimpleINSURE site.", "/404.html", main)
 
@@ -1405,6 +1426,7 @@ def pages():
         "resources/index.html": resources_page(),
         "client-center/index.html": client_page(),
         "about/index.html": about_page(),
+        "contact/index.html": contact_page(),
         "partners/index.html": partners_page(),
         "legal/index.html": legal_page(),
         "photo-credits/index.html": credits_page(),
