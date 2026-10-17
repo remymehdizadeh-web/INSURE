@@ -1071,7 +1071,7 @@ def switching_page():
         ("A conversation, not a commitment", "You tell us what the account is and what is not working. Price, a contract, a nonrenewal, a claim, or a broker you rarely hear from. No one is appointed yet."),
         ("We read the current program", "Send the declarations page and, if you have them, the forms list and the endorsements. The declarations page is the cover. The forms decide the coverage."),
         ("An opinion before a market", "We tell you what is solid, what is thin, and whether moving is worth it. If the program should stay where it is, that is the recommendation."),
-        ("A market, only if there is a reason", "We approach carriers that write this kind of risk, including specialty markets when the standard market is a poor fit. Access to A-rated carriers is the point of that work. We do not scatter an account for the sake of activity."),
+        ("A market, only if there is a reason", "We approach carriers that write this kind of risk, including specialty markets when the standard market is a poor fit. Access to A-rated carriers is the point of that work. The account goes to market with a purpose."),
         ("You choose, with the current program still in view", "Options sit beside what you have: price, limits, exclusions, and the wording a lender or a contract requires. You can keep the policy you have."),
         ("The broker of record letter, if you appoint us on an existing policy", "A broker of record letter is a short written appointment. It tells the insurance company that you want SimpleINSURE to service a policy that is already in force. It names you, the policy, and the broker, and you sign it. It does not, by itself, cancel coverage, change limits, or erase a claim. The carrier decides whether to honor it. Some accept a change during the term. Some will not act until renewal. We tell you which case applies before you sign. If the right path is a replacement policy instead of an appointment, we coordinate the effective date so one program ends as the next begins."),
         ("The handover", "Certificates, mortgagee and landlord notices, open claims, and the renewal date move onto our calendar. You should not have to introduce yourself twice."),
@@ -1140,7 +1140,7 @@ ESSAYS = [
     ("broker-of-record", "The broker of record letter", [
         "A broker of record letter is a signed note from you to the insurance company. It says that SimpleINSURE, or whichever broker you name, is the broker you want servicing a policy that already exists. The letter identifies you, the policy number, and the new broker.",
         "It does not cancel the policy. It does not change your limits, your deductibles, or your exclusions. It does not settle a claim. The insurer decides whether to accept the appointment. Some carriers honor a change in the middle of the term. Others will not move until the renewal. Commission usually follows the appointment once it is accepted, which is why the prior broker notices.",
-        "Because of that, we do not ask anyone to sign a letter at the first meeting. We read the program, tell you whether a move is even useful, and tell you whether the carrier is likely to accept an appointment now or only at renewal. If a replacement policy is the cleaner path, we set the effective dates so you are not uncovered between them.",
+        "The letter comes after that reading. We tell you whether a move is useful, and whether the carrier is likely to accept an appointment now or only at renewal. If a replacement policy is the cleaner path, we set the effective dates so coverage continues from one program to the next.",
         "You can ask us for the letter before you sign it. You should. If a broker will not explain the appointment in plain language, that is information about the broker.",
     ]),
     ("declarations", "How to read a declarations page", [
@@ -1231,7 +1231,7 @@ def client_page():
       <li><span>02</span><p>Certificates go out when the policy supports them. If it does not, we say what is missing.</p></li>
       <li><span>03</span><p>Changes in payroll, vehicles, locations, or ownership are endorsed, not remembered.</p></li>
       <li><span>04</span><p>Renewal work starts before the expiration date, with a comparison, not only a bill.</p></li>
-      <li><span>05</span><p>If a loss happens, you call us. We help you notify the carrier. We do not promise how a claim will end.</p></li>
+      <li><span>05</span><p>If a loss happens, you call us. We help you notify the carrier and we follow the claim through to the carrier's decision.</p></li>
       <li><span>06</span><p>If your current program is already right, we will tell you to keep it.</p></li>
     </ol>
   </div>
@@ -1245,7 +1245,7 @@ def client_page():
 <section class="section" style="padding-top:0"><div class="wrap prose narrow">
   <h2>If a loss happens</h2>
   <p>Call {PHONE}. Note the date, the place, and who was involved. Photograph what you safely can. Do not guess at fault in a written statement to anyone but your broker and, through us, the carrier. Send the suit papers the day you receive them. Late notice is an avoidable way to damage a claim.</p>
-  <p>We help you report the claim and follow it. The insurer decides coverage under the policy. We will not tell you a claim is covered before the carrier does.</p>
+  <p>We report the claim and stay with it. Coverage is the carrier's decision under the policy, and that is the decision we bring back to you.</p>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap layout">{cert}{aside()}</div></section>
 '''
@@ -1261,15 +1261,15 @@ def about_page():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We are not an insurance company. We place coverage and stay with the account.",
+        "We place coverage for the client and stay with the account.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
-    <h2>What independent means here</h2>
-    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. We approach admitted and specialty markets, including surplus lines when the standard market is not a fit, and we have access to A-rated carriers.</p>
-    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. We do not publish a headcount or a founding year. The work is the standard on the <a href="/client-center/">client service</a> page.</p>
-    <h2>Where the license lives</h2>
-    <p>We place coverage where we are licensed. The license we hold today is on the <a href="/legal/">licenses page</a>. We do not describe licenses we do not hold.</p>
+    <h2>An independent practice</h2>
+    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. Admitted markets, specialty markets, and surplus lines are all in reach, with access to A-rated carriers when the risk calls for them.</p>
+    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. That standard is on the <a href="/client-center/">client service</a> page: one broker for the account, a policy read against the lease or the contract, and a direct answer when the program already in force should stay.</p>
+    <h2>Where we are licensed</h2>
+    <p>Each placement follows the license that covers it. The license on record is on the <a href="/legal/">licenses page</a>.</p>
     <h2>How we are paid</h2>
     <p>Usually by commission from the insurer. The plain version is on the licenses page, including how to ask about compensation on your own policy.</p>
     <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
@@ -1318,7 +1318,7 @@ def partners_page():
     <div><b>Accountants</b><span>When a client hires, or buys a building, the insurance should be ready before the deadline is.</span></div>
     <div><b>What you can expect</b><span>A prompt call to your client, a copy to you if they agree, and a note when the account is placed. Their information is not shared beyond that.</span></div>
   </div>
-  <div class="note"><b>Referral policy.</b> We do not pay referral fees or share commissions with unlicensed persons. New York Insurance Law § 2116 is the rule we follow. Partners get a responsive broker and, where it fits, a referral back.</div>
+  <div class="note"><b>Referral policy.</b> Compensation for a referral follows the license. New York Insurance Law § 2116 limits referral fees and commission sharing to licensed persons. Partners get a responsive broker and, where it fits, a referral back.</div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap layout">{form}{aside()}</div></section>
 '''

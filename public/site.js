@@ -6,18 +6,36 @@
   var header = d.querySelector(".site-header");
   var menuBtn = d.querySelector(".nav-btn");
   var sheet = d.getElementById("sheet");
+  var lenis = null;
+  var scrollLock = 0;
 
   function closeSheet() {
     if (!sheet || sheet.hidden) return;
     sheet.hidden = true;
+    d.documentElement.classList.remove("nav-open");
     d.body.classList.remove("nav-open");
+    d.body.style.position = "";
+    d.body.style.top = "";
+    d.body.style.left = "";
+    d.body.style.right = "";
+    d.body.style.width = "";
+    window.scrollTo(0, scrollLock || 0);
+    if (lenis) lenis.start();
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
   }
   function openSheet() {
+    scrollLock = window.scrollY || 0;
     sheet.hidden = false;
+    d.documentElement.classList.add("nav-open");
     d.body.classList.add("nav-open");
+    d.body.style.position = "fixed";
+    d.body.style.top = (-scrollLock) + "px";
+    d.body.style.left = "0";
+    d.body.style.right = "0";
+    d.body.style.width = "100%";
+    if (lenis) lenis.stop();
     menuBtn.setAttribute("aria-expanded", "true");
-    var first = sheet.querySelector("a, button");
+    var first = sheet.querySelector("nav a, button");
     if (first) first.focus();
   }
   if (menuBtn && sheet) {
@@ -68,9 +86,23 @@
   });
 
   function syncHeader() {
-    var stuck = scrollY > 8;
+    var y = window.scrollY || 0;
+    if (d.body.style.position === "fixed") y = scrollLock || 0;
+    var stuck = y > 8;
     if (header) header.classList.toggle("is-stuck", stuck);
     d.documentElement.classList.toggle("scrolled", stuck);
+    var veil = false;
+    if (stuck && !d.body.classList.contains("nav-open")) {
+      var stack = d.elementsFromPoint ? d.elementsFromPoint(24, 4) : [];
+      var probe = null;
+      for (var i = 0; i < stack.length; i++) {
+        if (!stack[i].closest || stack[i].closest(".site-header")) continue;
+        probe = stack[i];
+        break;
+      }
+      veil = !(probe && probe.closest && probe.closest(".page-head, .hero, .photo-hero, .site-footer"));
+    }
+    d.documentElement.classList.toggle("veil", veil);
     var bar = d.querySelector(".scroll-progress span");
     if (bar) {
       var max = d.documentElement.scrollHeight - innerHeight;
@@ -567,7 +599,7 @@
       });
     }
     if (window.Lenis && matchMedia("(pointer: fine)").matches) {
-      var lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
       lenis.on("scroll", function () {
         ScrollTrigger.update();
         syncHeader();
