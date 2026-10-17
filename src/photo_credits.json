@@ -1,0 +1,50 @@
+{
+ "hero": {
+  "title": "Manhattan skyline in 2023.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Manhattan_skyline_in_2023.jpg",
+  "artist": "rboed*",
+  "license": "CC BY 2.0",
+  "license_url": "https://creativecommons.org/licenses/by/2.0",
+  "date": "2023-10-15 16:01:45"
+ },
+ "building": {
+  "title": "Park Place Brooklyn Jan 2010.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Park_Place_Brooklyn_Jan_2010.jpg",
+  "artist": "Chris Pruitt",
+  "license": "CC BY-SA 2.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+  "date": "Taken on\u00a018 January "
+ },
+ "restaurant": {
+  "title": "Interior of Malibu Diner (New York City) May 2023.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Interior_of_Malibu_Diner_(New_York_City)_May_2023.jpg",
+  "artist": "Beno\u00eet Prieur",
+  "license": "CC0",
+  "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+  "date": "2023-05-21 11:02:49"
+ },
+ "contractor": {
+  "title": "47 St sidewalk shed work 2020 jeh.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:47_St_sidewalk_shed_work_2020_jeh.jpg",
+  "artist": "Jim.henderson",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "date": "2020-01-21 13:21:19"
+ },
+ "business": {
+  "title": "Greenlight Bookstore (55267412177).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Greenlight_Bookstore_(55267412177).jpg",
+  "artist": "ajay_suresh",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "date": "2026-04-23 11:57:23"
+ },
+ "state": {
+  "title": "Lower Manhattan Skyline 2024 005.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Lower_Manhattan_Skyline_2024_005.jpg",
+  "artist": "Kidfly182",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0",
+  "date": "2024-08-13 13:54:47"
+ }
+}
