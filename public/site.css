@@ -112,6 +112,7 @@ html:not(.scrolled) body.page-home:not(.nav-open) .site-header .drop.is-here>but
 .hero h1 .line{display:block;overflow:hidden}
 .hero h1 .line>span{display:block}
 .hero-copy .lede{margin-top:22px;color:rgba(247,245,240,.9);max-width:34em}
+.hero .lede .mob{display:none}
 .hero-credit{position:absolute;right:max(16px,calc((100vw - var(--wrap)) / 2));bottom:18px;z-index:2;margin:0;max-width:min(280px,42vw);font-size:10px;line-height:1.35;color:rgba(247,245,240,.78);text-align:right;text-shadow:0 1px 2px rgba(0,0,0,.55)}
 .hero-credit a{color:inherit}
 .scroll-cue{position:absolute;left:max(24px,calc((100vw - var(--wrap)) / 2));bottom:18px;z-index:2;display:inline-flex;align-items:center;gap:10px;color:rgba(247,245,240,.88);text-decoration:none;font-size:11px;font-weight:640;letter-spacing:.16em;text-transform:uppercase}
@@ -359,7 +360,9 @@ html.motion .time:after{content:"";position:absolute;left:15px;top:8px;width:1px
   .stage,.stage img{min-height:0;height:320px}
   .page-hero img{height:280px}
   .hero{min-height:100svh;align-items:flex-end}
-  .hero-shade{background:linear-gradient(180deg,rgba(8,16,28,.42) 0%,rgba(8,16,28,.18) 34%,rgba(8,16,28,.82) 100%)}
+  .hero-shade{background:linear-gradient(to top,#070f1c 0%,rgba(8,16,28,.97) 46%,rgba(8,16,28,.9) 62%,rgba(8,16,28,.42) 100%)}
+  .hero .lede .desk{display:none}
+  .hero .lede .mob{display:inline}
   .hero-copy{width:min(var(--wrap),calc(100% - 32px));padding:calc(var(--header) + 24px) 0 92px}
   .hero-credit{right:16px;left:auto;max-width:58%;bottom:16px}
   .scroll-cue{left:16px;bottom:16px}

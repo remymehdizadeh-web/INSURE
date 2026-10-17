@@ -302,7 +302,7 @@ def home():
   <div class="hero-copy">
     <p class="kicker light">Commercial and personal insurance</p>
     <h1><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span>already meet.</span></span></h1>
-    <p class="lede">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York. We read the policy you have, approach carriers with access to A-rated markets, and stay with the account after it is bound.</p>
+    <p class="lede"><span class="desk">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York. We read the policy you have, approach carriers with access to A-rated markets, and stay with the account after it is bound.</span><span class="mob">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York.</span></p>
     <div class="cta-row">
       <a class="btn btn-light" href="/quote/">Request a coverage review <span class="arr" aria-hidden="true">→</span></a>
       <a class="btn btn-line" href="/policy-review/">Review a current policy</a>
