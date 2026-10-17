@@ -306,13 +306,13 @@ def cinematic_sections(eager=False):
         "personal": "Home, auto, umbrella.",
     }
     slides = []
-    for i, (href, title, _sub, key) in enumerate(COVER, 1):
+    for href, title, _sub, key in COVER:
         slides.append(
             f'<div class="slide{" slide-hospitality" if key == "hospitality" else ""}">'
             f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
             f'<span class="slide-shade" aria-hidden="true"></span>'
             f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
-            f'<span class="slide-copy"><em>{i:02d}</em><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
+            f'<span class="slide-copy"><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
             f'</div>'
         )
     return f'''
@@ -329,14 +329,8 @@ def cinematic_sections(eager=False):
       <a class="text-link on-dark" href="/policy-review/">Review a current policy</a>
     </div>
   </div>
-  <a class="scroll-cue" href="#practices"><span>Practices</span><i aria-hidden="true"></i></a>
+  <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
 </section>
-<div class="band" aria-hidden="true">
-  <div class="band-track">
-    <p>Property<span>Liability</span><span>Umbrella</span><span>Workers compensation</span><span>Employment practices</span><span>Cyber</span><span>Business income</span><span>Directors and officers</span></p>
-    <p>Property<span>Liability</span><span>Umbrella</span><span>Workers compensation</span><span>Employment practices</span><span>Cyber</span><span>Business income</span><span>Directors and officers</span></p>
-  </div>
-</div>
 <section class="h-pin" id="practices" aria-labelledby="practices-h">
   <div class="h-sticky">
     <div class="h-intro">
@@ -381,10 +375,10 @@ def home():
       <a class="text-link" href="/switching/">How the handover works {ARROW}</a>
     </div>
     <ol class="work-steps">
-      <li><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
-      <li><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
-      <li><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
-      <li><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+      <li><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
+      <li><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
+      <li><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
+      <li><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
     </ol>
   </div>
 </section>
@@ -413,15 +407,17 @@ def style_preview():
         "/style-preview/",
         cinematic_sections(eager=True) + '''
 <section class="method" id="method" aria-labelledby="method-h">
-  <div class="wrap">
-    <h2 class="rise" id="method-h"><span class="line"><span>Read it first.</span></span></h2>
-    <p class="lede">We read what you have before anyone is asked to sign a broker of record letter.</p>
-    <ol>
-      <li><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
-      <li><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
-      <li><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
-      <li><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
-    </ol>
+  <div class="wrap method-grid">
+    <div class="method-lead">
+      <h2 class="rise" id="method-h"><span class="line"><span>Read it first.</span></span></h2>
+      <p class="lede">We read what you have before anyone is asked to sign a broker of record letter.</p>
+    </div>
+    <div class="method-steps">
+      <p><b>Read.</b> Declarations, forms, and the endorsements behind them.</p>
+      <p><b>Say so.</b> If the current program is already right, we say so.</p>
+      <p><b>Market.</b> Only when there is a reason to move the account.</p>
+      <p><b>Hand over.</b> Dates, certificates, and the renewal calendar.</p>
+    </div>
   </div>
 </section>
 ''',

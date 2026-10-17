@@ -98,33 +98,9 @@
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
     d.querySelectorAll("[data-reveal]").forEach(function (el) { io.observe(el); });
 
-    function money(el) {
-      var n = +el.getAttribute("data-count");
-      var finalText = "$" + n.toLocaleString("en-US");
-      var start = null;
-      var dur = 1100;
-      function frame(ts) {
-        if (!start) start = ts;
-        var k = Math.min(1, (ts - start) / dur);
-        if (k >= 1) {
-          el.textContent = finalText;
-          return;
-        }
-        var v = 1 - Math.pow(1 - k, 3);
-        el.textContent = "$" + Math.round(n * v).toLocaleString("en-US");
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    }
-    var co = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        en.target.classList.add("is-in");
-        en.target.querySelectorAll("[data-count]").forEach(money);
-        co.unobserve(en.target);
-      });
-    }, { threshold: 0.35 });
-    d.querySelectorAll(".money").forEach(function (el) { co.observe(el); });
+    d.querySelectorAll("[data-count]").forEach(function (el) {
+      el.textContent = "$" + (+el.getAttribute("data-count")).toLocaleString("en-US");
+    });
 
     var stageImg = d.querySelector("[data-parallax]");
     var time = d.querySelector("[data-time]");
@@ -528,12 +504,9 @@
     gsap.utils.toArray(".rise").forEach(function (block) {
       var lines = block.querySelectorAll(".line > span");
       if (!lines.length) return;
-      var masked = !block.closest(".h-intro");
-      var vars = masked
-        ? { yPercent: 0, duration: 0.95, stagger: 0.08, ease: "power3.out" }
-        : { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power3.out" };
-      if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 84%" };
-      gsap.fromTo(lines, masked ? { yPercent: 110 } : { y: 12, opacity: 0 }, vars);
+      var vars = { y: 0, opacity: 1, duration: 1.15, stagger: 0.1, ease: "power2.out" };
+      if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 86%" };
+      gsap.fromTo(lines, { y: 14, opacity: 0 }, vars);
     });
     var heroImg = d.querySelector(".hero .ken img");
     if (heroImg) {
@@ -593,15 +566,6 @@
         onUpdate: function (self) { steps.style.setProperty("--p", self.progress.toFixed(3)); }
       });
     }
-    d.querySelectorAll(".magnet").forEach(function (btn) {
-      btn.addEventListener("mousemove", function (e) {
-        var r = btn.getBoundingClientRect();
-        gsap.to(btn, { x: (e.clientX - (r.left + r.width / 2)) * 0.28, y: (e.clientY - (r.top + r.height / 2)) * 0.4, duration: 0.35, ease: "power3.out" });
-      });
-      btn.addEventListener("mouseleave", function () {
-        gsap.to(btn, { x: 0, y: 0, duration: 0.55, ease: "power3.out" });
-      });
-    });
     if (window.Lenis && matchMedia("(pointer: fine)").matches) {
       var lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
       lenis.on("scroll", function () {
