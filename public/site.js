@@ -67,9 +67,13 @@
     }
   });
 
-  addEventListener("scroll", function () {
-    if (header) header.classList.toggle("is-stuck", scrollY > 8);
-  }, { passive: true });
+  function syncHeader() {
+    var stuck = scrollY > 8;
+    if (header) header.classList.toggle("is-stuck", stuck);
+    d.documentElement.classList.toggle("scrolled", stuck);
+  }
+  syncHeader();
+  addEventListener("scroll", syncHeader, { passive: true });
 
   if (!reduce && "IntersectionObserver" in window) {
     d.documentElement.classList.add("motion");
@@ -170,7 +174,7 @@
           var page = a.getAttribute("data-page") || "";
           var license = a.getAttribute("data-license") || "";
           var licenseUrl = a.getAttribute("data-license-url") || "";
-          cap.innerHTML = "Photograph by " + linkHtml(page, artist) + ", " + linkHtml(licenseUrl, license);
+          cap.innerHTML = '<span class="cap">Photograph by ' + linkHtml(page, artist) + ", " + linkHtml(licenseUrl, license) + "</span>";
         }
       }
       a.addEventListener("mouseenter", show);

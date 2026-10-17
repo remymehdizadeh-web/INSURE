@@ -46,9 +46,11 @@ def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw"):
 
 def cred(key):
     c = CRED[key]
+    # One inline span so spaces survive if a parent is a flex container.
     return (
-        f'Photograph by <a href="{h(c["page"])}" rel="noopener">{h(c["artist"])}</a>, '
-        f'<a href="{h(c["license_url"])}" rel="noopener">{h(c["license"])}</a>'
+        '<span class="cap">Photograph by '
+        f'<a href="{h(c["page"])}" rel="noopener">{h(c["artist"])}</a>, '
+        f'<a href="{h(c["license_url"])}" rel="noopener">{h(c["license"])}</a></span>'
     )
 
 
@@ -150,7 +152,7 @@ def header(current):
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="bar">
-    <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-560.png" alt="SimpleINSURE" width="148" height="32"></a>
+    <a class="logo" href="/" aria-label="SimpleINSURE home"><img class="logo-color" src="/img/simpleinsure-wordmark-560.png" alt="SimpleINSURE" width="148" height="32"><img class="logo-light" src="/img/simpleinsure-wordmark-white-560.png" alt="" width="148" height="32"></a>
     <nav class="nav-desk" aria-label="Primary">
       <div class="drop{cov_here}">
         <button type="button" aria-expanded="false" aria-controls="menu-coverage">Coverage</button>
@@ -220,7 +222,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
     preload = ""
     if path == "/":
         preload = '''<link rel="preload" as="image" href="/photos/hero-800.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" media="(max-width: 980px)" fetchpriority="high">
-<link rel="preload" as="image" href="/photos/hero-1200.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="46vw" media="(min-width: 981px)" fetchpriority="high">'''
+<link rel="preload" as="image" href="/photos/hero-1600.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" media="(min-width: 981px)" fetchpriority="high">'''
     body = "page-home" if path == "/" else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
@@ -245,6 +247,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/site.css">
+<script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8)</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
 {extra}
@@ -291,21 +294,21 @@ def home():
         "/",
         f'''
 <section class="hero" aria-label="Introduction">
+  <figure class="hero-media">
+    {pic("hero", eager=True, sizes="100vw")}
+    <div class="hero-shade" aria-hidden="true"></div>
+    <figcaption class="hero-credit">{cred("hero")}</figcaption>
+  </figure>
   <div class="hero-copy">
-    <div>
-      <p class="kicker">Commercial and personal insurance</p>
-      <h1>The standard a broker should already meet.</h1>
-      <p class="lede">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York. We read the policy you have, approach carriers with access to A-rated markets, and stay with the account after it is bound.</p>
-      <div class="cta-row">
-        <a class="btn" href="/quote/">Request a coverage review <span class="arr" aria-hidden="true">→</span></a>
-        <a class="btn-ghost" href="/policy-review/">Review a current policy</a>
-      </div>
+    <p class="kicker light">Commercial and personal insurance</p>
+    <h1><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span>already meet.</span></span></h1>
+    <p class="lede">SimpleINSURE places commercial and personal insurance from our headquarters in Garden City, New York. We read the policy you have, approach carriers with access to A-rated markets, and stay with the account after it is bound.</p>
+    <div class="cta-row">
+      <a class="btn btn-light" href="/quote/">Request a coverage review <span class="arr" aria-hidden="true">→</span></a>
+      <a class="btn btn-line" href="/policy-review/">Review a current policy</a>
     </div>
   </div>
-  <figure class="hero-fig">
-    {pic("hero", eager=True, sizes="(max-width: 980px) 100vw, 46vw").replace("<img ", '<img data-parallax="1" ', 1)}
-    <figcaption>{cred("hero")}</figcaption>
-  </figure>
+  <a class="scroll-cue" href="#practices">Practices <i aria-hidden="true"></i></a>
 </section>
 <section class="facts" aria-label="At a glance"><div class="wrap">
   <div><b>Headquarters</b><span>Garden City, New York</span></div>
@@ -313,7 +316,7 @@ def home():
   <div><b>A-rated markets</b><span>Access to admitted and specialty carriers</span></div>
   <div><b>After the binder</b><span>Certificates, changes, renewals, claims questions</span></div>
 </div></section>
-<section class="section practices" aria-labelledby="practices-h">
+<section class="section practices" id="practices" aria-labelledby="practices-h">
   <div class="wrap practice-grid">
     <div>
       <div class="intro"><p class="kicker">Practices</p><h2 id="practices-h">Five practices. One standard of care.</h2></div>
