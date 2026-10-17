@@ -528,9 +528,12 @@
     gsap.utils.toArray(".rise").forEach(function (block) {
       var lines = block.querySelectorAll(".line > span");
       if (!lines.length) return;
-      var vars = { yPercent: 0, duration: 0.95, stagger: 0.08, ease: "power3.out" };
+      var masked = !block.closest(".h-intro");
+      var vars = masked
+        ? { yPercent: 0, duration: 0.95, stagger: 0.08, ease: "power3.out" }
+        : { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: "power3.out" };
       if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 84%" };
-      gsap.fromTo(lines, { yPercent: 110 }, vars);
+      gsap.fromTo(lines, masked ? { yPercent: 110 } : { y: 12, opacity: 0 }, vars);
     });
     var heroImg = d.querySelector(".hero .ken img");
     if (heroImg) {
