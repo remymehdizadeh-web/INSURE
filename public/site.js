@@ -527,29 +527,44 @@
       if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 84%" };
       gsap.fromTo(lines, { yPercent: 110 }, vars);
     });
-    d.querySelectorAll(".arcs").forEach(function (el) {
-      var host = el.parentElement || el;
-      gsap.fromTo(el, { yPercent: -6 }, {
-        yPercent: 8,
+    var heroImg = d.querySelector(".hero .ken img");
+    if (heroImg) {
+      gsap.fromTo(heroImg, { yPercent: -8, scale: 1.06 }, {
+        yPercent: 12,
+        scale: 1.14,
         ease: "none",
-        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
       });
-    });
-    d.querySelectorAll(".arc-glow").forEach(function (el) {
-      var host = el.closest("section, header, footer") || el;
-      gsap.fromTo(el, { opacity: 0.28 }, {
-        opacity: 0.72,
+    }
+    var pin = d.querySelector(".h-pin");
+    var track = d.querySelector(".h-track");
+    var sticky = d.querySelector(".h-sticky");
+    var intro = d.querySelector(".h-intro");
+    if (pin && track && sticky && intro && matchMedia("(min-width: 981px)").matches) {
+      var dist = function () {
+        return Math.max(0, track.scrollWidth - (sticky.clientWidth - intro.offsetWidth));
+      };
+      var fit = function () { pin.style.height = (innerHeight + dist()) + "px"; };
+      fit();
+      ScrollTrigger.addEventListener("refreshInit", fit);
+      gsap.to(track, {
+        x: function () { return -dist(); },
         ease: "none",
-        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
+        scrollTrigger: {
+          trigger: pin,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.6,
+          invalidateOnRefresh: true
+        }
       });
-    });
-    d.querySelectorAll(".arc-drift").forEach(function (el) {
-      var host = el.closest("section, header, footer") || el;
-      gsap.fromTo(el, { rotation: -10 }, {
-        rotation: 16,
+      addEventListener("load", function () { ScrollTrigger.refresh(); });
+    }
+    gsap.utils.toArray(".case-bleed img, .close .ken img, .slide img").forEach(function (img) {
+      gsap.fromTo(img, { scale: 1.12 }, {
+        scale: 1,
         ease: "none",
-        svgOrigin: "120 430",
-        scrollTrigger: { trigger: host, start: "top bottom", end: "bottom top", scrub: true }
+        scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: true }
       });
     });
     gsap.utils.toArray(".case-photo img, .stage img").forEach(function (img) {

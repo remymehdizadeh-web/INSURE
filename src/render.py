@@ -219,7 +219,6 @@ def header(current):
 def footer():
     cov = "".join(f'<li><a href="{href}">{h(title)}</a></li>' for href, title, _s, *_r in COVER)
     return f'''<footer class="site-footer">
-  {arcs()}
   <div class="wrap foot-grid">
     <div>
       <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/img/simpleinsure-wordmark-white-560.png" alt="SimpleINSURE" width="132" height="28"></a>
@@ -250,13 +249,17 @@ def footer():
 </footer>'''
 
 
-def document(title, desc, path, main, current=None, canonical=None, extra=""):
+def document(title, desc, path, main, current=None, canonical=None, extra="", show_footer=True):
     cur = path if current is None else current
     canon = SITE + (path if canonical is None else canonical)
     if path == "/":
         canon = SITE + "/"
-    preload = ""
-    body = "page-home" if path == "/" else "page-inner"
+    cinematic = path in ("/", "/style-preview/")
+    preload = '<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>'
+    if cinematic:
+        preload += '''
+<link rel="preload" as="image" href="/photos/hero-1600.webp" imagesrcset="/photos/hero-800.webp 800w, /photos/hero-1200.webp 1200w, /photos/hero-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">'''
+    body = "page-home" if cinematic else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -287,7 +290,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 <body class="{body}">
 {header(cur)}
 <main id="main">{main}</main>
-{footer()}
+{footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/vendor/lenis.min.js" defer></script>
@@ -296,7 +299,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra=""):
 </html>'''
 
 
-def home():
+def cinematic_sections(eager=False):
     blurbs = {
         "estate": "Buildings, schedules, lenders.",
         "hospitality": "Restaurants, bars, the lease.",
@@ -304,47 +307,68 @@ def home():
         "professional": "Offices, retail, advice.",
         "personal": "Home, auto, umbrella.",
     }
-    rows = []
+    slides = []
     for i, (href, title, _sub, key) in enumerate(COVER, 1):
-        on = " is-on" if i == 1 else ""
-        rows.append(
-            f'<a href="{href}" class="{on.strip()}" {photo_attrs(key)}>'
-            f'<span class="num">{i:02d}</span><span class="pt"><strong>{h(title)}</strong><em>{h(blurbs[key])}</em></span>'
-            f'{ARROW}</a>'
+        slides.append(
+            f'<div class="slide">'
+            f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
+            f'<span class="slide-shade" aria-hidden="true"></span>'
+            f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
+            f'<span class="slide-copy"><em>{i:02d}</em><strong>{h(title)}</strong><small>{h(blurbs[key])}</small></span>'
+            f'<span class="slide-credit">{cred(key)}</span></div>'
         )
-    rail = "  ·  ".join(title for _, title, _, _ in COVER)
+    return f'''
+<section class="hero" aria-label="Introduction">
+  <div class="hero-media">
+    <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <p class="hero-credit">{cred("hero")}</p>
+  </div>
+  <div class="hero-copy wrap">
+    <h1 class="rise"><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span><em>already meet.</em></span></span></h1>
+    <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
+    <div class="cta-row">
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-line magnet" href="/policy-review/">Review a current policy</a>
+    </div>
+  </div>
+  <a class="scroll-cue" href="#practices"><span>Practices</span><i aria-hidden="true"></i></a>
+</section>
+<section class="h-pin" id="practices" aria-labelledby="practices-h">
+  <div class="h-sticky">
+    <div class="h-intro">
+      <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
+      <p>Buildings, hospitality, contracting, offices, and the household.</p>
+    </div>
+    <div class="h-track">{''.join(slides)}</div>
+  </div>
+</section>
+<section class="case" id="case-study" aria-labelledby="case-h">
+  <figure class="case-bleed">
+    {pic("hospitality", eager=eager, sizes="(max-width: 980px) 100vw, 58vw")}
+    <figcaption>{cred("hospitality")}</figcaption>
+  </figure>
+  <div class="case-copy">
+    <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span><em>A wider umbrella.</em></span></span></h2>
+    <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
+    <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
+      <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
+      <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
+      <p class="delta">$49,887 less a year.</p>
+      <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
+    </div>
+    <div class="cta-row"><a class="btn btn-light magnet" href="/policy-review/">Send a policy for review {ARROW}</a></div>
+  </div>
+</section>
+'''
+
+
+def home():
     return document(
         "Commercial and Personal Insurance | SimpleINSURE",
         "SimpleINSURE places commercial and personal insurance. Send the policy you have. We read it, approach A-rated markets when there is a reason, and stay after it is bound.",
         "/",
-        f'''
-<section class="hero" aria-label="Introduction">
-  {arcs()}
-  <div class="hero-copy">
-    <div class="hero-lead">
-      <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span class="tone">made simple.</span></span></h1>
-      <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
-      <div class="cta-row"><a class="btn magnet" href="/quote/">Request a review {ARROW}</a></div>
-    </div>
-    <div class="entry">
-      <a class="glass" href="/coverage/personal/"><span><b>Personal</b><em>Home, auto, umbrella</em></span>{ARROW}</a>
-      <a class="glass" href="/coverage/"><span><b>Business</b><em>Buildings, restaurants, trades</em></span>{ARROW}</a>
-    </div>
-  </div>
-</section>
-<div class="marquee" aria-hidden="true"><div class="marquee-track"><span>{rail}  ·  </span><span>{rail}  ·  </span></div></div>
-<section class="section practices" id="practices" aria-labelledby="practices-h">
-  <div class="wrap">
-    <div class="practice-head">
-      <h2 class="rise" id="practices-h"><span class="line"><span>Five practices.</span></span><span class="line"><span>One way of reading a policy.</span></span></h2>
-      <p>Buildings, hospitality, contracting, offices, and the household.</p>
-    </div>
-    <div class="practice-pin">
-      {figure_block("estate", "(max-width: 980px) 100vw, 42vw", cls="stage")}
-      <div class="plist">{''.join(rows)}</div>
-    </div>
-  </div>
-</section>
+        cinematic_sections() + f'''
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
@@ -353,43 +377,40 @@ def home():
       <a class="text-link" href="/switching/">How the handover works {ARROW}</a>
     </div>
     <ol class="work-steps">
-      <li data-reveal><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
-      <li data-reveal><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
-      <li data-reveal><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
-      <li data-reveal><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+      <li><span>01</span><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
+      <li><span>02</span><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
+      <li><span>03</span><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
+      <li><span>04</span><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
     </ol>
   </div>
 </section>
-<section class="section case" id="case-study" aria-labelledby="case-h">
-  <div class="wrap case-layout">
-    {figure_block("hospitality", "(max-width: 980px) 100vw, 42vw", cls="case-photo")}
-    <div class="case-copy">
-      <h2 class="rise" id="case-h"><span class="line"><span>Same limits.</span></span><span class="line"><span>A wider umbrella.</span></span></h2>
-      <p class="story">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
-      <div class="money" aria-label="Annual premium went from 71196 dollars to 21309 dollars">
-        <div class="money-row before"><span class="lab">Before</span><span class="fig" data-count="71196">$71,196</span></div>
-        <div class="track"><i style="--w:100%"></i></div>
-        <div class="money-row"><span class="lab">After</span><span class="fig" data-count="21309">$21,309</span></div>
-        <div class="track"><i class="after" style="--w:30%"></i></div>
-        <p class="delta">$49,887 less a year.</p>
-        <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
-      </div>
-      <div class="cta-row"><a class="btn magnet" href="/policy-review/">Send a policy for review {ARROW}</a></div>
-    </div>
-  </div>
-</section>
 <section class="close" aria-labelledby="close-h">
-  {arcs()}
+  <div class="hero-media">
+    <div class="ken">{pic("personal", sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <p class="hero-credit">{cred("personal")}</p>
+  </div>
   <div class="wrap close-inner">
-    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span class="tone">you have.</span></span></h2>
+    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
     <p>We will tell you what it does, including when the right answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
 </section>
 ''',
+    )
+
+
+def style_preview():
+    return document(
+        "Style preview | SimpleINSURE",
+        "A preview of the SimpleINSURE home: the opening photograph, the practices, and a case study.",
+        "/style-preview/",
+        cinematic_sections(eager=True),
+        current="/style-preview/",
+        show_footer=False,
     )
 
 
@@ -497,7 +518,7 @@ def aside():
 
 def page_head(kicker, title, lede=""):
     lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
-    return f'<header class="page-head">{arcs()}<div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
+    return f'<header class="page-head"><div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
 
 
 def continue_to(links):
@@ -758,18 +779,21 @@ def industry(ind, path=None, canonical=None):
         ],
     }, ensure_ascii=True)
     main = f'''
-<header class="page-head">{arcs()}<div class="wrap">
-  <p class="kicker">{h(ind["nav"])}</p>
-  <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
-  <p class="lede">{h(ind["lede"])}</p>
-  <div class="cta-row"><a class="btn magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
-</div></header>
-<section class="section" style="padding-top:48px"><div class="wrap split">
-  <div class="prose"><h2>How we look at it</h2>{essay}</div>
-  <div>
-    {figure_block(ind["key"], "(max-width: 980px) 100vw, 46vw", eager=True)}
-    <div class="panel"><h2>What we ask first</h2><ul class="prose">{asks}</ul></div>
+<header class="photo-hero">
+  <div class="hero-media">
+    <div class="ken">{pic(ind["key"], eager=True, sizes="100vw")}</div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <p class="hero-credit">{cred(ind["key"])}</p>
   </div>
+  <div class="wrap">
+    <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
+    <p class="lede">{h(ind["lede"])}</p>
+    <div class="cta-row"><a class="btn btn-light magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
+  </div>
+</header>
+<section class="section" style="padding-top:64px"><div class="wrap split">
+  <div class="prose"><h2>How we look at it</h2>{essay}</div>
+  <div class="ask"><h2>What we ask first</h2><ul>{asks}</ul></div>
 </div></section>
 <section class="section" style="padding-top:0"><div class="wrap">
   <div class="intro"><p class="kicker">Coverage</p><h2>What a careful program usually includes.</h2></div>
@@ -805,9 +829,8 @@ def coverage_index():
         "Commercial and personal, handled as one account.",
         "Choose a practice for the coverage we place, the questions we ask, and a checklist you can mark.",
     ) + f'''
-<section class="section" style="padding-top:20px"><div class="wrap practice-grid">
-  <div class="plist">{"".join(rows)}</div>
-  {figure_block("estate", "(max-width: 980px) 100vw, 40vw", cls="stage")}
+<section class="section" style="padding-top:12px"><div class="wrap">
+  <div class="index-list">{"".join(rows)}</div>
 </div></section>
 ''' + continue_to([
         ("/needs/", "01", "Coverage guide", "Not sure which practice fits? Answer a few questions."),
@@ -1361,6 +1384,7 @@ def not_found():
 def pages():
     out = {
         "index.html": home(),
+        "style-preview/index.html": style_preview(),
         "quote/index.html": quote_page(),
         "policy-review/index.html": policy_page(),
         "coverage/index.html": coverage_index(),
