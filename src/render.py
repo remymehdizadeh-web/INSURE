@@ -217,6 +217,8 @@ def footer():
     </ul></div>
     <div><h2>Firm</h2><ul>
       <li><a href="/about/">The firm</a></li>
+    </ul></div>
+    <div><h2>Office</h2><ul>
       <li><a href="{TEL}">{PHONE}</a></li>
       <li><a href="{MAIL}">{EMAIL}</a></li>
     </ul></div>
@@ -237,8 +239,6 @@ def footer():
         </ul></div>
         <div><h2>Firm</h2><ul>
           <li><a href="/about/">The firm</a></li>
-          <li><a href="{TEL}">{PHONE}</a></li>
-          <li><a href="{MAIL}">{EMAIL}</a></li>
         </ul></div>
         <div><h2>Office</h2><ul>
           <li><a href="{TEL}">{PHONE}</a></li>
@@ -285,7 +285,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=6">
+<link rel="stylesheet" href="/site.css?v=7">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -304,7 +304,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=5">
+<link rel="stylesheet" href="/mobile.css?v=6">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -317,7 +317,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/vendor/lenis.min.js" defer></script>
-<script src="/site.js?v=4" defer></script>
+<script src="/site.js?v=5" defer></script>
 </body>
 </html>'''
 
@@ -352,7 +352,7 @@ def cinematic_sections(eager=False):
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
       <a class="m-phone m-only" href="{TEL}">{PHONE}</a>
-      <a class="text-link on-dark" href="/policy-review/#read">Review a current policy</a>
+      <a class="text-link on-dark desk-only" href="/policy-review/#read">Review a current policy</a>
     </div>
   </div>
   <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
@@ -1523,36 +1523,27 @@ def not_found():
 
 
 def coverage_page():
-    tiles = []
     jumps = []
     bands = []
     for i, ind in enumerate(INDUSTRIES):
         slug = ind["slug"]
         name = ind["nav"]
-        href = f"/coverage/#{slug}"
-        wide = " m-tile-wide" if i == len(INDUSTRIES) - 1 else ""
-        tiles.append(
-            f'<a class="m-tile{wide}" href="#{slug}">'
-            f'{pic(ind["key"], sizes="(max-width: 768px) 46vw, 240px")}'
-            f"<span>{h(name)}</span></a>"
-        )
-        jumps.append(f'<a href="#{slug}">{h(name)}</a>')
+        on = " is-on" if i == 0 else ""
+        jumps.append(f'<a href="#{slug}" data-prac="{slug}" class="{on.strip()}">{h(name)}</a>')
         lines = "".join(
             f"<li><b>{h(a)}</b><span>{h(b)}</span></li>" for a, b in ind["coverages"][:4]
         )
-        ask_items = "".join(f"<li>{h(a)}</li>" for a in ind["asks"][:3])
+        asks = "".join(f"<p>{h(a)}</p>" for a in ind["asks"][:3])
         flip = " flip" if i % 2 else ""
         bands.append(f'''
-<section class="section practice" id="{slug}">
-  <div class="wrap band{flip}">
-    <figure class="shot">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 42vw")}</figure>
-    <div>
-      <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
-      <p class="lede">{h(ind["lede"])}</p>
-      <ul class="lines">{lines}</ul>
-      <ul class="asks">{ask_items}</ul>
-      <a class="more" href="/policy-review/">Review this account {ARROW}</a>
-    </div>
+<section class="stage{flip}" id="{slug}">
+  <figure class="stage-photo">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
+  <div class="stage-copy">
+    <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
+    <p class="lede">{h(ind["lede"])}</p>
+    <ul class="stage-lines">{lines}</ul>
+    <div class="asks">{asks}</div>
+    <a class="more" href="/policy-review/">Review this account {ARROW}</a>
   </div>
 </section>''')
     main = page_head(
@@ -1560,10 +1551,7 @@ def coverage_page():
         "Five practices. One account.",
         "Real estate, hospitality, contractors, offices, and the household. The same broker reads the policy, the lease, and the contract.",
     ) + f'''
-<section class="section" style="padding-top:28px"><div class="wrap">
-  <nav class="cov-jump desk-only" aria-label="Practices">{"".join(jumps)}</nav>
-  <div class="m-tiles m-only">{"".join(tiles)}</div>
-</div></section>
+<nav class="prac-nav" aria-label="Practices"><div class="wrap">{"".join(jumps)}</div></nav>
 {"".join(bands)}'''
     return document(
         "Coverage | SimpleINSURE",
@@ -1660,10 +1648,19 @@ def policy_hub():
     )
 
 
-def _svc(title, blurb, subject, button, inner, extra=""):
-    return f'''<details class="cc-item">
-  <summary><b>{h(title)}</b><em>{h(blurb)}</em></summary>
-  <div class="cc-body">{extra}{wizard(subject, button, inner)}</div>
+def _svc(num, title, blurb, subject, button, inner, extra="", claim=False):
+    cls = "cc-item cc-claim" if claim else "cc-item"
+    hot = f'<a class="cc-hot" href="{TEL}">Call {PHONE}</a>' if claim else ""
+    return f'''<details class="{cls}">
+  <summary>
+    <span class="cc-n">{num}</span>
+    <span class="cc-main"><b>{h(title)}</b><em>{h(blurb)}</em></span>
+    {hot}
+    <span class="cc-go" aria-hidden="true">{ARROW}</span>
+  </summary>
+  <div class="cc-body"><div class="cc-inner">{extra}{wizard(subject, button, inner)}
+    <p class="quiet cc-store">Nothing on this form is stored on the website.</p>
+  </div></div>
 </details>'''
 
 
@@ -1677,6 +1674,7 @@ def _who(prefix):
 
 def client_center():
     cert = _svc(
+        "01",
         "Request a certificate",
         "Holder, wording, and the date you need it.",
         "Certificate request",
@@ -1694,6 +1692,7 @@ def client_center():
         </div>''',
     )
     cards = _svc(
+        "02",
         "Request ID cards",
         "Auto ID cards for the vehicles on the policy.",
         "ID card request",
@@ -1708,6 +1707,7 @@ def client_center():
         </div>''',
     )
     change = _svc(
+        "03",
         "Policy change",
         "A vehicle, a driver, a location, or payroll.",
         "Policy change",
@@ -1722,6 +1722,7 @@ def client_center():
         </div>''',
     )
     claim = _svc(
+        "04",
         "Report a claim",
         "Date, place, and what happened. Call first if it is urgent.",
         "Claim report",
@@ -1739,8 +1740,10 @@ def client_center():
           <p class="quiet">Attach photos to the email draft. Do not guess at fault in a written statement to anyone but your broker and, through us, the carrier.</p>
         </div>''',
         extra=f'<p class="callout">If this is happening now, call <a href="{TEL}">{PHONE}</a> right away. Then send the note below.</p>',
+        claim=True,
     )
     bill = _svc(
+        "05",
         "Billing question",
         "Payments go to the carrier. We can send the pay link.",
         "Billing question",
@@ -1755,6 +1758,7 @@ def client_center():
         extra="<p class=\"cc-note\">Premium payments are made to the insurance carrier, not to SimpleINSURE. When you ask, we send the carrier's pay link.</p>",
     )
     renew = _svc(
+        "06",
         "Renewal or cancellation",
         "A date coming up, or a policy you may end.",
         "Renewal or cancellation",
@@ -1769,22 +1773,24 @@ def client_center():
           </div>
         </div>''',
     )
-    main = page_head(
-        "Client Center",
-        "For the account already in force.",
-        "Certificates, ID cards, changes, a claim, a bill, or a renewal. Each one opens an email to the brokerage. Nothing is stored on this site.",
-    ) + f'''
-<section class="section" style="padding-top:20px"><div class="wrap">
+    main = f'''<header class="photo-hero cc-hero">
+  <div class="hero-media"><div class="ken">{pic("hero", eager=True, sizes="100vw")}</div><div class="hero-shade" aria-hidden="true"></div></div>
+  <div class="wrap">
+    <h1 class="rise"><span class="line"><span>For the account</span></span><span class="line"><span>already in force.</span></span></h1>
+    <p class="lede">Certificates, ID cards, a change, a claim, a bill, or a renewal. Each one opens an email to the brokerage.</p>
+  </div>
+</header>
+<section class="cc-portal"><div class="wrap cc-layout">
   <div class="cc-list">{cert}{cards}{change}{claim}{bill}{renew}</div>
-</div></section>
-<section class="section" style="padding-top:0"><div class="wrap">
-  <h2>What to expect</h2>
-  <ul class="expect">
-    <li>One broker stays with the account, including at renewal.</li>
-    <li>Certificates go out when the policy supports them. If it does not, we say what is missing.</li>
-    <li>A change in vehicles, locations, payroll, or ownership is endorsed, not remembered.</li>
-    <li>If the program already in force is right, we say so.</li>
-  </ul>
+  <aside class="expect-strip">
+    <h2>What to expect</h2>
+    <ul>
+      <li>One broker stays with the account, including at renewal.</li>
+      <li>A certificate goes out when the policy supports it. If it does not, we say what is missing.</li>
+      <li>A change in vehicles, locations, payroll, or ownership is endorsed.</li>
+      <li>If the program already in force is right, we say so.</li>
+    </ul>
+  </aside>
 </div></section>'''
     return document(
         "Client Center | SimpleINSURE",
