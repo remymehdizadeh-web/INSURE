@@ -344,8 +344,8 @@ def cinematic_sections(eager=False):
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
   <div class="hero-copy wrap">
-    <h1 class="rise"><span class="line"><span>Know what</span></span><span class="line"><span>you're <em>covered for.</em></span></span></h1>
-    <p class="lede">Send us your policy. We read it and tell you, in plain English, what it does.</p>
+    <h1 class="rise"><span class="line"><span>Know what you're covered for.</span></span></h1>
+    <p class="lede">Send us your policy. We'll walk you through it in plain English. The policy itself governs.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
     </div>
@@ -383,7 +383,7 @@ def mobile_home():
         ("We read it", "Your policy, forms, and endorsements."),
         ("We tell you", "If it's right, we say so."),
         ("We shop it", "Only when there's a reason to."),
-        ("We switch it", "Dates lined up, no gap."),
+        ("We switch it", "Dates lined up."),
     ]
     step_html = "".join(
         f'<li><div><span>{i:02d}</span><div><strong>{h(title)}</strong><em>{h(text)}</em></div></div></li>'
@@ -430,7 +430,7 @@ def home():
       <li><div><h3>We read it</h3><p>Your policy, forms, and endorsements.</p></div></li>
       <li><div><h3>We tell you</h3><p>If it's right, we say so.</p></div></li>
       <li><div><h3>We shop it</h3><p>Only when there's a reason to.</p></div></li>
-      <li><div><h3>We switch it</h3><p>Dates lined up, no gap.</p></div></li>
+      <li><div><h3>We switch it</h3><p>Dates lined up.</p></div></li>
     </ol>
   </div>
 </section>
@@ -441,7 +441,7 @@ def home():
   </div>
   <div class="wrap close-inner">
     <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
-    <p>We'll tell you what it does, even if the answer is to keep it.</p>
+    <p>We'll walk you through it, even if the answer is to keep it.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
@@ -548,7 +548,7 @@ def contact_fields(prefix):
 def done_block():
     return f'''<div class="done" hidden>
       <h2>Your note is ready to send.</h2>
-      <p class="lede">An email draft to <a href="{MAIL}">{EMAIL}</a> should be open. If not, use the button below. Email is not encrypted, so leave out Social Security, driver's license, birth date, and bank or card numbers, or call <a href="{TEL}">{PHONE}</a>.</p>
+      <p class="lede">An email draft to <a href="{MAIL}">{EMAIL}</a> should be open. If not, use the button below. Email is not encrypted, so leave out Social Security, driver's license, birth date, and bank or card numbers, including in attachments, or call {PHONE}.</p>
       <div class="summary"></div>
       <div class="done-actions">
         <a class="btn" data-mailto href="{MAIL}">Open the email draft <span class="arr" aria-hidden="true">→</span></a>
@@ -1311,7 +1311,7 @@ def about_page():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We work for you, not for an insurance company.",
+        "We work for you, not for any one insurance company.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
@@ -1442,6 +1442,7 @@ def contact_page():
     steps = f'''
 <div data-step="1" data-label="Message" data-error="Add your name, and an email or a phone number.">
   <h2 style="font-size:32px;margin-bottom:14px">Send a note</h2>
+  <p class="quiet">Nothing on this form is stored on the website.</p>
   <div class="fields" style="margin-top:16px">{contact_fields("c")}</div>
   <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
 </div>'''
@@ -1526,6 +1527,7 @@ def policy_hub():
     read_steps = f'''
 <div data-step="1" data-label="Account" data-error="Choose what the policy covers.">
   <h2 style="font-size:32px;margin-bottom:8px">What does the current policy cover?</h2>
+  <p class="quiet">Nothing on this form is stored on the website.</p>
   <div style="margin-top:16px">{line_choices()}</div>
 </div>
 <div data-step="2" data-label="The policy" hidden>
@@ -1546,6 +1548,7 @@ def policy_hub():
     account_steps = f'''
 <div data-step="1" data-label="Account" data-error="Choose what you want us to look at.">
   <h2 style="font-size:32px;margin-bottom:8px">What should we look at?</h2>
+  <p class="quiet">Nothing on this form is stored on the website.</p>
   <div style="margin-top:16px">{line_choices("q")}</div>
 </div>
 <div data-step="2" data-label="Details" hidden>
@@ -1583,7 +1586,7 @@ def policy_hub():
   </div>
   <div class="prose handover" id="handover">
     <h2>How switching works</h2>
-    <p>A broker of record letter only changes who services your policy. It doesn't cancel coverage or change limits. We tell you the timing before you sign.</p>
+    <p>A broker of record letter changes who services your policy, if the insurer accepts it.</p>
   </div>
 </div></section>'''
     return document(
@@ -1755,7 +1758,7 @@ def about_hub():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We work for you, not for an insurance company.",
+        "We work for you, not for any one insurance company.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
