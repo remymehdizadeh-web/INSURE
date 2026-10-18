@@ -220,44 +220,6 @@
     d.querySelectorAll(".money").forEach(function (el) { el.classList.add("is-in"); });
   }
 
-  d.querySelectorAll(".result-n").forEach(function (el) {
-    var exact = el.textContent;
-    if (reduce) return;
-    var match = exact.match(/\$[\d,]+/);
-    if (!match) return;
-    var target = parseInt(match[0].replace(/[^\d]/g, ""), 10);
-    var at = exact.indexOf(match[0]);
-    var prefix = exact.slice(0, at);
-    var suffix = exact.slice(at + match[0].length);
-    var played = false;
-    function finish() { el.textContent = exact; }
-    function run() {
-      if (played) return;
-      played = true;
-      var t0 = 0;
-      var dur = 800;
-      function frame(now) {
-        if (!t0) t0 = now;
-        var p = Math.min(1, (now - t0) / dur);
-        var eased = 1 - Math.pow(1 - p, 3);
-        var n = Math.round(target * eased);
-        el.textContent = prefix + "$" + n.toLocaleString("en-US") + suffix;
-        if (p < 1) requestAnimationFrame(frame);
-        else finish();
-      }
-      requestAnimationFrame(frame);
-    }
-    if (!("IntersectionObserver" in window)) { run(); return; }
-    var watch = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        run();
-        watch.unobserve(el);
-      });
-    }, { threshold: 0.5 });
-    watch.observe(el);
-  });
-
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];

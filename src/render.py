@@ -281,7 +281,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=11">
+<link rel="stylesheet" href="/site.css?v=12">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -312,7 +312,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=8" defer></script>
+<script src="/site.js?v=9" defer></script>
 </body>
 </html>'''
 
@@ -423,10 +423,6 @@ def client_result():
   <div class="wrap">
     <p class="result-label">Client result</p>
     <h2 id="result-h">A Manhattan restaurant</h2>
-    <div class="result-figs">
-      <p class="result-row"><span class="result-k">Before</span><span class="result-n">$71,196 a year</span></p>
-      <p class="result-row"><span class="result-k">Now</span><span class="result-n">$25,708 a year, including our broker fee</span></p>
-    </div>
     <p class="result-line">Same liability limits. Umbrella raised from $1 million to $5 million. Employment practices coverage added.</p>
     <p class="result-foot">Every account is different. Terms depend on underwriting.</p>
   </div>
