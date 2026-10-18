@@ -98,8 +98,8 @@ def assert_portable(out_dir):
                 if 'href="#"' in line or "href='#'" in line:
                     bad.append(f"{rel}:{i}: empty hash link")
     home = open(os.path.join(out_dir, "index.html"), encoding="utf-8").read()
-    if "1984615" in home or "BR-" in home:
-        bad.append("index.html: license number on the home page")
+    if "BR-1984615" not in home:
+        bad.append("index.html: footer license number missing")
     legal = open(os.path.join(out_dir, "legal", "index.html"), encoding="utf-8").read()
     if "BR-1984615" not in legal:
         bad.append("legal/index.html: missing license number")

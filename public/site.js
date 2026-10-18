@@ -121,7 +121,6 @@
   }
 
   function flattenRail() {
-    if (!mobileQ.matches) return;
     var pin = d.querySelector(".h-pin");
     var track = d.querySelector(".h-track");
     if (pin) pin.style.setProperty("height", "auto", "important");
@@ -630,30 +629,8 @@
         scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
       });
     }
-    var pin = d.querySelector(".h-pin");
-    var track = d.querySelector(".h-track");
-    var sticky = d.querySelector(".h-sticky");
-    var intro = d.querySelector(".h-intro");
-    if (pin && track && sticky && intro && matchMedia("(min-width: 981px)").matches && !mobileQ.matches) {
-      var dist = function () {
-        return Math.max(0, track.scrollWidth - (sticky.clientWidth - intro.offsetWidth));
-      };
-      var fit = function () { pin.style.height = (innerHeight + dist()) + "px"; };
-      fit();
-      ScrollTrigger.addEventListener("refreshInit", fit);
-      gsap.to(track, {
-        x: function () { return -dist(); },
-        ease: "none",
-        scrollTrigger: {
-          trigger: pin,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.6,
-          invalidateOnRefresh: true
-        }
-      });
-      addEventListener("load", function () { ScrollTrigger.refresh(); });
-    }
+    // The practices rail is a static grid. It no longer pins the page and
+    // turns vertical scrolling into a slow sideways crawl.
     gsap.utils.toArray(".case-bleed img, .close .ken img, .slide img").forEach(function (img) {
       gsap.fromTo(img, { scale: 1.12 }, {
         scale: 1,
@@ -679,15 +656,8 @@
         onUpdate: function (self) { steps.style.setProperty("--p", self.progress.toFixed(3)); }
       });
     }
-    if (window.Lenis && matchMedia("(pointer: fine)").matches) {
-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenis.on("scroll", function () {
-        ScrollTrigger.update();
-        syncHeader();
-      });
-      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-      gsap.ticker.lagSmoothing(0);
-    }
+    // Native scrolling only. Smooth-scroll hijacking (Lenis) made the
+    // wheel and trackpad feel stuck on desktop.
   } else {
     d.querySelectorAll(".rise .line > span").forEach(function (el) { el.style.transform = "none"; });
   }
