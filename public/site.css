@@ -648,3 +648,58 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .h-track{transform:none !important;flex-direction:column}
   .slide{width:100%;height:70vh}
 }
+
+/* Rhythm, hover, and the consolidated pages. The hero and the pill stay as they are. */
+.section{padding:92px 0}
+.text-link{text-underline-offset:3px}
+.text-link:hover{text-decoration:underline}
+.index-list a,.next a,.cov-jump a,.band .more,.cc-item summary{transition:color .25s var(--ease)}
+.index-list a:hover strong,.next a:hover b,.cov-jump a:hover,.band .more:hover{color:#1F6FC4}
+.nav-desk>a,.drop>button{transition:color .2s ease}
+.band,.cc-item,.practice{scroll-margin-top:120px}
+.practice{padding:72px 0}
+.cov-jump{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:8px}
+.cov-jump a{font-family:var(--serif);font-weight:500;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em;color:var(--navy);text-decoration:none}
+.band{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:48px 72px;align-items:center}
+.band.flip .shot{order:2}
+.band .shot{height:min(52vh,480px);overflow:hidden}
+.band .shot img{width:100%;height:100%;object-fit:cover}
+.band h2{font-size:clamp(42px,4.4vw,64px);color:var(--navy);max-width:12em}
+.band .lede{margin-top:14px}
+.band .lines{list-style:none;margin-top:22px}
+.band .lines li{padding:14px 0;border-top:1px solid var(--line)}
+.band .lines b{display:block;font-size:16px;font-weight:620}
+.band .lines span{display:block;margin-top:3px;color:var(--muted);font-size:15.5px}
+.band .asks{list-style:none;margin-top:18px}
+.band .asks li{position:relative;padding:5px 0 5px 16px;color:var(--muted)}
+.band .asks li:before{content:"";position:absolute;left:0;top:.72em;width:7px;height:1px;background:currentColor}
+.band .more{display:inline-block;margin-top:18px;font-weight:620;color:var(--navy);text-decoration:none}
+.path-tabs{margin-top:8px}
+.path-bar{display:flex;gap:28px;margin:0 0 28px;border-bottom:1px solid var(--line)}
+.path-bar button{background:none;border:0;padding:0 0 12px;margin-bottom:-1px;font-family:var(--serif);font-size:28px;font-weight:500;color:var(--soft);cursor:pointer}
+.path-bar button[aria-selected="true"]{color:var(--navy);box-shadow:inset 0 -2px 0 var(--navy)}
+.path-bar button:hover{color:var(--navy)}
+.cc-list{margin-top:8px}
+.cc-item{border-top:1px solid var(--line)}
+.cc-item:last-child{border-bottom:1px solid var(--line)}
+.cc-item summary{cursor:pointer;list-style:none;position:relative;display:flex;flex-direction:column;gap:6px;padding:26px 48px 26px 0}
+.cc-item summary:after{content:"+";position:absolute;right:0;top:22px;font-family:var(--serif);font-weight:500;font-size:36px;line-height:1;color:var(--navy)}
+.cc-item[open] summary:after{content:"-"}
+.cc-item summary::-webkit-details-marker{display:none}
+.cc-item summary b{font-family:var(--serif);font-weight:500;font-size:clamp(32px,3vw,44px);letter-spacing:-.03em;color:var(--navy)}
+.cc-item summary em{font-style:normal;color:var(--muted);font-size:16.5px}
+.cc-item summary:hover b{color:#1F6FC4}
+.cc-item[open] summary b{color:var(--navy)}
+.cc-body{padding:0 0 28px;max-width:760px}
+.cc-note{margin:0 0 16px;color:var(--muted);max-width:40em}
+.callout{margin:0 0 18px;padding:18px 20px;background:#071018;color:#f4f7fb}
+.callout a{color:#fff;font-weight:640}
+.expect{list-style:none;margin-top:18px}
+.expect li{padding:16px 0;border-top:1px solid var(--line);font-size:18px;color:var(--muted)}
+.expect li:last-child{border-bottom:1px solid var(--line)}
+.gloss-mini{margin-top:12px}
+.gloss-mini article{padding:16px 0;border-top:1px solid var(--line)}
+.gloss-mini h3{font-family:var(--serif);font-weight:500;font-size:26px;color:var(--navy)}
+.gloss-mini p{margin-top:6px;color:var(--muted)}
+.wizard{border:0;padding:0;background:transparent}
+.handover{margin-top:48px;max-width:40em}
