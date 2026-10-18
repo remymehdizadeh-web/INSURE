@@ -321,11 +321,11 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 
 def cinematic_sections(eager=False):
     blurbs = {
-        "estate": "Buildings, schedules, lenders.",
-        "hospitality": "Restaurants, bars, the lease.",
-        "construction": "Trades, contracts, certificates.",
-        "professional": "Offices and professional firms.",
-        "personal": "Home, auto, and the household.",
+        "estate": "Apartment and commercial buildings.",
+        "hospitality": "Restaurants, bars, and cafes.",
+        "construction": "Trades and contractors.",
+        "professional": "Offices, shops, and firms.",
+        "personal": "Home, auto, and umbrella.",
     }
     slides = []
     for href, title, _sub, key in COVER:
@@ -344,12 +344,10 @@ def cinematic_sections(eager=False):
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
   <div class="hero-copy wrap">
-    <h1 class="rise"><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span><em>already meet.</em></span></span></h1>
-    <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
+    <h1 class="rise"><span class="line"><span>Know what</span></span><span class="line"><span>you're <em>covered for.</em></span></span></h1>
+    <p class="lede">Send us your policy. We read it and tell you, in plain English, what it does.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
-      <a class="m-phone m-only" href="{TEL}">{PHONE}</a>
-      <a class="text-link on-dark desk-only" href="/policy-review/#read">Review a current policy</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
     </div>
   </div>
   <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
@@ -359,7 +357,6 @@ def cinematic_sections(eager=False):
     <div class="h-intro">
       <div class="h-copy">
         <h2 class="rise" id="practices-h"><span class="line"><span>Five</span></span><span class="line"><span>practices.</span></span></h2>
-        <p>Buildings, hospitality, contracting, offices, and the household.</p>
       </div>
     </div>
     <div class="h-track">{''.join(slides)}</div>
@@ -383,10 +380,10 @@ def mobile_home():
             f'<li><a href="{href}"><span>{i:02d}</span><strong>{h(title)}</strong></a></li>'
         )
     steps = [
-        ("Read", "Declarations, forms, and the endorsements behind them."),
-        ("Say so", "If the current program is already right, we say so."),
-        ("Market", "Only when there is a reason to move the account."),
-        ("Hand over", "Dates, certificates, and the renewal calendar."),
+        ("We read it", "Your policy, forms, and endorsements."),
+        ("We tell you", "If it's right, we say so."),
+        ("We shop it", "Only when there's a reason to."),
+        ("We switch it", "Dates lined up, no gap."),
     ]
     step_html = "".join(
         f'<li><div><span>{i:02d}</span><div><strong>{h(title)}</strong><em>{h(text)}</em></div></div></li>'
@@ -403,31 +400,14 @@ def mobile_home():
 <div class="m-home m-only">
 <section class="m-block">
   <div class="wrap">
-    <p class="m-eye"><i aria-hidden="true"></i>Practices</p>
     <h2>Five<span class="b">practices.</span></h2>
-    <p class="m-lead">Buildings, hospitality, contracting, offices, and the household.</p>
     <div class="m-tiles">{''.join(tiles)}</div>
   </div>
 </section>
 <section class="m-block" style="padding-top:8px">
   <div class="wrap">
-    <p class="m-eye"><i aria-hidden="true"></i>Coverage</p>
-    <h2>Commercial and<span class="b">personal.</span></h2>
-    <div class="m-tabs" data-tabs>
-      <div class="m-tabbar" role="tablist" aria-label="Coverage lists">
-        <button type="button" role="tab" data-tab="practices">Practices</button>
-        <button type="button" role="tab" data-tab="steps">The work</button>
-      </div>
-      <div class="tab-panel is-on" id="panel-practices" role="tabpanel"><ol class="m-num">{''.join(practices)}</ol></div>
-      <div class="tab-panel" id="panel-steps" role="tabpanel"><ol class="m-num m-num-notes">{step_html}</ol><p class="m-more"><a href="/policy-review/#handover">How the handover works {ARROW}</a></p></div>
-    </div>
-  </div>
-</section>
-<section class="m-block">
-  <div class="wrap">
-    <p class="m-eye"><i aria-hidden="true"></i>The standard</p>
-    <h2>What we will<span class="b">not do.</span></h2>
-    <div class="faq">{faq_html}</div>
+    <h2>How it<span class="b">works.</span></h2>
+    <ol class="m-num m-num-notes">{step_html}</ol>
   </div>
 </section>
 </div>
@@ -443,15 +423,14 @@ def home():
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
-      <h2 class="rise" id="work-h"><span class="line"><span>Switching is</span></span><span class="line"><span>a sequence.</span></span></h2>
-      <p>We read what you have before anyone is asked to sign a broker of record letter. If it should stay, that is the answer.</p>
-      <a class="text-link" href="/policy-review/#handover">How the handover works {ARROW}</a>
+      <h2 class="rise" id="work-h"><span class="line"><span>How it</span></span><span class="line"><span>works.</span></span></h2>
+      <p>We read your policy before you sign anything.</p>
     </div>
     <ol class="work-steps">
-      <li><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
-      <li><div><h3>Say so</h3><p>If the current program is already right, we say so.</p></div></li>
-      <li><div><h3>Market</h3><p>Only when there is a reason to move the account.</p></div></li>
-      <li><div><h3>Hand over</h3><p>Dates, certificates, and the renewal calendar.</p></div></li>
+      <li><div><h3>We read it</h3><p>Your policy, forms, and endorsements.</p></div></li>
+      <li><div><h3>We tell you</h3><p>If it's right, we say so.</p></div></li>
+      <li><div><h3>We shop it</h3><p>Only when there's a reason to.</p></div></li>
+      <li><div><h3>We switch it</h3><p>Dates lined up, no gap.</p></div></li>
     </ol>
   </div>
 </section>
@@ -462,9 +441,9 @@ def home():
   </div>
   <div class="wrap close-inner">
     <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
-    <p>We will tell you what it does, including when the right answer is to keep it.</p>
+    <p>We'll tell you what it does, even if the answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
@@ -569,7 +548,7 @@ def contact_fields(prefix):
 def done_block():
     return f'''<div class="done" hidden>
       <h2>Your note is ready to send.</h2>
-      <p class="lede">An email draft to <a href="{MAIL}">{EMAIL}</a> should be open. If it is not, open it below. Nothing on this form is stored on the website. If you have a declarations page or a contract, you can attach it to that email. Email is not encrypted: black out Social Security numbers, driver's license numbers, dates of birth, and bank or card numbers first, or call <a href="{TEL}">{PHONE}</a> to send it another way.</p>
+      <p class="lede">An email draft to <a href="{MAIL}">{EMAIL}</a> should be open. If not, use the button below. Email is not encrypted, so leave out Social Security, driver's license, birth date, and bank or card numbers, or call <a href="{TEL}">{PHONE}</a>.</p>
       <div class="summary"></div>
       <div class="done-actions">
         <a class="btn" data-mailto href="{MAIL}">Open the email draft <span class="arr" aria-hidden="true">→</span></a>
@@ -597,8 +576,6 @@ def aside():
         <div class="row"><span>Call</span><a href="{TEL}">{PHONE}</a></div>
         <div class="row"><span>Email</span><a href="{MAIL}">{EMAIL}</a></div>
       </div>
-      <div class="panel"><h2>Nothing is stored here</h2>
-        <p>The form opens an email in your own mail program. This website does not keep the answers.</p></div>
     </aside>'''
 
 
@@ -624,7 +601,7 @@ INDUSTRIES = [
         "title": "Real Estate and Building Insurance | SimpleINSURE",
         "desc": "Insurance for apartment, mixed-use, and commercial buildings. Property, liability, umbrella, and the wording lenders ask for.",
         "h1": "Insurance for the building, the schedule, and the lender.",
-        "lede": "Apartment, mixed-use, and commercial property. One building or a schedule. The loan wording is part of the placement.",
+        "lede": "Apartment, mixed-use, and commercial buildings. One or a whole portfolio.",
         "essay": [
             "A building account is decided by the loan, the tenants, and the condition of the property. We start with the address or the schedule, the construction, the occupancy, and the insurance section of the financing. Lender wording is part of the work, not a footnote after a number comes back.",
             "Property, loss of rents, liability, and umbrella are the core. Older buildings often need ordinance or law coverage. Elevators and boilers raise equipment breakdown. If anyone is employed, including a superintendent, workers compensation belongs in the same conversation. We place coverage where we are licensed to do so, and we say so before a broker of record letter is prepared.",
@@ -666,7 +643,7 @@ INDUSTRIES = [
         "title": "Restaurant and Bar Insurance | SimpleINSURE",
         "desc": "Insurance for restaurants, bars, and cafes: property, liability, liquor, workers compensation, and the lease.",
         "h1": "A restaurant policy that can survive the lease and a Saturday night.",
-        "lede": "Property, liability, liquor, and the statutory lines a staff requires. The lease usually sets the floor.",
+        "lede": "Restaurants, bars, and cafes, including liquor liability.",
         "essay": [
             "Hospitality insurance fails in the details: a liquor exclusion, an assault sublimit, a landlord who is not actually an additional insured, or business income that runs out before the kitchen reopens. We read the lease insurance section and the current forms together.",
             "The program usually includes property on improvements and equipment, business income, general liability, and liquor liability when alcohol is served or sold. Where a state requires workers compensation, disability benefits, or paid family leave, those lines sit beside the package. New York is one of the states that requires disability benefits and Paid Family Leave for most employers. Delivery, outdoor seating, and off-site catering change the exposure, so we ask.",
@@ -710,7 +687,7 @@ INDUSTRIES = [
         "title": "Contractor and Trade Insurance | SimpleINSURE",
         "desc": "Contractor insurance written to the contract: general liability, workers compensation, auto, umbrella, and certificates.",
         "h1": "Coverage written to the contract, not to a guess.",
-        "lede": "General liability, compensation, auto, and the certificate wording upstream parties actually ask for.",
+        "lede": "Liability, workers comp, and auto for the trades.",
         "essay": [
             "A contractor's insurance is a contract document. The exhibit names the limits, who must be an additional insured, whether the coverage is primary and noncontributory, and whether subrogation is waived. We read that page before we go to market.",
             "The usual structure is general liability, workers compensation, commercial auto, and umbrella. Tools and equipment in transit are an inland marine question. Design or construction management can require professional liability. Certificates are part of the service. We place coverage where we are licensed, and we will tell you if a project sits outside that.",
@@ -753,7 +730,7 @@ INDUSTRIES = [
         "title": "Professional, Office, and Retail Insurance | SimpleINSURE",
         "desc": "Insurance for offices, retailers, and firms that give advice: package policies, professional liability, cyber, and umbrella.",
         "h1": "For firms whose work is a lease, advice, or client data.",
-        "lede": "Offices, retail, and professional practices. The package is only the start if you give advice or hold data.",
+        "lede": "Offices, shops, and professional firms.",
         "essay": [
             "A small office is not a small risk by default. The lease can require limits and additional insured status. The work can require professional liability. The systems can require a cyber conversation. We separate those instead of folding them into a single cheerful package.",
             "We place business owners or package policies where a location needs property and general liability, workers compensation where there are employees, hired and non-owned auto when people drive their own cars for work, and umbrella when a contract or a balance sheet asks for it. If the current program is already fitted to the work, we will say that.",
@@ -796,7 +773,7 @@ INDUSTRIES = [
         "title": "Home, Auto, and Umbrella Insurance | SimpleINSURE",
         "desc": "Homeowners, auto, and personal umbrella for owners and families, including rental property held in a personal name.",
         "h1": "Home, auto, and umbrella, in the same conversation as the business.",
-        "lede": "Personal insurance for people who also own a company, a building, or a rental.",
+        "lede": "Home, auto, and umbrella for owners and their families.",
         "essay": [
             "The personal account is where a serious liability loss can land after the business policies respond, or instead of them. We would rather see the house, the cars, and the umbrella next to the commercial program than discover the gap after a loss.",
             "We place homeowners or renters, auto, and personal umbrella. If a rental property is held in a personal name, it needs its own discussion, because a homeowners form does not cover it. Valuables above a standard sublimit can be scheduled. We place these where we are licensed to do so.",
@@ -936,7 +913,6 @@ def quote_page():
     steps = f'''
 <div data-step="1" data-label="Account" data-error="Choose what you want us to look at.">
   <h2 style="font-size:32px;margin-bottom:8px">What should we look at?</h2>
-  <p class="quiet">Choose one. You can add detail on the next step.</p>
   <div style="margin-top:16px">{line_choices()}</div>
 </div>
 <div data-step="2" data-label="Details" hidden>
@@ -1335,7 +1311,7 @@ def about_page():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We place coverage for the client and stay with the account.",
+        "We work for you, not for an insurance company.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
@@ -1466,14 +1442,13 @@ def contact_page():
     steps = f'''
 <div data-step="1" data-label="Message" data-error="Add your name, and an email or a phone number.">
   <h2 style="font-size:32px;margin-bottom:14px">Send a note</h2>
-  <p class="quiet">The button opens an email draft to {EMAIL}. This page does not store what you type.</p>
   <div class="fields" style="margin-top:16px">{contact_fields("c")}</div>
   <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
 </div>'''
     main = page_head(
         "Contact",
         "Call, or send a note.",
-        "A broker replies by phone or email. If it is urgent, call. The form opens a draft in your own mail program.",
+        "A broker replies by phone or email. If it's urgent, call.",
     ) + f'''<section class="section" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
     return document(
         "Contact | SimpleINSURE",
@@ -1489,7 +1464,7 @@ def not_found():
         "That page is not on this site.",
         "The address may be old. The pages below are current.",
     ) + '''<section class="section" style="padding-top:0"><div class="wrap ress">
-      <a href="/"><h3>Home</h3><p>The firm, the case study, and the practices.</p></a>
+      <a href="/"><h3>Home</h3><p>The firm and the practices.</p></a>
       <a href="/policy-review/"><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
       <a href="/contact/"><h3>Contact</h3><p>Call, or send a note.</p></a>
     </div></section>'''
@@ -1505,7 +1480,7 @@ def coverage_page():
         on = " is-on" if i == 0 else ""
         jumps.append(f'<a href="#{slug}" data-prac="{slug}" class="{on.strip()}">{h(name)}</a>')
         lines = "".join(
-            f"<li><b>{h(a)}</b><span>{h(b)}</span></li>" for a, b in ind["coverages"][:4]
+            f"<li><b>{h(a)}</b></li>" for a, b in ind["coverages"][:4]
         )
         asks = "".join(f"<p>{h(a)}</p>" for a in ind["asks"][:3])
         flip = " flip" if i % 2 else ""
@@ -1516,14 +1491,13 @@ def coverage_page():
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
     <p class="lede">{h(ind["lede"])}</p>
     <ul class="stage-lines">{lines}</ul>
-    <div class="asks">{asks}</div>
-    <a class="more" href="/policy-review/">Review this account {ARROW}</a>
+    <a class="more" href="/policy-review/">Get a quote {ARROW}</a>
   </div>
 </section>''')
     main = page_head(
         "Coverage",
         "Five practices. One account.",
-        "Real estate, hospitality, contractors, offices, and the household. The same broker reads the policy, the lease, and the contract.",
+        "One broker for the business and the household.",
     ) + f'''
 <nav class="prac-nav" aria-label="Practices"><div class="wrap">{"".join(jumps)}</div></nav>
 {"".join(bands)}'''
@@ -1555,8 +1529,8 @@ def policy_hub():
   <div style="margin-top:16px">{line_choices()}</div>
 </div>
 <div data-step="2" data-label="The policy" hidden>
-  <h2 style="font-size:32px;margin-bottom:8px">What do you want a second opinion on?</h2>
-  <p class="quiet">Select any that apply. Estimates are fine.</p>
+  <h2 style="font-size:32px;margin-bottom:8px">What should we check?</h2>
+  <p class="quiet">Pick any. Estimates are fine.</p>
   <div class="chips" style="margin:16px 0">{"".join(chips)}</div>
   <div class="fields">
     {field("prem", "Current annual premium, if you know it")}
@@ -1572,7 +1546,6 @@ def policy_hub():
     account_steps = f'''
 <div data-step="1" data-label="Account" data-error="Choose what you want us to look at.">
   <h2 style="font-size:32px;margin-bottom:8px">What should we look at?</h2>
-  <p class="quiet">Choose one. You can add detail on the next step.</p>
   <div style="margin-top:16px">{line_choices("q")}</div>
 </div>
 <div data-step="2" data-label="Details" hidden>
@@ -1597,7 +1570,7 @@ def policy_hub():
     main = page_head(
         "Policy review",
         "Send the policy you have.",
-        "We read it before anyone is asked to sign a broker of record letter. If it should stay, that is the answer.",
+        "We read it first. If it's right, we say so.",
     ) + f'''
 <section class="section" id="read" style="padding-top:36px"><div class="wrap">
   <div class="path-tabs" data-tabs>
@@ -1609,9 +1582,8 @@ def policy_hub():
     <div class="tab-panel" id="panel-account" role="tabpanel">{wizard("Coverage review", "Email this request", account_steps)}</div>
   </div>
   <div class="prose handover" id="handover">
-    <h2>How a handover works</h2>
-    <p>We read the declarations, the forms, and the endorsements before a broker of record letter is prepared. The letter tells the insurer who should service a policy that is already in force. It does not, by itself, cancel coverage, change limits, or erase a claim. Some carriers accept it during the term. Some wait until renewal. We tell you which one applies before you sign.</p>
-    <p>If the right path is a replacement policy, we line up the dates so one program ends as the next begins.</p>
+    <h2>How switching works</h2>
+    <p>A broker of record letter only changes who services your policy. It doesn't cancel coverage or change limits. We tell you the timing before you sign.</p>
   </div>
 </div></section>'''
     return document(
@@ -1650,7 +1622,7 @@ def client_center():
     cert = _svc(
         "01",
         "Request a certificate",
-        "Holder, wording, and the date you need it.",
+        "Who it's for and when you need it.",
         "Certificate request",
         "Email this certificate request",
         f'''<div data-step="1" data-label="Certificate" data-error="Add your name, and an email or a phone number.">
@@ -1662,13 +1634,13 @@ def client_center():
             {field("needby", "Needed by", kind="date")}
             {_who("c")}
           </div>
-          <p class="quiet">A certificate is issued when the policy allows it. If the holder wants wording the policy does not grant, we say so.</p>
+          <p class="quiet">We issue a certificate when the policy allows it. If it doesn't, we tell you.</p>
         </div>''',
     )
     cards = _svc(
         "02",
         "Request ID cards",
-        "Auto ID cards for the vehicles on the policy.",
+        "Auto ID cards for your vehicles.",
         "ID card request",
         "Email this ID card request",
         f'''<div data-step="1" data-label="ID cards" data-error="Add your name, and an email or a phone number.">
@@ -1729,7 +1701,7 @@ def client_center():
             {_who("b")}
           </div>
         </div>''',
-        extra="<p class=\"cc-note\">Most premium payments go directly to the insurance company, and when you ask we send the carrier's pay link. If we bill a policy ourselves, the invoice comes from SimpleINSURE Brokerage LLC and says where to pay. Ask if you are not sure which applies.</p>",
+        extra="<p class=\"cc-note\">Most premiums are paid to the insurance company, and we can send the pay link. If we bill you, the invoice comes from SimpleINSURE Brokerage LLC and says where to pay.</p>",
     )
     renew = _svc(
         "06",
@@ -1750,23 +1722,14 @@ def client_center():
     main = f'''<header class="photo-hero cc-hero">
   <div class="hero-media"><div class="ken">{pic("hero", eager=True, sizes="100vw")}</div><div class="hero-shade" aria-hidden="true"></div></div>
   <div class="wrap">
-    <h1 class="rise"><span class="line"><span>For the account</span></span><span class="line"><span>already in force.</span></span></h1>
-    <p class="lede">Certificates, ID cards, a change, a claim, a bill, or a renewal. Each one opens an email to the brokerage.</p>
+    <h1 class="rise"><span class="line"><span>Already a client?</span></span></h1>
+    <p class="lede">Certificates, ID cards, changes, claims, bills, and renewals.</p>
   </div>
 </header>
 <section class="cc-portal"><div class="wrap">
-  <p id="portal" class="cc-login"><a href="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn" target="_blank" rel="noopener">Client login (EZLynx)</a>. This link opens a client portal operated by EZLynx, a third-party service. Its sign-in and security are governed by EZLynx's terms and privacy policy.</p>
+  <p id="portal" class="cc-login"><a href="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn" target="_blank" rel="noopener">Client login (EZLynx)</a>. Opens a portal run by EZLynx, a third-party service with its own terms and privacy policy.</p>
   <div class="cc-layout">
   <div class="cc-list">{cert}{cards}{change}{claim}{bill}{renew}</div>
-  <aside class="expect-strip">
-    <h2>What to expect</h2>
-    <ul>
-      <li>One broker stays with the account, including at renewal.</li>
-      <li>A certificate goes out when the policy supports it. If it does not, we say what is missing.</li>
-      <li>A change in vehicles, locations, payroll, or ownership is endorsed.</li>
-      <li>If the program already in force is right, we say so.</li>
-    </ul>
-  </aside>
   </div>
 </div></section>'''
     return document(
@@ -1792,27 +1755,22 @@ def about_hub():
     main = page_head(
         "The firm",
         "An independent brokerage.",
-        "We place coverage for the client and stay with the account.",
+        "We work for you, not for an insurance company.",
     ) + f'''
 <section class="section" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
     <h2>An independent practice</h2>
-    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. We work with a range of insurance companies, including specialty markets for risks the standard market will not write.</p>
-    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. Remy is a licensed New York property and casualty broker. Both licenses are listed on the <a href="/legal/">licenses page</a>. We are usually paid a commission by the insurer. You can ask what we expect on your own policy.</p>
+    <p>SimpleINSURE Brokerage LLC works with a range of insurance companies, including specialty markets.</p>
+    <p>Remy Mehdizadeh, a licensed New York property and casualty broker, founded the firm so owners have one broker who reads the policy and stays after it's bound. Both licenses are on the <a href="/legal/">licenses page</a>. We're usually paid a commission by the insurer, and you can ask what we expect on your policy.</p>
     <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
   </div>
   {figure_block("hero", "(max-width: 980px) 100vw, 40vw")}
 </div></section>
 <section class="section" id="partners" style="padding-top:0"><div class="wrap prose narrow">
   <h2>For advisors</h2>
-  <p>Real estate attorneys, property managers, and accountants already sit next to the closing, the lease, and the books. Introduce a client and we call them, copy you if they agree, and tell you when the account is placed. Their information is not shared beyond that.</p>
-  <p>Compensation for a referral follows the license. New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons. What an advisor gets from us is a responsive broker.</p>
+  <p>Attorneys, property managers, and accountants: introduce a client and we'll call them. With their OK, we keep you posted.</p>
+  <p>New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
   <p><a href="/contact/">Introduce a client</a></p>
-</div></section>
-<section class="section" id="glossary" style="padding-top:0"><div class="wrap">
-  <h2>A short glossary</h2>
-  <p class="lede">Eight terms that show up in leases, loans, and certificates.</p>
-  <div class="gloss-mini">{gloss}</div>
 </div></section>'''
     return document(
         "About SimpleINSURE",

@@ -697,7 +697,7 @@ body.page-inner:has(.page-head) main>.stage:before{content:none}
 .cc-portal{padding:36px 0 88px;background:#fff}
 #portal{scroll-margin-top:calc(var(--header) + 12px)}
 .cc-login{margin:0 0 22px}
-.cc-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.62fr);gap:36px 56px;align-items:start}
+.cc-layout{display:block;max-width:880px}
 .cc-list{margin-top:0}
 .cc-item{border-top:1px solid var(--line)}
 .cc-item:last-child{border-bottom:1px solid var(--line)}
