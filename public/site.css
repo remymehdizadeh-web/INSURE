@@ -576,9 +576,9 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
 .index-list em{font-style:normal;color:var(--muted)}
 .panel{border:0;border-top:1px solid var(--line);padding:8px 0 0;background:transparent}
 @media (max-width:980px){
-  .site-header{top:max(12px,env(safe-area-inset-top));padding-top:0;transform:translate3d(0,var(--header-shift,0px),0)}
-  .site-header:before{content:"";position:absolute;left:0;right:0;bottom:100%;top:auto;height:max(12px,env(safe-area-inset-top));background:#071018;pointer-events:none}
-  html.veil .site-header:before{height:max(12px,env(safe-area-inset-top));top:auto;bottom:100%;background:#fff}
+  .site-header{top:calc(12px + env(safe-area-inset-top));padding-top:0;transform:translate3d(0,var(--header-shift,0px),0)}
+  .site-header:before{content:"";position:absolute;left:0;right:0;bottom:100%;top:auto;height:calc(12px + env(safe-area-inset-top));background:transparent;pointer-events:none}
+  html.veil .site-header:before{height:calc(12px + env(safe-area-inset-top));top:auto;bottom:100%;background:#fff}
   body.page-inner:not(:has(.photo-hero)) .site-header:before{background:#0c1824}
   html.veil body.page-inner .site-header:before,html.veil body.page-home .site-header:before{background:#fff}
   .bar{width:calc(100% - 24px);height:60px;padding:0 8px 0 14px;gap:8px}
