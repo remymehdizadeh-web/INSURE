@@ -149,7 +149,16 @@
   body.page-inner .page-head { position: relative; top: auto; }
   body.page-inner:has(.page-head) main > :not(.page-head):before { content: none; display: none; }
   body.page-inner:has(.page-head) main > .page-head + .section { padding-top: 36px !important; }
-  body.page-inner main > :not(.page-head) { background: #fff; }
+  body.page-inner main > :not(.page-head):not(.photo-hero) { background: #fff; }
+  body.page-inner main > .photo-hero,
+  body.page-inner main > .photo-hero h1,
+  body.page-inner main > .photo-hero h1 span {
+    background: #061A2E;
+    color: #fff;
+  }
+  body.page-inner main > .photo-hero h1,
+  body.page-inner main > .photo-hero h1 span { background: transparent; }
+  body.page-inner main > .photo-hero .lede { color: #d5e2ef; }
 
   .section { padding: 36px 0 48px !important; }
   .section h2, .prose h2, .ask h2, .panel h2 {
