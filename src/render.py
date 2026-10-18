@@ -281,7 +281,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=10">
+<link rel="stylesheet" href="/site.css?v=11">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -312,7 +312,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=7" defer></script>
+<script src="/site.js?v=8" defer></script>
 </body>
 </html>'''
 
@@ -395,7 +395,7 @@ def mobile_home():
         ("Stay after it is bound", "The same broker stays with certificates, renewals, and a claim."),
     ]
     faq_html = "".join(f"<details><summary>{h(q)}</summary><p>{h(a)}</p></details>" for q, a in faqs)
-    return f'''
+    practices_block = f'''
 <div class="m-home m-only">
 <section class="m-block">
   <div class="wrap">
@@ -403,6 +403,10 @@ def mobile_home():
     <div class="m-tiles">{''.join(tiles)}</div>
   </div>
 </section>
+</div>
+'''
+    steps_block = f'''
+<div class="m-home m-only">
 <section class="m-block" style="padding-top:8px">
   <div class="wrap">
     <h2>How it<span class="b">works.</span></h2>
@@ -411,14 +415,31 @@ def mobile_home():
 </section>
 </div>
 '''
+    return practices_block, steps_block
+
+
+def client_result():
+    return '''<section class="client-result" aria-labelledby="result-h">
+  <div class="wrap">
+    <p class="result-label">Client result</p>
+    <h2 id="result-h">A Manhattan restaurant</h2>
+    <div class="result-figs">
+      <p class="result-row"><span class="result-k">Before</span><span class="result-n">$71,196 a year</span></p>
+      <p class="result-row"><span class="result-k">Now</span><span class="result-n">$25,708 a year, including our broker fee</span></p>
+    </div>
+    <p class="result-line">Same liability limits. Umbrella raised from $1 million to $5 million. Employment practices coverage added.</p>
+    <p class="result-foot">Every account is different. Terms depend on underwriting.</p>
+  </div>
+</section>'''
 
 
 def home():
+    m_top, m_steps = mobile_home()
     return document(
         "Commercial and Personal Insurance | SimpleINSURE",
         "SimpleINSURE Brokerage LLC places commercial and personal insurance in New York. Send the policy you have. We read it, approach other insurers only when there is a reason, and stay after it is bound.",
         "/",
-        cinematic_sections() + mobile_home() + f'''
+        cinematic_sections() + m_top + client_result() + m_steps + f'''
 <section class="cred-strip only-1024" aria-label="License">
   <div class="wrap">
     <p>SimpleINSURE Brokerage LLC</p>
