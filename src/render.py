@@ -134,11 +134,11 @@ def schema(path):
 
 
 COVER = [
-    ("/coverage/real-estate/", "Real estate", "Buildings and landlords", "estate"),
-    ("/coverage/hospitality/", "Hospitality", "Restaurants and bars", "hospitality"),
-    ("/coverage/construction/", "Contractors", "Trades and job sites", "construction"),
-    ("/coverage/professional/", "Offices", "Professional firms", "professional"),
-    ("/coverage/personal/", "Personal", "Household, home, and auto", "personal"),
+    ("/coverage/#real-estate", "Real estate", "Buildings and landlords", "estate"),
+    ("/coverage/#hospitality", "Hospitality", "Restaurants and bars", "hospitality"),
+    ("/coverage/#construction", "Contractors", "Trades and job sites", "construction"),
+    ("/coverage/#professional", "Offices", "Professional firms", "professional"),
+    ("/coverage/#personal", "Personal", "Household, home, and auto", "personal"),
 ]
 FIRM = [
     ("/about/", "The firm", "The practice"),
@@ -160,19 +160,12 @@ def nav_links(items, current):
 def sheet_links(current):
     parts = ['<a href="/coverage/">Coverage</a>']
     for href, title, _sub, *_r in COVER:
-        cur = ' aria-current="page"' if current == href else ""
-        parts.append(f'<a class="sub" href="{href}"{cur}>{h(title)}</a>')
-    parts.append('<a class="sub" href="/checklists/">Coverage checklists</a>')
-    parts.append('<a class="sub" href="/needs/">Coverage guide</a>')
+        parts.append(f'<a class="sub" href="{href}">{h(title)}</a>')
     for href, label in (
         ("/policy-review/", "Policy review"),
-        ("/resources/", "Resources"),
-        ("/switching/", "Switching brokers"),
-        ("/client-center/", "Client service"),
-        ("/about/", "The firm"),
+        ("/client-center/", "Client Center"),
+        ("/about/", "Firm"),
         ("/contact/", "Contact"),
-        ("/partners/", "Partners"),
-        ("/legal/", "Licenses and disclosures"),
     ):
         cur = ' aria-current="page"' if current == href else ""
         parts.append(f'<a href="{href}"{cur}>{label}</a>')
@@ -180,8 +173,6 @@ def sheet_links(current):
 
 
 def header(current):
-    cov_here = " is-here" if current.startswith("/coverage") or current in ("/checklists/", "/needs/") else ""
-    firm_here = " is-here" if current in [h for h, _, _ in FIRM] or current == "/legal/" else ""
     def top(href, label):
         cur = ' aria-current="page"' if current == href else ""
         return f'<a href="{href}"{cur}>{label}</a>'
@@ -190,33 +181,22 @@ def header(current):
   <div class="bar">
     <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
     <nav class="nav-desk" aria-label="Primary">
-      <div class="drop{cov_here}">
-        <button type="button" aria-expanded="false" aria-controls="menu-coverage">Coverage</button>
-        <div class="drop-panel" id="menu-coverage">
-          {nav_links(COVER, current)}
-          <a href="/checklists/"><b>Coverage checklists</b><small>Mark what you already have</small></a>
-          <a href="/needs/"><b>Coverage guide</b><small>What this business needs</small></a>
-          <a href="/coverage/"><b>All practices</b><small>Commercial and personal</small></a>
-        </div>
-      </div>
+      {top("/coverage/", "Coverage")}
       {top("/policy-review/", "Policy review")}
-      {top("/resources/", "Resources")}
-      <div class="drop{firm_here}">
-        <button type="button" aria-expanded="false" aria-controls="menu-firm">Firm</button>
-        <div class="drop-panel" id="menu-firm">{nav_links(FIRM, current)}</div>
-      </div>
+      {top("/client-center/", "Client Center")}
+      {top("/about/", "Firm")}
       {top("/contact/", "Contact")}
     </nav>
     <div class="nav-actions">
       <a class="phone-full" href="{TEL}">{PHONE}</a>
-      <a class="btn btn-sm" href="/quote/">Request a review</a>
+      <a class="btn btn-sm" href="/policy-review/">Request a review</a>
       <button class="nav-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="nav-ic" aria-hidden="true"></span><span class="sr">Menu</span></button>
     </div>
   </div>
 </header>
 <div class="sheet" id="sheet" hidden>
   <nav aria-label="Mobile">{sheet_links(current)}</nav>
-  <div class="sheet-cta"><a class="btn" href="/quote/">Request a review</a><a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>
+  <div class="sheet-cta"><a class="btn" href="/policy-review/">Request a review</a><a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>
 </div>'''
 
 
@@ -229,18 +209,16 @@ def footer():
       <p class="addr">Commercial and personal insurance.</p>
       <p class="addr">{ADDR}</p>
     </div>
-    <div><h2>Coverage</h2><ul>{cov}<li><a href="/checklists/">Checklists</a></li><li><a href="/needs/">Coverage guide</a></li></ul></div>
+    <div><h2>Coverage</h2><ul>{cov}</ul></div>
     <div><h2>Advisory</h2><ul>
       <li><a href="/policy-review/">Policy review</a></li>
-      <li><a href="/quote/">Request a review</a></li>
-      <li><a href="/switching/">Switching brokers</a></li>
-      <li><a href="/resources/">Resources</a></li>
-      <li><a href="/client-center/">Client service</a></li>
+      <li><a href="/client-center/">Client Center</a></li>
+      <li><a href="/contact/">Contact</a></li>
     </ul></div>
     <div><h2>Firm</h2><ul>
       <li><a href="/about/">The firm</a></li>
-      <li><a href="/contact/">Contact</a></li>
-      <li><a href="/partners/">Partners</a></li>
+    </ul></div>
+    <div><h2>Office</h2><ul>
       <li><a href="{TEL}">{PHONE}</a></li>
       <li><a href="{MAIL}">{EMAIL}</a></li>
     </ul></div>
@@ -253,18 +231,14 @@ def footer():
     <div class="wrap">
       <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
       <div class="m-foot-cols">
-        <div><h2>Coverage</h2><ul>{cov}<li><a href="/checklists/">Checklists</a></li><li><a href="/needs/">Coverage guide</a></li></ul></div>
+        <div><h2>Coverage</h2><ul>{cov}</ul></div>
         <div><h2>Advisory</h2><ul>
           <li><a href="/policy-review/">Policy review</a></li>
-          <li><a href="/quote/">Request a review</a></li>
-          <li><a href="/switching/">Switching brokers</a></li>
-          <li><a href="/resources/">Resources</a></li>
-          <li><a href="/client-center/">Client service</a></li>
+          <li><a href="/client-center/">Client Center</a></li>
+          <li><a href="/contact/">Contact</a></li>
         </ul></div>
         <div><h2>Firm</h2><ul>
           <li><a href="/about/">The firm</a></li>
-          <li><a href="/contact/">Contact</a></li>
-          <li><a href="/partners/">Partners</a></li>
         </ul></div>
         <div><h2>Office</h2><ul>
           <li><a href="{TEL}">{PHONE}</a></li>
@@ -311,7 +285,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=4">
+<link rel="stylesheet" href="/site.css?v=8">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -330,7 +304,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=2">
+<link rel="stylesheet" href="/mobile.css?v=7">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -343,7 +317,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/vendor/lenis.min.js" defer></script>
-<script src="/site.js?v=4" defer></script>
+<script src="/site.js?v=5" defer></script>
 </body>
 </html>'''
 
@@ -376,8 +350,9 @@ def cinematic_sections(eager=False):
     <h1 class="rise"><span class="line"><span>The standard</span></span><span class="line"><span>a broker should</span></span><span class="line"><span><em>already meet.</em></span></span></h1>
     <p class="lede">Send the policy you have. We read it before we talk about replacing it.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
-      <a class="text-link on-dark" href="/policy-review/">Review a current policy</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
+      <a class="m-phone m-only" href="{TEL}">{PHONE}</a>
+      <a class="text-link on-dark desk-only" href="/policy-review/#read">Review a current policy</a>
     </div>
   </div>
   <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
@@ -445,18 +420,6 @@ def mobile_home():
     faq_html = "".join(f"<details><summary>{h(q)}</summary><p>{h(a)}</p></details>" for q, a in faqs)
     return f'''
 <div class="m-home m-only">
-<section class="m-hero" aria-label="Introduction">
-  <div class="m-arcs" aria-hidden="true"></div>
-  <div class="wrap">
-    <p class="m-eye"><i aria-hidden="true"></i>Commercial and personal</p>
-    <h1><span>The standard</span><span class="b">a broker should already meet.</span></h1>
-    <p class="m-sub">Send the policy you have. We read it before we talk about replacing it.</p>
-    <div class="m-actions">
-      <a class="btn" href="/quote/">Talk to a broker {ARROW}</a>
-      <a class="m-phone" href="{TEL}">{PHONE}</a>
-    </div>
-  </div>
-</section>
 <section class="m-block">
   <div class="wrap">
     <p class="m-eye"><i aria-hidden="true"></i>Practices</p>
@@ -475,7 +438,7 @@ def mobile_home():
         <button type="button" role="tab" data-tab="steps">The work</button>
       </div>
       <div class="tab-panel is-on" id="panel-practices" role="tabpanel"><ol class="m-num">{''.join(practices)}</ol></div>
-      <div class="tab-panel" id="panel-steps" role="tabpanel"><ol class="m-num m-num-notes">{step_html}</ol><p class="m-more"><a href="/switching/">How the handover works {ARROW}</a></p></div>
+      <div class="tab-panel" id="panel-steps" role="tabpanel"><ol class="m-num m-num-notes">{step_html}</ol><p class="m-more"><a href="/policy-review/#handover">How the handover works {ARROW}</a></p></div>
     </div>
   </div>
 </section>
@@ -510,13 +473,13 @@ def home():
         "Commercial and Personal Insurance | SimpleINSURE",
         "SimpleINSURE places commercial and personal insurance. Send the policy you have. We read it, approach A-rated markets when there is a reason, and stay after it is bound.",
         "/",
-        mobile_home() + cinematic_sections() + f'''
+        cinematic_sections() + mobile_home() + f'''
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
       <h2 class="rise" id="work-h"><span class="line"><span>Switching is</span></span><span class="line"><span>a sequence.</span></span></h2>
       <p>We read what you have before anyone is asked to sign a broker of record letter. If it should stay, that is the answer.</p>
-      <a class="text-link" href="/switching/">How the handover works {ARROW}</a>
+      <a class="text-link" href="/policy-review/#handover">How the handover works {ARROW}</a>
     </div>
     <ol class="work-steps">
       <li><div><h3>Read</h3><p>Declarations, forms, and the endorsements behind them.</p></div></li>
@@ -535,7 +498,7 @@ def home():
     <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
     <p>We will tell you what it does, including when the right answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/quote/">Request a review {ARROW}</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
@@ -595,10 +558,10 @@ def field(fid, label, kind="text", options=None, required=False, show=None, full
     return f'<div class="{cls}"{show_attr}><label for="{fid}">{h(label)}</label>{control}</div>'
 
 
-def line_choices():
+def line_choices(prefix=""):
     bits = []
     for val, label in LINES:
-        fid = "line-" + val
+        fid = prefix + "line-" + val
         bits.append(
             f'<label class="choice" for="{fid}"><input id="{fid}" type="radio" name="line" value="{val}" required>'
             f"<span>{h(label)}</span></label>"
@@ -1559,37 +1522,392 @@ def not_found():
     return document("Page not found | SimpleINSURE", "That page is not on the SimpleINSURE site.", "/404.html", main)
 
 
+def coverage_page():
+    jumps = []
+    bands = []
+    for i, ind in enumerate(INDUSTRIES):
+        slug = ind["slug"]
+        name = ind["nav"]
+        on = " is-on" if i == 0 else ""
+        jumps.append(f'<a href="#{slug}" data-prac="{slug}" class="{on.strip()}">{h(name)}</a>')
+        lines = "".join(
+            f"<li><b>{h(a)}</b><span>{h(b)}</span></li>" for a, b in ind["coverages"][:4]
+        )
+        asks = "".join(f"<p>{h(a)}</p>" for a in ind["asks"][:3])
+        flip = " flip" if i % 2 else ""
+        bands.append(f'''
+<section class="stage{flip}" id="{slug}">
+  <figure class="stage-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
+  <div class="stage-copy">
+    <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
+    <p class="lede">{h(ind["lede"])}</p>
+    <ul class="stage-lines">{lines}</ul>
+    <div class="asks">{asks}</div>
+    <a class="more" href="/policy-review/">Review this account {ARROW}</a>
+  </div>
+</section>''')
+    main = page_head(
+        "Coverage",
+        "Five practices. One account.",
+        "Real estate, hospitality, contractors, offices, and the household. The same broker reads the policy, the lease, and the contract.",
+    ) + f'''
+<nav class="prac-nav" aria-label="Practices"><div class="wrap">{"".join(jumps)}</div></nav>
+{"".join(bands)}'''
+    return document(
+        "Coverage | SimpleINSURE",
+        "Commercial and personal insurance for real estate, hospitality, contractors, offices, and the household.",
+        "/coverage/",
+        main,
+    )
+
+
+def policy_hub():
+    concerns = [
+        "The price",
+        "The limits",
+        "An exclusion or a sublimit",
+        "A certificate or a contract",
+        "A renewal that is coming up",
+        "A claim",
+        "I am not sure",
+    ]
+    chips = []
+    for i, label in enumerate(concerns):
+        fid = f"concern-{i}"
+        chips.append(f'<label for="{fid}"><input id="{fid}" name="{fid}" type="checkbox"> {h(label)}</label>')
+    read_steps = f'''
+<div data-step="1" data-label="Account" data-error="Choose what the policy covers.">
+  <h2 style="font-size:32px;margin-bottom:8px">What does the current policy cover?</h2>
+  <div style="margin-top:16px">{line_choices()}</div>
+</div>
+<div data-step="2" data-label="The policy" hidden>
+  <h2 style="font-size:32px;margin-bottom:8px">What do you want a second opinion on?</h2>
+  <p class="quiet">Select any that apply. Estimates are fine.</p>
+  <div class="chips" style="margin:16px 0">{"".join(chips)}</div>
+  <div class="fields">
+    {field("prem", "Current annual premium, if you know it")}
+    {field("carrier", "Current carrier, if you want to say")}
+    {field("renew", "Renewal or expiration date", kind="date")}
+    {field("worry", "What concerns you", kind="textarea", full=True)}
+  </div>
+</div>
+<div data-step="3" data-label="Contact" data-error="Add your name, and an email or a phone number." hidden>
+  <h2 style="font-size:32px;margin-bottom:14px">Where should we reply?</h2>
+  <div class="fields">{contact_fields("p")}</div>
+</div>'''
+    account_steps = f'''
+<div data-step="1" data-label="Account" data-error="Choose what you want us to look at.">
+  <h2 style="font-size:32px;margin-bottom:8px">What should we look at?</h2>
+  <p class="quiet">Choose one. You can add detail on the next step.</p>
+  <div style="margin-top:16px">{line_choices("q")}</div>
+</div>
+<div data-step="2" data-label="Details" hidden>
+  <h2 style="font-size:32px;margin-bottom:14px">About the account</h2>
+  <div class="fields">
+    {field("city", "City or ZIP", attrs='autocomplete="postal-code"')}
+    {field("timing", "Timing", kind="select", options=["Renewal coming up", "New purchase or opening", "Mid-term", "Not sure"])}
+    {field("insured", "Currently insured?", kind="select", options=["Yes", "No", "Not sure"])}
+    {field("re-desc", "Property or portfolio", kind="textarea", show="real-estate", full=True)}
+    {field("ho-concept", "Concept", show="hospitality")}
+    {field("co-trade", "Trade", show="construction")}
+    {field("pr-does", "What the business does", kind="textarea", show="professional", full=True)}
+    {field("pe-what", "What to cover", kind="select", show="personal", options=["Home", "Auto", "Home and auto", "Umbrella", "Rental property"])}
+    {field("un-about", "Describe what you want insured", kind="textarea", show="unsure", full=True)}
+  </div>
+</div>
+<div data-step="3" data-label="Contact" data-error="Add your name, and an email or a phone number." hidden>
+  <h2 style="font-size:32px;margin-bottom:14px">Where should we reply?</h2>
+  <div class="fields">{contact_fields("q")}</div>
+  <p class="quiet">By sending this you agree that a broker may contact you about the request. There is no obligation.</p>
+</div>'''
+    main = page_head(
+        "Policy review",
+        "Send the policy you have.",
+        "We read it before anyone is asked to sign a broker of record letter. If it should stay, that is the answer.",
+    ) + f'''
+<section class="section" id="read" style="padding-top:36px"><div class="wrap">
+  <div class="path-tabs" data-tabs>
+    <div class="path-bar" role="tablist" aria-label="How to start">
+      <button type="button" role="tab" data-tab="read">Read a current policy</button>
+      <button type="button" role="tab" data-tab="account">Start from the account</button>
+    </div>
+    <div class="tab-panel is-on" id="panel-read" role="tabpanel"><div class="layout">{wizard("Policy review", "Email this review", read_steps)}{aside()}</div></div>
+    <div class="tab-panel" id="panel-account" role="tabpanel">{wizard("Coverage review", "Email this request", account_steps)}</div>
+  </div>
+  <div class="prose handover" id="handover">
+    <h2>How a handover works</h2>
+    <p>We read the declarations, the forms, and the endorsements before a broker of record letter is prepared. The letter tells the insurer who should service a policy that is already in force. It does not, by itself, cancel coverage, change limits, or erase a claim. Some carriers accept it during the term. Some wait until renewal. We tell you which one applies before you sign.</p>
+    <p>If the right path is a replacement policy, we line up the dates so one program ends as the next begins.</p>
+  </div>
+</div></section>'''
+    return document(
+        "Policy Review | SimpleINSURE",
+        "Send a current policy for a second reading, or start a review from the account. The form opens an email. Nothing is stored on the website.",
+        "/policy-review/",
+        main,
+    )
+
+
+def _svc(num, title, blurb, subject, button, inner, extra="", claim=False):
+    cls = "cc-item cc-claim" if claim else "cc-item"
+    hot = f'<a class="cc-hot" href="{TEL}">Call {PHONE}</a>' if claim else ""
+    return f'''<details class="{cls}">
+  <summary>
+    <span class="cc-n">{num}</span>
+    <span class="cc-main"><b>{h(title)}</b><em>{h(blurb)}</em></span>
+    {hot}
+    <span class="cc-go" aria-hidden="true">{ARROW}</span>
+  </summary>
+  <div class="cc-body"><div class="cc-inner">{extra}{wizard(subject, button, inner)}
+    <p class="quiet cc-store">Nothing on this form is stored on the website.</p>
+  </div></div>
+</details>'''
+
+
+def _who(prefix):
+    return (
+        field(prefix + "who", "Your name", required=True, full=True, attrs='autocomplete="name"')
+        + field(prefix + "em", "Email", kind="email", need="email", attrs='autocomplete="email"')
+        + field(prefix + "ph", "Phone", kind="tel", need="phone", attrs='autocomplete="tel"')
+    )
+
+
+def client_center():
+    cert = _svc(
+        "01",
+        "Request a certificate",
+        "Holder, wording, and the date you need it.",
+        "Certificate request",
+        "Email this certificate request",
+        f'''<div data-step="1" data-label="Certificate" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("holder", "Certificate holder", required=True, full=True)}
+            {field("haddr", "Holder address", full=True)}
+            {field("ai", "Additional insured needed?", kind="select", options=["Yes", "No", "Not sure"])}
+            {field("job", "Project, lease, or reason", kind="textarea", full=True)}
+            {field("needby", "Needed by", kind="date")}
+            {_who("c")}
+          </div>
+          <p class="quiet">A certificate is issued when the policy allows it. If the holder wants wording the policy does not grant, we say so.</p>
+        </div>''',
+    )
+    cards = _svc(
+        "02",
+        "Request ID cards",
+        "Auto ID cards for the vehicles on the policy.",
+        "ID card request",
+        "Email this ID card request",
+        f'''<div data-step="1" data-label="ID cards" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("ni", "Named insured", required=True, full=True)}
+            {field("veh", "Vehicles or drivers", kind="textarea", full=True)}
+            {field("send", "Where should we send them?", kind="select", options=["Email", "Text", "Either"])}
+            {_who("i")}
+          </div>
+        </div>''',
+    )
+    change = _svc(
+        "03",
+        "Policy change",
+        "A vehicle, a driver, a location, or payroll.",
+        "Policy change",
+        "Email this change",
+        f'''<div data-step="1" data-label="Change" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("kind", "What changed?", kind="select", required=True, options=["Add a vehicle", "Remove a vehicle", "Add a driver", "Remove a driver", "Add a location", "Remove a location", "Payroll or revenue change", "Other"])}
+            {field("detail", "Tell us the change", kind="textarea", full=True, required=True)}
+            {field("when", "Effective date, if you know it", kind="date")}
+            {_who("g")}
+          </div>
+        </div>''',
+    )
+    claim = _svc(
+        "04",
+        "Report a claim",
+        "Date, place, and what happened. Call first if it is urgent.",
+        "Claim report",
+        "Email this claim note",
+        f'''<div data-step="1" data-label="Claim" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("cdate", "Date of loss", kind="date", required=True)}
+            {field("cloc", "Location", required=True, full=True)}
+            {field("what", "What happened", kind="textarea", full=True, required=True)}
+            {field("inj", "Injuries?", kind="select", options=["Yes", "No", "Not sure"])}
+            {field("rep", "Police or report number")}
+            {field("photos", "Photos", kind="select", options=["I can attach photos to the email", "I do not have photos"])}
+            {_who("k")}
+          </div>
+          <p class="quiet">Attach photos to the email draft. Do not guess at fault in a written statement to anyone but your broker and, through us, the carrier.</p>
+        </div>''',
+        extra=f'<p class="callout">If this is happening now, call <a href="{TEL}">{PHONE}</a> right away. Then send the note below.</p>',
+        claim=True,
+    )
+    bill = _svc(
+        "05",
+        "Billing question",
+        "Payments go to the carrier. We can send the pay link.",
+        "Billing question",
+        "Email this billing question",
+        f'''<div data-step="1" data-label="Billing" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("bpol", "Policy or account")}
+            {field("bask", "What do you need?", kind="textarea", full=True, required=True)}
+            {_who("b")}
+          </div>
+        </div>''',
+        extra="<p class=\"cc-note\">Premium payments are made to the insurance carrier, not to SimpleINSURE. When you ask, we send the carrier's pay link.</p>",
+    )
+    renew = _svc(
+        "06",
+        "Renewal or cancellation",
+        "A date coming up, or a policy you may end.",
+        "Renewal or cancellation",
+        "Email this question",
+        f'''<div data-step="1" data-label="Renewal" data-error="Add your name, and an email or a phone number.">
+          <div class="fields">
+            {field("rpol", "Policy or account", full=True)}
+            {field("rdate", "Renewal or cancellation date", kind="date")}
+            {field("rwhy", "What do you need?", kind="select", options=["Renewal question", "Cancel a policy", "Something else"])}
+            {field("rnote", "Notes", kind="textarea", full=True)}
+            {_who("r")}
+          </div>
+        </div>''',
+    )
+    main = f'''<header class="photo-hero cc-hero">
+  <div class="hero-media"><div class="ken">{pic("hero", eager=True, sizes="100vw")}</div><div class="hero-shade" aria-hidden="true"></div></div>
+  <div class="wrap">
+    <h1 class="rise"><span class="line"><span>For the account</span></span><span class="line"><span>already in force.</span></span></h1>
+    <p class="lede">Certificates, ID cards, a change, a claim, a bill, or a renewal. Each one opens an email to the brokerage.</p>
+  </div>
+</header>
+<section class="cc-portal"><div class="wrap cc-layout">
+  <div class="cc-list">{cert}{cards}{change}{claim}{bill}{renew}</div>
+  <aside class="expect-strip">
+    <h2>What to expect</h2>
+    <ul>
+      <li>One broker stays with the account, including at renewal.</li>
+      <li>A certificate goes out when the policy supports it. If it does not, we say what is missing.</li>
+      <li>A change in vehicles, locations, payroll, or ownership is endorsed.</li>
+      <li>If the program already in force is right, we say so.</li>
+    </ul>
+  </aside>
+</div></section>'''
+    return document(
+        "Client Center | SimpleINSURE",
+        "Request a certificate, ID cards, a policy change, or help with a claim, a bill, or a renewal. The forms open an email to SimpleINSURE.",
+        "/client-center/",
+        main,
+    )
+
+
+def about_hub():
+    terms = [
+        ("Additional insured", "A party added to a liability policy by endorsement. A certificate that names them does not create that status if the endorsement is missing."),
+        ("Broker of record", "The broker appointed to service a policy. The appointment is a signed letter. It does not, by itself, rewrite the coverage."),
+        ("Certificate of insurance", "A snapshot that a policy exists. It does not change the policy."),
+        ("Declarations page", "The cover: named insured, dates, limits, deductibles, locations, and the form list. The forms control."),
+        ("Endorsement", "A form that changes the policy. The surprises at claim time usually live here."),
+        ("Loss payee", "A party paid for a covered property loss. It is not the same as an additional insured."),
+        ("Umbrella", "Liability limits above the underlying policies. The underlying limits have to qualify."),
+        ("Waiver of subrogation", "An endorsement in which the insurer gives up recovery against a named party."),
+    ]
+    gloss = "".join(f"<article><h3>{h(t)}</h3><p>{h(d)}</p></article>" for t, d in terms)
+    main = page_head(
+        "The firm",
+        "An independent brokerage.",
+        "We place coverage for the client and stay with the account.",
+    ) + f'''
+<section class="section" style="padding-top:12px"><div class="wrap split">
+  <div class="prose">
+    <h2>An independent practice</h2>
+    <p>SimpleINSURE Brokerage LLC places commercial and personal insurance for the client, not for a single carrier. Admitted markets, specialty markets, and surplus lines are all in reach, with access to A-rated carriers when the risk calls for them.</p>
+    <p>Remy Mehdizadeh founded the firm so an owner could have one broker who reads the policy and remains after it is bound. The license on record is on the <a href="/legal/">licenses page</a>. We are usually paid a commission by the insurer. You can ask what we expect on your own policy.</p>
+    <p><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
+  </div>
+  {figure_block("hero", "(max-width: 980px) 100vw, 40vw")}
+</div></section>
+<section class="section" id="partners" style="padding-top:0"><div class="wrap prose narrow">
+  <h2>For advisors</h2>
+  <p>Real estate attorneys, property managers, and accountants already sit next to the closing, the lease, and the books. Introduce a client and we call them, copy you if they agree, and tell you when the account is placed. Their information is not shared beyond that.</p>
+  <p>Compensation for a referral follows the license. New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons. What an advisor gets from us is a responsive broker.</p>
+  <p><a href="/contact/">Introduce a client</a></p>
+</div></section>
+<section class="section" id="glossary" style="padding-top:0"><div class="wrap">
+  <h2>A short glossary</h2>
+  <p class="lede">Eight terms that show up in leases, loans, and certificates.</p>
+  <div class="gloss-mini">{gloss}</div>
+</div></section>'''
+    return document(
+        "About SimpleINSURE",
+        "SimpleINSURE places commercial and personal insurance and stays with the account after it is bound.",
+        "/about/",
+        main,
+    )
+
+
+def redirect_page(from_key, target):
+    frag = ""
+    path = target
+    if "#" in target:
+        path, frag = target.split("#", 1)
+        frag = "#" + frag
+    if path != "/" and not path.endswith("/"):
+        path += "/"
+    depth = from_key.count("/")
+    if path == "/":
+        rel = "../" * depth or "./"
+    else:
+        rel = ("../" * depth) + path.lstrip("/")
+    rel += frag
+    canon = SITE + (path if path != "/" else "/") + frag
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Continue | SimpleINSURE</title>
+<meta name="description" content="This page has moved.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="{h(canon)}">
+<meta http-equiv="refresh" content="0; url={h(rel)}">
+</head>
+<body>
+<p><a href="{h(rel)}">Continue</a></p>
+</body>
+</html>'''
+
+
+REDIRECTS = {
+    "coverage/real-estate/index.html": "/coverage/#real-estate",
+    "coverage/hospitality/index.html": "/coverage/#hospitality",
+    "coverage/construction/index.html": "/coverage/#construction",
+    "coverage/professional/index.html": "/coverage/#professional",
+    "coverage/personal/index.html": "/coverage/#personal",
+    "checklists/index.html": "/coverage/",
+    "needs/index.html": "/coverage/",
+    "quote/index.html": "/policy-review/",
+    "resources/index.html": "/about/#glossary",
+    "partners/index.html": "/about/#partners",
+    "switching/index.html": "/policy-review/#handover",
+    "photo-credits/index.html": "/",
+    "style-preview/index.html": "/",
+    "new-york-building-insurance/index.html": "/coverage/#real-estate",
+    "new-york-contractor-insurance/index.html": "/coverage/#construction",
+    "new-york-restaurant-insurance/index.html": "/coverage/#hospitality",
+}
+
+
 def pages():
     out = {
         "index.html": home(),
-        "style-preview/index.html": style_preview(),
-        "quote/index.html": quote_page(),
-        "policy-review/index.html": policy_page(),
-        "coverage/index.html": coverage_index(),
-        "needs/index.html": needs_page(),
-        "checklists/index.html": checklists_page(),
-        "switching/index.html": switching_page(),
-        "resources/index.html": resources_page(),
-        "client-center/index.html": client_page(),
-        "about/index.html": about_page(),
+        "coverage/index.html": coverage_page(),
+        "policy-review/index.html": policy_hub(),
+        "client-center/index.html": client_center(),
+        "about/index.html": about_hub(),
         "contact/index.html": contact_page(),
-        "partners/index.html": partners_page(),
         "legal/index.html": legal_page(),
-        "photo-credits/index.html": credits_page(),
         "404.html": not_found(),
     }
-    for ind in INDUSTRIES:
-        out[f"coverage/{ind['slug']}/index.html"] = industry(ind)
-    legacy = {
-        "new-york-building-insurance": "real-estate",
-        "new-york-restaurant-insurance": "hospitality",
-        "new-york-contractor-insurance": "construction",
-    }
-    by_slug = {ind["slug"]: ind for ind in INDUSTRIES}
-    for old, slug in legacy.items():
-        out[f"{old}/index.html"] = industry(
-            by_slug[slug],
-            path=f"/{old}/",
-            canonical=f"/coverage/{slug}/",
-        )
+    for key, target in REDIRECTS.items():
+        out[key] = redirect_page(key, target)
     return out

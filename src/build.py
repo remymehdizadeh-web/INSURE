@@ -10,7 +10,7 @@ SRC = os.path.join(ROOT, "src")
 OUT = os.path.join(ROOT, "out")
 sys.path.insert(0, SRC)
 
-from render import pages  # noqa: E402
+from render import REDIRECTS, SITE, pages  # noqa: E402
 
 
 def split_root_url(url):
@@ -146,6 +146,66 @@ def assert_links(out_dir):
         raise SystemExit("broken links:\n" + "\n".join(missing[:80]))
 
 
+REMOVED = (
+    "coverage/real-estate/",
+    "coverage/hospitality/",
+    "coverage/construction/",
+    "coverage/professional/",
+    "coverage/personal/",
+    "checklists/",
+    "needs/",
+    "quote/",
+    "resources/",
+    "partners/",
+    "switching/",
+    "photo-credits/",
+    "style-preview/",
+    "new-york-building-insurance",
+    "new-york-contractor-insurance",
+    "new-york-restaurant-insurance",
+)
+
+
+def assert_retired(out_dir):
+    """Old URLs may exist only as redirect documents. No other page may link to them."""
+    href_re = re.compile(r'''(?:href|src|action)=["']([^"']+)["']''')
+    bad = []
+    for dirpath, _, files in os.walk(out_dir):
+        for name in files:
+            if not name.endswith(".html"):
+                continue
+            fp = os.path.join(dirpath, name)
+            rel = os.path.relpath(fp, out_dir).replace("\\", "/")
+            text = open(fp, encoding="utf-8").read()
+            if 'http-equiv="refresh"' in text:
+                continue
+            for url in href_re.findall(text):
+                path = url.split("#", 1)[0].split("?", 1)[0]
+                if any(piece in path for piece in REMOVED):
+                    bad.append(f"{rel} -> {url}")
+    if bad:
+        raise SystemExit("links to removed pages:\n" + "\n".join(bad[:40]))
+
+
+def write_sitemap(built):
+    locs = []
+    for rel in built:
+        if rel in REDIRECTS or rel == "404.html" or not rel.endswith("index.html"):
+            continue
+        if rel == "index.html":
+            locs.append(SITE + "/")
+        else:
+            locs.append(SITE + "/" + rel[: -len("index.html")])
+    body = "\n".join(f"  <url><loc>{loc}</loc></url>" for loc in locs)
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + body
+        + "\n</urlset>\n"
+    )
+    open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8").write(xml)
+
+
 def main():
     if os.path.exists(OUT):
         shutil.rmtree(OUT)
@@ -166,8 +226,10 @@ def main():
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         open(fp, "w", encoding="utf-8").write(relativize_urls(doc, rel.count("/")))
     open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write("User-agent: *\nDisallow: /\n")
+    write_sitemap(built)
     assert_portable(OUT)
     assert_links(OUT)
+    assert_retired(OUT)
     print("built", len(built), "pages")
 
 

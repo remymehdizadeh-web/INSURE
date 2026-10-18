@@ -578,6 +578,30 @@
     render();
   }
 
+  var pracNav = d.querySelector(".prac-nav");
+  if (pracNav) {
+    var pracLinks = [].slice.call(pracNav.querySelectorAll("a[data-prac]"));
+    var pracSections = pracLinks.map(function (a) { return d.getElementById(a.getAttribute("data-prac")); });
+    function markPractice() {
+      var current = pracSections[0];
+      pracSections.forEach(function (sec) {
+        if (!sec) return;
+        if (sec.getBoundingClientRect().top - 170 <= 0) current = sec;
+      });
+      pracLinks.forEach(function (a) {
+        var on = current && a.getAttribute("data-prac") === current.id;
+        a.classList.toggle("is-on", !!on);
+        if (on) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    }
+    addEventListener("scroll", markPractice, { passive: true });
+    markPractice();
+  }
+  d.querySelectorAll(".cc-hot").forEach(function (a) {
+    a.addEventListener("click", function (e) { e.stopPropagation(); });
+  });
+
   d.querySelectorAll(".plist").forEach(function (list) {
     list.addEventListener("mousemove", function (e) {
       var a = e.target.closest("a");
