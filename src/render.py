@@ -1438,6 +1438,7 @@ def not_found():
 
 
 def pages():
+    from mobile_samples import samples
     out = {
         "index.html": home(),
         "style-preview/index.html": style_preview(),
@@ -1456,6 +1457,7 @@ def pages():
         "photo-credits/index.html": credits_page(),
         "404.html": not_found(),
     }
+    out.update(samples())
     for ind in INDUSTRIES:
         out[f"coverage/{ind['slug']}/index.html"] = industry(ind)
     legacy = {
