@@ -740,6 +740,7 @@ body.page-inner:has(.page-head) main>.stage:before{content:none}
 .gloss-mini h3{font-family:var(--serif);font-weight:500;font-size:26px;color:var(--navy)}
 .gloss-mini p{margin-top:6px;color:var(--muted)}
 .wizard{border:0;padding:0;background:transparent}
+.wizard [hidden]{display:none !important}
 .handover{margin-top:48px;max-width:40em}
 
 .client-result{background:#f6f4f0;padding:28px 0}
@@ -786,8 +787,8 @@ body.page-inner:has(.page-head) main>.stage:before{content:none}
   .prac-nav a:hover{color:var(--navy);background:rgba(27,54,93,.05);border-bottom-color:transparent}
   .prac-nav a.is-on{color:var(--navy);background:#fff;border-color:rgba(27,54,93,.18);border-bottom-color:rgba(27,54,93,.18);box-shadow:0 8px 22px rgba(7,19,28,.06)}
   .prac-nav a:focus-visible{outline-color:var(--navy)}
-  .policy-head{padding-bottom:28px}
-  .contact-head{padding-bottom:8px}
+  .policy-head{padding-bottom:72px}
+  .contact-head{padding-bottom:72px}
   .desk-sheet{padding:72px 0 108px}
   .desk-sheet .wrap{max-width:680px}
   .desk-h{font-family:var(--serif);font-weight:500;font-size:clamp(36px,3vw,48px);letter-spacing:-.03em;color:var(--navy);margin:8px 0 8px}
@@ -797,6 +798,9 @@ body.page-inner:has(.page-head) main>.stage:before{content:none}
   .desk-sheet .btn{min-height:56px;min-width:240px;font-size:16px}
   .desk-bor{margin-top:36px;max-width:36em}
   .reach{background:#0c1824;color:#fff;padding:12px 0 72px}
+  body.page-inner:has(.page-head) main>.reach{background:#0c1824;padding-top:12px !important}
+  body.page-inner:has(.page-head) main>.reach:before,
+  body.page-inner:has(.page-head) main>.desk-sheet:before{content:none}
   .reach-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
   .reach-call{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(44px,4.4vw,68px);line-height:1;letter-spacing:-.03em;color:#fff;text-decoration:none}
   .reach-call:hover{color:#fff}

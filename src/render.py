@@ -281,7 +281,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=12">
+<link rel="stylesheet" href="/site.css?v=13">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -1621,7 +1621,6 @@ def policy_hub():
 </div>'''
     desk_steps = f'''
 <div data-step="1" data-label="Account" data-error="Choose what the policy covers.">
-  <h2 class="desk-h">Send the policy you have.</h2>
   <p class="quiet">Nothing on this form is stored on the website.</p>
   <div class="fields">
     {field("dcover", "What does the current policy cover?", kind="select", required=True, full=True, options=[label for _val, label in LINES])}
