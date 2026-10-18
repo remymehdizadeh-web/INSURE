@@ -251,6 +251,35 @@ def footer():
     <span>© 2026 SimpleINSURE Brokerage LLC. Coverage descriptions are general summaries. The issued policy governs.</span>
     <a href="/legal/">Licenses and disclosures</a>
   </div>
+  <div class="m-foot m-only">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
+      <div class="m-foot-cols">
+        <div><h2>Coverage</h2><ul>{cov}<li><a href="/checklists/">Checklists</a></li><li><a href="/needs/">Coverage guide</a></li></ul></div>
+        <div><h2>Advisory</h2><ul>
+          <li><a href="/policy-review/">Policy review</a></li>
+          <li><a href="/quote/">Request a review</a></li>
+          <li><a href="/switching/">Switching brokers</a></li>
+          <li><a href="/resources/">Resources</a></li>
+          <li><a href="/client-center/">Client service</a></li>
+        </ul></div>
+        <div><h2>Firm</h2><ul>
+          <li><a href="/about/">The firm</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/partners/">Partners</a></li>
+          <li><a href="/legal/">Licenses and disclosures</a></li>
+          <li><a href="/photo-credits/">Photo credits</a></li>
+        </ul></div>
+        <div><h2>Office</h2><ul>
+          <li><a href="{TEL}">{PHONE}</a></li>
+          <li><a href="{MAIL}">{EMAIL}</a></li>
+          <li>{ADDR}</li>
+        </ul></div>
+      </div>
+      <p class="m-legal">© 2026 SimpleINSURE Brokerage LLC. Coverage descriptions are general summaries. The issued policy governs.</p>
+      <p class="m-legal"><a href="/legal/">Licenses and disclosures</a></p>
+    </div>
+  </div>
 </footer>'''
 
 
@@ -288,6 +317,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/site.css?v=4">
 <style>
+.m-only{{display:none}}
 @media (max-width:980px){{
   .site-header{{position:fixed !important;top:max(12px,env(safe-area-inset-top)) !important;left:0 !important;right:0 !important;padding-top:0 !important;z-index:80 !important;transform:translate3d(0,var(--header-shift,0px),0)}}
   .site-header:before{{content:"";position:absolute;left:0;right:0;bottom:100%;height:max(12px,env(safe-area-inset-top));background:#071018;pointer-events:none}}
@@ -304,6 +334,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
+<link rel="stylesheet" href="/mobile.css?v=1">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -385,12 +416,105 @@ def cinematic_sections(eager=False):
 '''
 
 
+def mobile_home():
+    tiles = []
+    for i, (href, title, _sub, key) in enumerate(COVER):
+        wide = " m-tile-wide" if i == len(COVER) - 1 else ""
+        tiles.append(
+            f'<a class="m-tile{wide}" href="{href}">'
+            f'{pic(key, sizes="(max-width: 768px) 46vw, 240px")}'
+            f"<span>{h(title)}</span></a>"
+        )
+    practices = []
+    for i, (href, title, _sub, _key) in enumerate(COVER, 1):
+        practices.append(
+            f'<li><a href="{href}"><span>{i:02d}</span><strong>{h(title)}</strong></a></li>'
+        )
+    steps = [
+        ("Read", "Declarations, forms, and the endorsements behind them."),
+        ("Say so", "If the current program is already right, we say so."),
+        ("Market", "Only when there is a reason to move the account."),
+        ("Hand over", "Dates, certificates, and the renewal calendar."),
+    ]
+    step_html = "".join(
+        f'<li><div><span>{i:02d}</span><div><strong>{h(title)}</strong><em>{h(text)}</em></div></div></li>'
+        for i, (title, text) in enumerate(steps, 1)
+    )
+    faqs = [
+        ("Read the policy before a broker of record letter", "We read what you have before anyone is asked to sign a broker of record letter."),
+        ("Say so when it should stay", "If the current program is already right, we say so."),
+        ("Do not cut coverage to win on price", "A lower premium is not a reason to thin the program. Limits, valuation, and exclusions have to match the account."),
+        ("Stay after it is bound", "The same broker stays with certificates, renewals, and a claim."),
+    ]
+    faq_html = "".join(f"<details><summary>{h(q)}</summary><p>{h(a)}</p></details>" for q, a in faqs)
+    return f'''
+<div class="m-home m-only">
+<section class="m-hero" aria-label="Introduction">
+  <div class="m-arcs" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="m-eye"><i aria-hidden="true"></i>Commercial and personal</p>
+    <h1><span>The standard</span><span class="b">a broker should already meet.</span></h1>
+    <p class="m-sub">Send the policy you have. We read it before we talk about replacing it.</p>
+    <div class="m-actions">
+      <a class="btn" href="/quote/">Talk to a broker {ARROW}</a>
+      <a class="m-phone" href="{TEL}">{PHONE}</a>
+    </div>
+  </div>
+</section>
+<section class="m-block">
+  <div class="wrap">
+    <p class="m-eye"><i aria-hidden="true"></i>Practices</p>
+    <h2>Five<span class="b">practices.</span></h2>
+    <p class="m-lead">Buildings, hospitality, contracting, offices, and the household.</p>
+    <div class="m-tiles">{''.join(tiles)}</div>
+  </div>
+</section>
+<section class="m-block" style="padding-top:8px">
+  <div class="wrap">
+    <p class="m-eye"><i aria-hidden="true"></i>Coverage</p>
+    <h2>Commercial and<span class="b">personal.</span></h2>
+    <div class="m-tabs" data-tabs>
+      <div class="m-tabbar" role="tablist" aria-label="Coverage lists">
+        <button type="button" role="tab" data-tab="practices">Practices</button>
+        <button type="button" role="tab" data-tab="steps">The work</button>
+      </div>
+      <div class="tab-panel is-on" id="panel-practices" role="tabpanel"><ol class="m-num">{''.join(practices)}</ol></div>
+      <div class="tab-panel" id="panel-steps" role="tabpanel"><ol class="m-num m-num-notes">{step_html}</ol><p class="m-more"><a href="/switching/">How the handover works {ARROW}</a></p></div>
+    </div>
+  </div>
+</section>
+<section class="m-block alt">
+  <div class="wrap">
+    <p class="m-eye"><i aria-hidden="true"></i>A placed account</p>
+    <h2>Same limits.<span class="b">A wider umbrella.</span></h2>
+    <p class="m-lead">A Manhattan restaurant. Liability limits stayed. The umbrella rose from $1 million to $5 million, and employment practices liability was added. The prior program had excluded it.</p>
+    <div class="m-fig"><div><span>Before</span><b>$71,196</b></div><i style="--w:100%"></i></div>
+    <div class="m-fig"><div><span>After</span><b>$21,309</b></div><i style="--w:30%"></i></div>
+    <div class="m-card">
+      <p class="m-eye"><i aria-hidden="true"></i>The difference</p>
+      <h3>$49,887</h3>
+      <p>less a year.</p>
+      <p class="fine">The figures are the annual premium of the prior program and the new program as proposed, before any broker service fee. The difference is $49,887. The client and the prior broker are not named. Every account is different, and the result depends on underwriting.</p>
+    </div>
+  </div>
+</section>
+<section class="m-block">
+  <div class="wrap">
+    <p class="m-eye"><i aria-hidden="true"></i>The standard</p>
+    <h2>What we will<span class="b">not do.</span></h2>
+    <div class="faq">{faq_html}</div>
+  </div>
+</section>
+</div>
+'''
+
+
 def home():
     return document(
         "Commercial and Personal Insurance | SimpleINSURE",
         "SimpleINSURE places commercial and personal insurance. Send the policy you have. We read it, approach A-rated markets when there is a reason, and stay after it is bound.",
         "/",
-        cinematic_sections() + f'''
+        mobile_home() + cinematic_sections() + f'''
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
@@ -554,7 +678,8 @@ def aside():
 
 def page_head(kicker, title, lede=""):
     lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
-    return f'<header class="page-head"><div class="wrap"><h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
+    eye = f'<p class="kicker m-only">{h(kicker)}</p>' if kicker else ""
+    return f'<header class="page-head"><div class="wrap">{eye}<h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
 
 
 def continue_to(links):
@@ -821,9 +946,10 @@ def industry(ind, path=None, canonical=None):
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
   <div class="wrap">
+    <p class="kicker m-only">{h(ind["nav"])}</p>
     <h1 class="rise"><span class="line"><span>{h(ind["h1"])}</span></span></h1>
     <p class="lede">{h(ind["lede"])}</p>
-    <div class="cta-row"><a class="btn btn-light magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a></div>
+    <div class="cta-row"><a class="btn btn-light magnet" href="/quote/?type={ind["slug"]}">Start with this account {ARROW}</a><a class="m-phone m-only" href="{TEL}">{PHONE}</a></div>
   </div>
 </header>
 <section class="section" style="padding-top:64px"><div class="wrap split">
