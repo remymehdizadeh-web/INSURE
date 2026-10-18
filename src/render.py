@@ -83,7 +83,7 @@ def arcs():
         for r, sw, op, c in rings
     )
     return (
-        '<div class="arcs" aria-hidden="true"><div class="arc-glow"></div>'
+        '<div class="arcs only-1024" aria-hidden="true"><div class="arc-glow"></div>'
         '<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">'
         f'<g class="arc-drift"><g class="arc-spin">{circles}</g></g></svg></div>'
     )
@@ -162,7 +162,6 @@ def sheet_links(current):
     for href, title, _sub, *_r in COVER:
         parts.append(f'<a class="sub" href="{href}">{h(title)}</a>')
     for href, label in (
-        ("/policy-review/", "Policy review"),
         ("/client-center/", "Client Center"),
         ("/about/", "Firm"),
         ("/contact/", "Contact"),
@@ -182,7 +181,6 @@ def header(current):
     <a class="logo" href="/" aria-label="SimpleINSURE home"><img src="/simpleinsure-wordmark.png" alt="SimpleINSURE" width="1684" height="360"></a>
     <nav class="nav-desk" aria-label="Primary">
       {top("/coverage/", "Coverage")}
-      {top("/policy-review/", "Policy review")}
       {top("/client-center/", "Client Center")}
       {top("/about/", "Firm")}
       {top("/contact/", "Contact")}
@@ -283,7 +281,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=9">
+<link rel="stylesheet" href="/site.css?v=10">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -314,7 +312,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=6" defer></script>
+<script src="/site.js?v=7" defer></script>
 </body>
 </html>'''
 
@@ -343,6 +341,7 @@ def cinematic_sections(eager=False):
     <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
+  {arcs()}
   <div class="hero-copy wrap">
     <h1 class="rise"><span class="line"><span>Know what you're covered for.</span></span></h1>
     <p class="lede">Send us your policy. We'll walk you through it in plain English. The policy itself governs.</p>
@@ -420,6 +419,13 @@ def home():
         "SimpleINSURE Brokerage LLC places commercial and personal insurance in New York. Send the policy you have. We read it, approach other insurers only when there is a reason, and stay after it is bound.",
         "/",
         cinematic_sections() + mobile_home() + f'''
+<section class="cred-strip only-1024" aria-label="License">
+  <div class="wrap">
+    <p>SimpleINSURE Brokerage LLC</p>
+    <p>NY DFS License No. BR-1984615</p>
+    <a href="/legal/">Licenses and disclosures</a>
+  </div>
+</section>
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
@@ -579,10 +585,12 @@ def aside():
     </aside>'''
 
 
-def page_head(kicker, title, lede=""):
-    lead = f'<p class="lede">{h(lede)}</p>' if lede else ""
+def page_head(kicker, title, lede="", cls="", lede_cls=""):
+    lead_cls = "lede" + (f" {lede_cls}" if lede_cls else "")
+    lead = f'<p class="{lead_cls}">{h(lede)}</p>' if lede else ""
     eye = f'<p class="kicker m-only">{h(kicker)}</p>' if kicker else ""
-    return f'<header class="page-head"><div class="wrap">{eye}<h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
+    extra = f" {cls}" if cls else ""
+    return f'<header class="page-head{extra}"><div class="wrap">{eye}<h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
 
 
 def continue_to(links):
@@ -1446,11 +1454,35 @@ def contact_page():
   <div class="fields" style="margin-top:16px">{contact_fields("c")}</div>
   <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
 </div>'''
+    short = f'''
+<div data-step="1" data-label="Message" data-error="Add your name, and an email or a phone number.">
+  <h2 class="desk-h">Send a note</h2>
+  <p class="quiet">Nothing on this form is stored on the website.</p>
+  <div class="fields">
+    {field("sname", "Full name", required=True, full=True, attrs='autocomplete="name"')}
+    {field("semail", "Email", kind="email", need="email", attrs='autocomplete="email"')}
+    {field("sphone", "Phone", kind="tel", need="phone", attrs='autocomplete="tel"')}
+    {field("snotes", "Anything we should know", kind="textarea", full=True)}
+  </div>
+  <p class="quiet">By sending this you agree that a broker may contact you about the note. There is no obligation.</p>
+</div>'''
     main = page_head(
         "Contact",
         "Call, or send a note.",
         "A broker replies by phone or email. If it's urgent, call.",
-    ) + f'''<section class="section" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
+        cls="contact-head",
+        lede_cls="hide-1024",
+    ) + f'''
+<section class="reach only-1024" aria-label="Office"><div class="wrap reach-grid">
+  <div>
+    <a class="reach-call" href="{TEL}">{PHONE}</a>
+    <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
+    <p class="reach-addr">{ADDR}</p>
+  </div>
+  <iframe class="office-map" title="Map of 900 Stewart Ave, Garden City" src="https://www.openstreetmap.org/export/embed.html?bbox=-73.6085%2C40.7287%2C-73.5885%2C40.7387&amp;layer=mapnik&amp;marker=40.7336971%2C-73.5984942" loading="lazy"></iframe>
+</div></section>
+<section class="section desk-sheet only-1024"><div class="wrap">{wizard("Contact", "Email this note", short)}</div></section>
+<section class="section hide-1024" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
     return document(
         "Contact | SimpleINSURE",
         "Call SimpleINSURE or send a note. The form opens an email to the brokerage. Nothing is stored on the website.",
@@ -1570,12 +1602,37 @@ def policy_hub():
   <div class="fields">{contact_fields("q")}</div>
   <p class="quiet">By sending this you agree that a broker may contact you about the request. There is no obligation.</p>
 </div>'''
+    desk_steps = f'''
+<div data-step="1" data-label="Account" data-error="Choose what the policy covers.">
+  <h2 class="desk-h">Send the policy you have.</h2>
+  <p class="quiet">Nothing on this form is stored on the website.</p>
+  <div class="fields">
+    {field("dcover", "What does the current policy cover?", kind="select", required=True, full=True, options=[label for _val, label in LINES])}
+    {field("dcarrier", "Current carrier, if you want to say")}
+    {field("drenew", "Renewal or expiration date", kind="date")}
+    {field("ddeliver", "The policy", kind="select", required=True, full=True, options=["I'll attach it to the email", "Email it to us"])}
+  </div>
+</div>
+<div data-step="2" data-label="Contact" data-error="Add your name, and an email or a phone number." hidden>
+  <h2 class="desk-h">Where should we reply?</h2>
+  <div class="fields">
+    {field("dname", "Full name", required=True, full=True, attrs='autocomplete="name"')}
+    {field("demail", "Email", kind="email", need="email", attrs='autocomplete="email"')}
+    {field("dphone", "Phone", kind="tel", need="phone", attrs='autocomplete="tel"')}
+  </div>
+</div>'''
     main = page_head(
         "Policy review",
         "Send the policy you have.",
         "We read it first. If it's right, we say so.",
+        cls="policy-head",
+        lede_cls="hide-1024",
     ) + f'''
-<section class="section" id="read" style="padding-top:36px"><div class="wrap">
+<section class="section desk-sheet only-1024"><div class="wrap">
+  {wizard("Policy review", "Email this review", desk_steps)}
+  <p class="quiet desk-bor">A broker of record letter changes who services your policy, if the insurer accepts it.</p>
+</div></section>
+<section class="section hide-1024" id="read" style="padding-top:36px"><div class="wrap">
   <div class="path-tabs" data-tabs>
     <div class="path-bar" role="tablist" aria-label="How to start">
       <button type="button" role="tab" data-tab="read">Read a current policy</button>
@@ -1729,12 +1786,15 @@ def client_center():
     <p class="lede">Certificates, ID cards, changes, claims, bills, and renewals.</p>
   </div>
 </header>
-<section class="cc-portal"><div class="wrap">
-  <p id="portal" class="cc-login"><a href="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn" target="_blank" rel="noopener">Client login (EZLynx)</a>. Opens a portal run by EZLynx, a third-party service with its own terms and privacy policy.</p>
-  <div class="cc-layout">
+<section class="cc-portal">
+  <div id="portal" class="cc-login"><div class="wrap">
+    <div class="ez-card"><iframe title="Customer Service Portal Login" src="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn" class="ez-frame block h-[672px] w-full border-0 sm:h-[622px]">Your browser is unable to display frames. Please <a href="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn">click here</a> to visit the secure customer service center.</iframe></div>
+    <p class="cc-disclose"><a href="https://customerservice.agentinsure.com/EzlynxCustomerService/simpleinsure/Account/LogIn" target="_blank" rel="noopener">Client login (EZLynx)</a>. Opens a portal run by EZLynx, a third-party service with its own terms and privacy policy.</p>
+  </div></div>
+  <div class="wrap">  <div class="cc-layout">
   <div class="cc-list">{cert}{cards}{change}{claim}{bill}{renew}</div>
-  </div>
-</div></section>'''
+  </div></div>
+</section>'''
     return document(
         "Client Center | SimpleINSURE",
         "Request a certificate, ID cards, a policy change, or help with a claim, a bill, or a renewal. The forms open an email to SimpleINSURE.",
@@ -1759,8 +1819,24 @@ def about_hub():
         "The firm",
         "An independent brokerage.",
         "We work for you, not for any one insurance company.",
+        cls="firm-head",
     ) + f'''
-<section class="section" style="padding-top:12px"><div class="wrap split">
+<section class="section firm-desk only-1024"><div class="wrap firm-grid">
+  <div>
+    <h2>How it works.</h2>
+    <ol class="firm-points">
+      <li><strong>We read it</strong><span>Your policy, forms, and endorsements.</span></li>
+      <li><strong>We tell you</strong><span>If it's right, we say so.</span></li>
+      <li><strong>We shop it</strong><span>Only when there's a reason to.</span></li>
+      <li><strong>We switch it</strong><span>Dates lined up.</span></li>
+    </ol>
+    <p class="firm-license">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs.</p>
+    <p class="firm-law">New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
+    <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
+  </div>
+  {figure_block("hero", "(max-width: 980px) 100vw, 46vw")}
+</div></section>
+<section class="section hide-1024" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
     <h2>An independent practice</h2>
     <p>SimpleINSURE Brokerage LLC works with a range of insurance companies, including specialty markets.</p>
@@ -1769,7 +1845,7 @@ def about_hub():
   </div>
   {figure_block("hero", "(max-width: 980px) 100vw, 40vw")}
 </div></section>
-<section class="section" id="partners" style="padding-top:0"><div class="wrap prose narrow">
+<section class="section hide-1024" id="partners" style="padding-top:0"><div class="wrap prose narrow">
   <h2>For advisors</h2>
   <p>Attorneys, property managers, and accountants: introduce a client and we'll call them. With their OK, we keep you posted.</p>
   <p>New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>

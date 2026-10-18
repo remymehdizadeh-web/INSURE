@@ -273,6 +273,28 @@
     if (buttons[0]) select(buttons[0].getAttribute("data-tab"));
   });
 
+  var pracNav = d.querySelector(".prac-nav");
+  if (pracNav) {
+    var pracLinks = [].slice.call(pracNav.querySelectorAll("a[data-prac]"));
+    function markPrac() {
+      var wide = window.matchMedia("(min-width: 1024px)").matches;
+      var current = pracLinks[0];
+      if (wide) {
+        var y = window.scrollY + 160;
+        pracLinks.forEach(function (a) {
+          var el = d.getElementById(a.getAttribute("data-prac"));
+          if (!el) return;
+          var top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= y) current = a;
+        });
+      }
+      pracLinks.forEach(function (a) { a.classList.toggle("is-on", a === current); });
+    }
+    addEventListener("scroll", markPrac, { passive: true });
+    addEventListener("resize", markPrac);
+    markPrac();
+  }
+
   d.querySelectorAll("[data-checks]").forEach(function (root) {
     var key = "si-check-" + root.getAttribute("data-checks");
     var boxes = [].slice.call(root.querySelectorAll('input[type="checkbox"]'));
