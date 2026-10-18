@@ -158,9 +158,10 @@ def nav_links(items, current):
 
 
 def sheet_links(current):
-    parts = ['<a href="/coverage/">Coverage</a>']
+    parts = ['<a href="/coverage/">Coverage</a>', '<div class="sheet-subs">']
     for href, title, _sub, *_r in COVER:
         parts.append(f'<a class="sub" href="{href}">{h(title)}</a>')
+    parts.append("</div>")
     for href, label in (
         ("/client-center/", "Client Center"),
         ("/about/", "Firm"),
@@ -265,6 +266,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#061018" media="(max-width: 1023px)">
 <title>{h(title)}</title>
 <meta name="description" content="{h(desc)}">
 <meta name="robots" content="noindex, nofollow">
@@ -281,13 +283,13 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=13">
+<link rel="stylesheet" href="/site.css?v=14">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
-  .site-header{{position:fixed !important;top:max(12px,env(safe-area-inset-top)) !important;left:0 !important;right:0 !important;padding-top:0 !important;z-index:80 !important;transform:translate3d(0,var(--header-shift,0px),0)}}
-  .site-header:before{{content:"";position:absolute;left:0;right:0;bottom:100%;height:max(12px,env(safe-area-inset-top));background:#071018;pointer-events:none}}
-  html.veil .site-header:before{{background:#fff;height:max(12px,env(safe-area-inset-top));top:auto;bottom:100%}}
+  .site-header{{position:fixed !important;top:calc(12px + env(safe-area-inset-top)) !important;left:0 !important;right:0 !important;padding-top:0 !important;z-index:80 !important;transform:translate3d(0,var(--header-shift,0px),0)}}
+  .site-header:before{{content:"";position:absolute;left:0;right:0;bottom:100%;height:calc(12px + env(safe-area-inset-top));background:transparent;pointer-events:none}}
+  html.veil .site-header:before{{background:#fff;height:calc(12px + env(safe-area-inset-top));top:auto;bottom:100%}}
   .h-pin{{height:auto !important}}
   .h-sticky{{position:static !important;height:auto !important;display:block !important;overflow:visible !important}}
   .h-intro{{width:auto !important;display:block !important;padding:48px 20px 16px !important;box-sizing:border-box !important}}
@@ -300,7 +302,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=8">
+<link rel="stylesheet" href="/mobile.css?v=9">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -312,7 +314,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
 <script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=9" defer></script>
+<script src="/site.js?v=10" defer></script>
 </body>
 </html>'''
 
@@ -344,9 +346,9 @@ def cinematic_sections(eager=False):
   {arcs()}
   <div class="hero-copy wrap">
     <h1 class="rise"><span class="line"><span>Know what you're covered for.</span></span></h1>
-    <p class="lede">Send us your policy. We'll walk you through it in plain English. The policy itself governs.</p>
+    <p class="lede">Send us your policy. We'll walk you through it in plain English.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
     </div>
   </div>
   <a class="scroll-cue" href="#practices"><span class="sr">Practices</span><i aria-hidden="true"></i></a>
@@ -466,7 +468,7 @@ def home():
     <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
     <p>We'll walk you through it, even if the answer is to keep it.</p>
     <div class="cta-row">
-      <a class="btn btn-light magnet" href="/policy-review/">Get a quote {ARROW}</a>
+      <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
     </div>
   </div>
@@ -1541,7 +1543,7 @@ def coverage_page():
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
     <p class="lede">{h(ind["lede"])}</p>
     <ul class="stage-lines">{lines}</ul>
-    <a class="more" href="/policy-review/">Get a quote {ARROW}</a>
+    <a class="more" href="/policy-review/">Request a review {ARROW}</a>
   </div>
 </section>''')
     main = page_head(

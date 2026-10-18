@@ -22,6 +22,7 @@
     window.scrollTo(0, scrollLock || 0);
     if (lenis) lenis.start();
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+    pinHeader();
   }
   function openSheet() {
     scrollLock = window.scrollY || 0;
@@ -33,6 +34,8 @@
     d.body.style.left = "0";
     d.body.style.right = "0";
     d.body.style.width = "100%";
+    headerShift = 0;
+    d.documentElement.style.setProperty("--header-shift", "0px");
     if (lenis) lenis.stop();
     menuBtn.setAttribute("aria-expanded", "true");
     var first = sheet.querySelector("nav a, button");
@@ -97,12 +100,12 @@
       probe.style.cssText = "position:fixed;left:0;width:0;top:0;height:constant(safe-area-inset-top);height:env(safe-area-inset-top);pointer-events:none;visibility:hidden";
       d.body.appendChild(probe);
     }
-    return Math.max(12, probe.getBoundingClientRect().height || 0);
+    return (probe.getBoundingClientRect().height || 0) + 12;
   }
 
   function pinHeader() {
     if (!header) return;
-    if (!mobileQ.matches) {
+    if (!mobileQ.matches || d.documentElement.classList.contains("nav-open")) {
       if (headerShift) {
         headerShift = 0;
         d.documentElement.style.setProperty("--header-shift", "0px");

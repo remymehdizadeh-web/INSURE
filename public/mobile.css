@@ -1,6 +1,6 @@
 /* Phone layout, aligned with simpleinsure.co on a small screen.
-   Desktop (769px and up, including the approved 1024px+ page) is unchanged:
-   the only rule outside this query hides the extra phone markup. */
+   Desktop at 1024px and up is unchanged by the rules in this file:
+   the only rule outside these queries hides the extra phone markup. */
 
 .m-only { display: none; }
 
@@ -623,4 +623,138 @@
   .cc-hot { grid-column: 1 / -1; justify-self: start; font-size: 22px; white-space: normal; }
   .cc-item summary b { font-size: 28px; }
   .cc-claim .cc-inner { padding: 16px 16px 4px; }
+}
+
+/* Phone header and menu, under 1024. Desktop at 1024px and up is untouched. */
+@media (max-width: 1023px) {
+  .site-header {
+    top: calc(12px + env(safe-area-inset-top)) !important;
+    padding-top: 0 !important;
+  }
+  .site-header:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 100%;
+    height: calc(12px + env(safe-area-inset-top));
+    background: transparent;
+    pointer-events: none;
+  }
+  html.veil .site-header:before,
+  html.veil body.page-home .site-header:before,
+  html.veil body.page-inner .site-header:before {
+    top: auto;
+    bottom: 100%;
+    height: calc(12px + env(safe-area-inset-top));
+    background: #fff;
+  }
+  .bar { width: calc(100% - 24px); }
+
+  html.nav-open .site-header {
+    top: 0 !important;
+    padding-top: env(safe-area-inset-top) !important;
+    transform: none !important;
+  }
+  html.nav-open .site-header:before,
+  html.nav-open body.page-home .site-header:before,
+  html.nav-open body.page-inner .site-header:before {
+    background: #fff !important;
+    height: env(safe-area-inset-top);
+  }
+  html.nav-open .bar,
+  body.nav-open .bar {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .sheet {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+    padding: calc(env(safe-area-inset-top) + 76px) 24px max(24px, env(safe-area-inset-bottom));
+  }
+  .sheet nav { flex: none; overflow: visible; min-height: 0; }
+  .sheet nav > a {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -.03em;
+    color: #0c1824;
+    padding: 13px 0;
+    border-bottom: 1px solid #e4ebf2;
+  }
+  .sheet-subs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 18px;
+    padding: 2px 0 8px 14px;
+    border-bottom: 1px solid #e4ebf2;
+  }
+  .sheet .sheet-subs a.sub {
+    font-size: 15px;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: #5c6b7a;
+    padding: 7px 0;
+    border-bottom: 0;
+  }
+  .sheet .sheet-cta {
+    flex: none;
+    margin: 0;
+    padding: 18px 0 0;
+    gap: 8px;
+    background: #fff;
+  }
+  .sheet .sheet-cta a {
+    padding: 2px 0;
+    border: 0;
+    font-size: 16px;
+    font-weight: 560;
+    color: #0c1824;
+  }
+  .sheet .sheet-cta a.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    height: 42px;
+    margin: 0 0 4px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 999px;
+    background: #1F6FC4;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 560;
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: center;
+  }
+  .sheet .sheet-cta a.btn:hover {
+    background: #185fa8;
+    border-color: transparent;
+    color: #fff;
+  }
+  html.nav-open,
+  html.nav-open body {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
 }
