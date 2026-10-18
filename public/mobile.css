@@ -572,9 +572,20 @@
   .callout { margin: 0 0 16px; padding: 14px 16px; background: #061A2E; color: #fff; }
   .callout a { color: #fff; font-weight: 650; }
 
-  .prac-nav { position: static; top: auto; overflow-x: auto; }
+  body.page-inner:has(.page-head) main > .prac-nav {
+    position: static;
+    top: auto;
+    z-index: 2;
+    overflow-x: auto;
+    background: #fff;
+    color: #061A2E;
+    border-bottom: 1px solid #e4ebf2;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
   .prac-nav .wrap { width: max-content; min-width: 100%; gap: 18px; padding: 0 24px; }
-  .prac-nav a { font-size: 17px; padding: 12px 0; }
+  .prac-nav a { font-size: 17px; padding: 12px 0; color: #3E4854; }
+  .prac-nav a:hover, .prac-nav a.is-on { color: #061A2E; border-bottom-color: #061A2E; }
 
   body.page-inner main > .stage {
     display: block;

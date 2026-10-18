@@ -285,7 +285,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=7">
+<link rel="stylesheet" href="/site.css?v=8">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -304,7 +304,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=6">
+<link rel="stylesheet" href="/mobile.css?v=7">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -1537,7 +1537,7 @@ def coverage_page():
         flip = " flip" if i % 2 else ""
         bands.append(f'''
 <section class="stage{flip}" id="{slug}">
-  <figure class="stage-photo">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
+  <figure class="stage-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
   <div class="stage-copy">
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
     <p class="lede">{h(ind["lede"])}</p>
