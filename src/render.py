@@ -29,6 +29,7 @@ DIMS = {
     "professional": (1600, 1067),
     "personal": (1600, 1067),
     "facade": (1600, 1404),
+    "counter": (1600, 1067),
 }
 
 
@@ -260,7 +261,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=22">
+<link rel="stylesheet" href="/site.css?v=23">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -401,6 +402,17 @@ def client_result():
     <p class="result-label" data-rise>Client result</p>
     <h2 id="result-h" data-rise><span class="desk-break">A Manhattan</span> restaurant</h2>
     <p class="result-line" data-rise><span>Same liability limits.</span> <span>Umbrella raised from $1 million to $5 million.</span> <span>Employment practices coverage added.</span></p>
+    <p class="result-foot" data-rise>Every account is different. Terms depend on underwriting.</p>
+  </div>
+</section>
+<section class="client-result client-result-grays" id="grays" aria-labelledby="grays-h">
+  <figure class="result-photo rise-photo only-1024">{pic("counter", sizes="(min-width: 1024px) 58vw, 100vw", alt="Representative New York food counter")}<figcaption class="result-rep">Representative image.</figcaption></figure>
+  <div class="wrap">
+    <p class="result-label" data-rise>Client result</p>
+    <p class="result-name" data-rise>Gray's Papaya</p>
+    <h2 id="grays-h" data-rise><span class="desk-break">More coverage for</span> a New York original.</h2>
+    <p class="result-line" data-rise><span>Same liability limits.</span> <span>A higher umbrella limit.</span> <span>Employment practices coverage added.</span></p>
+    <p class="result-body" data-rise>Gray's Papaya has served hot dogs at 72nd and Broadway for years. We reviewed the full insurance program, took it to market, and put a broader program in place.</p>
     <p class="result-foot" data-rise>Every account is different. Terms depend on underwriting.</p>
   </div>
 </section>'''
