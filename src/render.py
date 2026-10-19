@@ -283,7 +283,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=14">
+<link rel="stylesheet" href="/site.css?v=15">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -438,13 +438,6 @@ def home():
         "SimpleINSURE Brokerage LLC places commercial and personal insurance in New York. Send the policy you have. We read it, approach other insurers only when there is a reason, and stay after it is bound.",
         "/",
         cinematic_sections() + m_top + client_result() + m_steps + f'''
-<section class="cred-strip only-1024" aria-label="License">
-  <div class="wrap">
-    <p>SimpleINSURE Brokerage LLC</p>
-    <p>NY DFS License No. BR-1984615</p>
-    <a href="/legal/">Licenses and disclosures</a>
-  </div>
-</section>
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
