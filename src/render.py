@@ -28,7 +28,7 @@ DIMS = {
     "construction": (1600, 1067),
     "professional": (1600, 1067),
     "personal": (1600, 1067),
-    "facade": (1600, 1067),
+    "facade": (1600, 1404),
 }
 
 
@@ -37,7 +37,7 @@ def h(value):
 
 
 # Same file family at every width. The query busts a cached estate-800 that was a different photograph.
-PHOTO_V = "4"
+PHOTO_V = "5"
 
 
 def photo_src(key, width):
@@ -259,7 +259,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=18">
+<link rel="stylesheet" href="/site.css?v=19">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -1415,7 +1415,7 @@ def credits_page():
         )
     main = page_head("Photo credits", "Every photograph on this site, with the author and the license.") + f'''
 <section class="section" style="padding-top:12px"><div class="wrap prose">
-  <p>Photographs are used under the Unsplash License. Credit is optional. It is listed here and is not shown on the other pages.</p>
+  <p>Photographs are used under the Unsplash License or the Pexels License. Credit is optional. It is listed here and is not shown on the other pages.</p>
   <table class="credits" style="width:100%;border-collapse:collapse;margin-top:18px">
     <thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Used as</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">File</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Author</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">License</th></tr></thead>
     <tbody>{"".join(rows)}</tbody>
@@ -1805,7 +1805,7 @@ def about_hub():
     ) + f'''
 <section class="section firm-desk only-1024">
   <div class="wrap firm-split">
-    <div class="firm-panel"><p>We work for you, not for any one insurance company.</p></div>
+    <div class="firm-panel"><p>Garden City, New York</p></div>
     <div class="firm-copy">
       <p class="firm-role">Principal</p>
       <h2>Remy Mehdizadeh</h2>
