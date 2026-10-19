@@ -178,6 +178,22 @@
 
   if (!reduce && "IntersectionObserver" in window) {
     d.documentElement.classList.add("motion");
+    var riseNodes = d.querySelectorAll("[data-rise], .rise-photo");
+    riseNodes.forEach(function (el, i) {
+      el.style.setProperty("--d", (Math.min(i, 5) * 0.07) + "s");
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.98 && r.bottom > 0) el.classList.add("is-in");
+    });
+    var riseIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("is-in");
+        riseIo.unobserve(en.target);
+      });
+    }, { rootMargin: "0px 0px 8% 0px", threshold: 0.01 });
+    riseNodes.forEach(function (el) {
+      if (!el.classList.contains("is-in")) riseIo.observe(el);
+    });
     var groups = new Map();
     d.querySelectorAll("[data-reveal]").forEach(function (el) {
       var p = el.parentElement;
