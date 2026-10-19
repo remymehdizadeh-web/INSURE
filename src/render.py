@@ -64,31 +64,6 @@ def cred(key):
     )
 
 
-def arcs():
-    rings = [
-        (280, 90, 0.16, "#5BA4E5"),
-        (280, 2.4, 0.8, "#C5E6FA"),
-        (430, 70, 0.13, "#3D86C4"),
-        (430, 2, 0.7, "#9ED4F8"),
-        (590, 110, 0.14, "#7EBFEE"),
-        (590, 2.6, 0.85, "#E7F6FF"),
-        (770, 64, 0.11, "#5BA4E5"),
-        (770, 1.8, 0.6, "#8ECAF5"),
-        (980, 86, 0.12, "#2F6FB0"),
-        (980, 2.2, 0.75, "#B9DFF8"),
-        (1200, 48, 0.1, "#5BA4E5"),
-    ]
-    circles = "".join(
-        f'<circle cx="120" cy="430" r="{r}" style="fill:none;stroke:{c};stroke-width:{sw};opacity:{op}"/>'
-        for r, sw, op, c in rings
-    )
-    return (
-        '<div class="arcs only-1024" aria-hidden="true"><div class="arc-glow"></div>'
-        '<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">'
-        f'<g class="arc-drift"><g class="arc-spin">{circles}</g></g></svg></div>'
-    )
-
-
 def figure_block(key, sizes, eager=False, cls="photo-block"):
     return f'<figure class="{cls}"><div class="shot">{pic(key, eager=eager, sizes=sizes)}</div></figure>'
 
@@ -283,7 +258,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=16">
+<link rel="stylesheet" href="/site.css?v=17">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -302,7 +277,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=9">
+<link rel="stylesheet" href="/mobile.css?v=10">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -313,7 +288,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
-<script src="/site.js?v=11" defer></script>
+<script src="/site.js?v=12" defer></script>
 </body>
 </html>'''
 
@@ -1483,15 +1458,19 @@ def contact_page():
         cls="contact-head",
         lede_cls="hide-1024",
     ) + f'''
-<section class="reach only-1024" aria-label="Office"><div class="wrap reach-grid">
-  <div>
-    <a class="reach-call" href="{TEL}">{PHONE}</a>
-    <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
-    <p class="reach-addr">{ADDR}</p>
+<section class="contact-desk only-1024" aria-label="Office">
+  <div class="contact-split">
+    <div class="contact-form">{wizard("Contact", "Email this note", short)}</div>
+    <figure class="contact-visual">
+      {pic("hero", eager=True, sizes="(min-width: 1024px) 58vw, 100vw")}
+      <figcaption>
+        <a class="reach-call" href="{TEL}">{PHONE}</a>
+        <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
+        <p class="reach-addr">{ADDR}</p>
+      </figcaption>
+    </figure>
   </div>
-  <figure class="reach-photo">{pic("professional", sizes="(min-width: 1024px) 46vw, 100vw")}</figure>
-</div></section>
-<section class="section desk-sheet only-1024"><div class="wrap">{wizard("Contact", "Email this note", short)}</div></section>
+</section>
 <section class="section hide-1024" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
     return document(
         "Contact | SimpleINSURE",
@@ -1536,6 +1515,7 @@ def coverage_page():
         "Coverage",
         "Five practices. One account.",
         "One broker for the business and the household.",
+        cls="cover-head",
     ) + "".join(bands)
     return document(
         "Coverage | SimpleINSURE",

@@ -126,6 +126,11 @@
   function flattenRail() {
     var pin = d.querySelector(".h-pin");
     var track = d.querySelector(".h-track");
+    if (!mobileQ.matches) {
+      if (pin) pin.style.removeProperty("height");
+      if (track) track.style.removeProperty("transform");
+      return;
+    }
     if (pin) pin.style.setProperty("height", "auto", "important");
     if (track) track.style.setProperty("transform", "none", "important");
   }
