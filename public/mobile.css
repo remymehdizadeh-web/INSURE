@@ -257,29 +257,6 @@
     color: #fff;
     padding: 132px 0 64px;
   }
-  .m-arcs, .m-arcs:before, .m-arcs:after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .m-arcs {
-    right: -78%;
-    bottom: -58%;
-    width: 168%;
-    height: 92%;
-    border: 1px solid rgba(124, 184, 242, .28);
-  }
-  .m-arcs:before {
-    inset: 11% 6% auto;
-    height: 78%;
-    border: 1px solid rgba(124, 184, 242, .2);
-  }
-  .m-arcs:after {
-    inset: 24% 14% auto;
-    height: 70%;
-    border: 1px solid rgba(124, 184, 242, .14);
-  }
   .m-eye {
     display: flex;
     align-items: center;

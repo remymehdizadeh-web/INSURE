@@ -28,6 +28,7 @@ DIMS = {
     "construction": (1600, 1067),
     "professional": (1600, 1067),
     "personal": (1600, 1067),
+    "facade": (1600, 1404),
 }
 
 
@@ -36,7 +37,7 @@ def h(value):
 
 
 # Same file family at every width. The query busts a cached estate-800 that was a different photograph.
-PHOTO_V = "4"
+PHOTO_V = "5"
 
 
 def photo_src(key, width):
@@ -61,31 +62,6 @@ def cred(key):
         '<span class="cap">Photograph by '
         f'<a href="{h(c["page"])}" rel="noopener">{h(c["artist"])}</a>, '
         f'<a href="{h(c["license_url"])}" rel="noopener">{h(c["license"])}</a></span>'
-    )
-
-
-def arcs():
-    rings = [
-        (280, 90, 0.16, "#5BA4E5"),
-        (280, 2.4, 0.8, "#C5E6FA"),
-        (430, 70, 0.13, "#3D86C4"),
-        (430, 2, 0.7, "#9ED4F8"),
-        (590, 110, 0.14, "#7EBFEE"),
-        (590, 2.6, 0.85, "#E7F6FF"),
-        (770, 64, 0.11, "#5BA4E5"),
-        (770, 1.8, 0.6, "#8ECAF5"),
-        (980, 86, 0.12, "#2F6FB0"),
-        (980, 2.2, 0.75, "#B9DFF8"),
-        (1200, 48, 0.1, "#5BA4E5"),
-    ]
-    circles = "".join(
-        f'<circle cx="120" cy="430" r="{r}" style="fill:none;stroke:{c};stroke-width:{sw};opacity:{op}"/>'
-        for r, sw, op, c in rings
-    )
-    return (
-        '<div class="arcs only-1024" aria-hidden="true"><div class="arc-glow"></div>'
-        '<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">'
-        f'<g class="arc-drift"><g class="arc-spin">{circles}</g></g></svg></div>'
     )
 
 
@@ -283,7 +259,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=14">
+<link rel="stylesheet" href="/site.css?v=19">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -302,7 +278,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=9">
+<link rel="stylesheet" href="/mobile.css?v=10">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -312,9 +288,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {header(cur)}
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
-<script src="/vendor/gsap.min.js" defer></script>
-<script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=10" defer></script>
+<script src="/site.js?v=13" defer></script>
 </body>
 </html>'''
 
@@ -343,9 +317,8 @@ def cinematic_sections(eager=False):
     <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
-  {arcs()}
   <div class="hero-copy wrap">
-    <h1 class="rise"><span class="line"><span>Know what you're covered for.</span></span></h1>
+    <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span>made simple.</span></span></h1>
     <p class="lede">Send us your policy. We'll walk you through it in plain English.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
@@ -438,13 +411,6 @@ def home():
         "SimpleINSURE Brokerage LLC places commercial and personal insurance in New York. Send the policy you have. We read it, approach other insurers only when there is a reason, and stay after it is bound.",
         "/",
         cinematic_sections() + m_top + client_result() + m_steps + f'''
-<section class="cred-strip only-1024" aria-label="License">
-  <div class="wrap">
-    <p>SimpleINSURE Brokerage LLC</p>
-    <p>NY DFS License No. BR-1984615</p>
-    <a href="/legal/">Licenses and disclosures</a>
-  </div>
-</section>
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
@@ -1449,7 +1415,7 @@ def credits_page():
         )
     main = page_head("Photo credits", "Every photograph on this site, with the author and the license.") + f'''
 <section class="section" style="padding-top:12px"><div class="wrap prose">
-  <p>Photographs are used under the Unsplash License. Credit is optional. It is listed here and is not shown on the other pages.</p>
+  <p>Photographs are used under the Unsplash License or the Pexels License. Credit is optional. It is listed here and is not shown on the other pages.</p>
   <table class="credits" style="width:100%;border-collapse:collapse;margin-top:18px">
     <thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Used as</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">File</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Author</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">License</th></tr></thead>
     <tbody>{"".join(rows)}</tbody>
@@ -1492,15 +1458,19 @@ def contact_page():
         cls="contact-head",
         lede_cls="hide-1024",
     ) + f'''
-<section class="reach only-1024" aria-label="Office"><div class="wrap reach-grid">
-  <div>
-    <a class="reach-call" href="{TEL}">{PHONE}</a>
-    <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
-    <p class="reach-addr">{ADDR}</p>
+<section class="contact-desk only-1024" aria-label="Office">
+  <div class="contact-split">
+    <div class="contact-form">{wizard("Contact", "Email this note", short)}</div>
+    <figure class="contact-visual">
+      {pic("facade", eager=True, sizes="(min-width: 1024px) 58vw, 100vw")}
+      <figcaption>
+        <a class="reach-call" href="{TEL}">{PHONE}</a>
+        <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
+        <p class="reach-addr">{ADDR}</p>
+      </figcaption>
+    </figure>
   </div>
-  <iframe class="office-map" title="Map of 900 Stewart Ave, Garden City" src="https://www.openstreetmap.org/export/embed.html?bbox=-73.6085%2C40.7287%2C-73.5885%2C40.7387&amp;layer=mapnik&amp;marker=40.7336971%2C-73.5984942" loading="lazy"></iframe>
-</div></section>
-<section class="section desk-sheet only-1024"><div class="wrap">{wizard("Contact", "Email this note", short)}</div></section>
+</section>
 <section class="section hide-1024" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
     return document(
         "Contact | SimpleINSURE",
@@ -1524,20 +1494,15 @@ def not_found():
 
 
 def coverage_page():
-    jumps = []
     bands = []
-    for i, ind in enumerate(INDUSTRIES):
+    for ind in INDUSTRIES:
         slug = ind["slug"]
         name = ind["nav"]
-        on = " is-on" if i == 0 else ""
-        jumps.append(f'<a href="#{slug}" data-prac="{slug}" class="{on.strip()}">{h(name)}</a>')
         lines = "".join(
             f"<li><b>{h(a)}</b></li>" for a, b in ind["coverages"][:4]
         )
-        asks = "".join(f"<p>{h(a)}</p>" for a in ind["asks"][:3])
-        flip = " flip" if i % 2 else ""
         bands.append(f'''
-<section class="stage{flip}" id="{slug}">
+<section class="stage" id="{slug}">
   <figure class="stage-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
   <div class="stage-copy">
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
@@ -1550,9 +1515,8 @@ def coverage_page():
         "Coverage",
         "Five practices. One account.",
         "One broker for the business and the household.",
-    ) + f'''
-<nav class="prac-nav" aria-label="Practices"><div class="wrap">{"".join(jumps)}</div></nav>
-{"".join(bands)}'''
+        cls="cover-head",
+    ) + "".join(bands)
     return document(
         "Coverage | SimpleINSURE",
         "Commercial and personal insurance for real estate, hospitality, contractors, offices, and the household.",
@@ -1839,21 +1803,21 @@ def about_hub():
         "We work for you, not for any one insurance company.",
         cls="firm-head",
     ) + f'''
-<section class="section firm-desk only-1024"><div class="wrap firm-grid">
-  <div>
-    <h2>How it works.</h2>
-    <ol class="firm-points">
-      <li><strong>We read it</strong><span>Your policy, forms, and endorsements.</span></li>
-      <li><strong>We tell you</strong><span>If it's right, we say so.</span></li>
-      <li><strong>We shop it</strong><span>Only when there's a reason to.</span></li>
-      <li><strong>We switch it</strong><span>Dates lined up.</span></li>
-    </ol>
-    <p class="firm-license">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs.</p>
-    <p class="firm-law">New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
-    <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
+<section class="section firm-desk only-1024">
+  <div class="wrap firm-split">
+    <div class="firm-panel"><p>Garden City, New York</p></div>
+    <div class="firm-copy">
+      <p class="firm-role">Principal</p>
+      <h2>Remy Mehdizadeh</h2>
+      <p>Remy Mehdizadeh, a licensed New York property and casualty broker, founded the firm so owners have one broker who reads the policy and stays after it's bound.</p>
+      <p class="firm-office">{ADDR}</p>
+      <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
+    </div>
   </div>
-  {figure_block("hero", "(max-width: 980px) 100vw, 46vw")}
-</div></section>
+  <div class="wrap">
+    <p class="firm-note">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs. New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
+  </div>
+</section>
 <section class="section hide-1024" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
     <h2>An independent practice</h2>

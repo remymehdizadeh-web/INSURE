@@ -126,6 +126,11 @@
   function flattenRail() {
     var pin = d.querySelector(".h-pin");
     var track = d.querySelector(".h-track");
+    if (!mobileQ.matches) {
+      if (pin) pin.style.removeProperty("height");
+      if (track) track.style.removeProperty("transform");
+      return;
+    }
     if (pin) pin.style.setProperty("height", "auto", "important");
     if (track) track.style.setProperty("transform", "none", "important");
   }
@@ -193,29 +198,6 @@
       el.textContent = "$" + (+el.getAttribute("data-count")).toLocaleString("en-US");
     });
 
-    var stageImg = d.querySelector("[data-parallax]");
-    var time = d.querySelector("[data-time]");
-    var ticking = false;
-    function onScroll() {
-      ticking = false;
-      if (stageImg) {
-        var r = stageImg.getBoundingClientRect();
-        var shift = (r.top / innerHeight) * 18;
-        stageImg.style.transform = "translate3d(0," + shift.toFixed(1) + "px,0) scale(1.04)";
-      }
-      if (time) {
-        var tr = time.getBoundingClientRect();
-        var p = (innerHeight * 0.75 - tr.top) / (tr.height + innerHeight * 0.2);
-        time.style.setProperty("--p", Math.max(0, Math.min(1, p)).toFixed(3));
-      }
-    }
-    addEventListener("scroll", function () {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(onScroll);
-      }
-    }, { passive: true });
-    onScroll();
   } else {
     d.querySelectorAll("[data-count]").forEach(function (el) {
       el.textContent = "$" + (+el.getAttribute("data-count")).toLocaleString("en-US");
@@ -242,9 +224,6 @@
           stage.src = src;
           stage.srcset = a.getAttribute("data-srcset") || "";
           stage.alt = a.getAttribute("data-alt") || "";
-          if (!reduce && window.gsap) {
-            gsap.fromTo(stage, { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" });
-          }
         }
         var cap = d.querySelector(".stage figcaption");
         if (cap) {
@@ -636,54 +615,5 @@
     });
   });
 
-  if (!reduce && window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-    gsap.utils.toArray(".rise").forEach(function (block) {
-      var lines = block.querySelectorAll(".line > span");
-      if (!lines.length) return;
-      var vars = { y: 0, opacity: 1, duration: 1.15, stagger: 0.1, ease: "power2.out" };
-      if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 86%" };
-      gsap.fromTo(lines, { y: 14, opacity: 0 }, vars);
-    });
-    var heroImg = d.querySelector(".hero .ken img");
-    if (heroImg) {
-      gsap.fromTo(heroImg, { yPercent: -8, scale: 1.06 }, {
-        yPercent: 12,
-        scale: 1.14,
-        ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
-      });
-    }
-    // The practices rail is a static grid. It no longer pins the page and
-    // turns vertical scrolling into a slow sideways crawl.
-    gsap.utils.toArray(".case-bleed img, .close .ken img, .slide img").forEach(function (img) {
-      gsap.fromTo(img, { scale: 1.12 }, {
-        scale: 1,
-        ease: "none",
-        scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: true }
-      });
-    });
-    gsap.utils.toArray(".case-photo img, .stage img").forEach(function (img) {
-      gsap.fromTo(img, { clipPath: "inset(16% 0 0 0)" }, {
-        clipPath: "inset(0% 0 0 0)",
-        duration: 1.15,
-        ease: "power3.out",
-        scrollTrigger: { trigger: img, start: "top 86%" }
-      });
-    });
-    var steps = d.querySelector(".work-steps");
-    if (steps) {
-      ScrollTrigger.create({
-        trigger: steps,
-        start: "top 75%",
-        end: "bottom 55%",
-        scrub: true,
-        onUpdate: function (self) { steps.style.setProperty("--p", self.progress.toFixed(3)); }
-      });
-    }
-    // Native scrolling only. Smooth-scroll hijacking (Lenis) made the
-    // wheel and trackpad feel stuck on desktop.
-  } else {
-    d.querySelectorAll(".rise .line > span").forEach(function (el) { el.style.transform = "none"; });
-  }
+  // Native scrolling only. No scroll library, no pinning, no scroll-linked transforms.
 })();
