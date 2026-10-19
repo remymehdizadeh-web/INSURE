@@ -259,7 +259,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=19">
+<link rel="stylesheet" href="/site.css?v=20">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -1805,7 +1805,7 @@ def about_hub():
     ) + f'''
 <section class="section firm-desk only-1024">
   <div class="wrap firm-split">
-    <div class="firm-panel"><p>Garden City, New York</p></div>
+    <div class="firm-panel"><p class="firm-panel-eye">The firm</p><p class="firm-panel-place">Garden City, New York</p></div>
     <div class="firm-copy">
       <p class="firm-role">Principal</p>
       <h2>Remy Mehdizadeh</h2>
