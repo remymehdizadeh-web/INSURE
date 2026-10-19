@@ -259,7 +259,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=20">
+<link rel="stylesheet" href="/site.css?v=21">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -288,7 +288,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {header(cur)}
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
-<script src="/site.js?v=13" defer></script>
+<script src="/site.js?v=14" defer></script>
 </body>
 </html>'''
 
@@ -302,13 +302,13 @@ def cinematic_sections(eager=False):
         "personal": "Home, auto, and umbrella.",
     }
     slides = []
-    for href, title, _sub, key in COVER:
+    for i, (href, title, _sub, key) in enumerate(COVER, 1):
         slides.append(
-            f'<div class="slide{" slide-hospitality" if key == "hospitality" else ""}">'
-            f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 62vw")}'
+            f'<div class="slide rise-photo{" slide-hospitality" if key == "hospitality" else ""}">'
+            f'{pic(key, eager=eager, sizes="(max-width: 980px) 100vw, 22vw")}'
             f'<span class="slide-shade" aria-hidden="true"></span>'
             f'<a class="slide-hit" href="{href}"><span class="sr">{h(title)}</span></a>'
-            f'<span class="slide-copy"><strong>{h(title)}</strong> <small>{h(blurbs[key])}</small></span>'
+            f'<span class="slide-copy" data-rise><em>{i:02d}</em><strong>{h(title)}</strong> <small>{h(blurbs[key])}</small></span>'
             f'</div>'
         )
     return f'''
@@ -394,12 +394,13 @@ def mobile_home():
 
 
 def client_result():
-    return '''<section class="client-result" aria-labelledby="result-h">
+    return f'''<section class="client-result" id="case-study" aria-labelledby="result-h">
+  <figure class="result-photo rise-photo only-1024">{pic("hospitality", sizes="(min-width: 1024px) 58vw, 100vw")}</figure>
   <div class="wrap">
-    <p class="result-label">Client result</p>
-    <h2 id="result-h">A Manhattan restaurant</h2>
-    <p class="result-line">Same liability limits. Umbrella raised from $1 million to $5 million. Employment practices coverage added.</p>
-    <p class="result-foot">Every account is different. Terms depend on underwriting.</p>
+    <p class="result-label" data-rise>Client result</p>
+    <h2 id="result-h" data-rise><span class="desk-break">A Manhattan</span> restaurant</h2>
+    <p class="result-line" data-rise><span>Same liability limits.</span> <span>Umbrella raised from $1 million to $5 million.</span> <span>Employment practices coverage added.</span></p>
+    <p class="result-foot" data-rise>Every account is different. Terms depend on underwriting.</p>
   </div>
 </section>'''
 
@@ -414,14 +415,14 @@ def home():
 <section class="section work" id="work" aria-labelledby="work-h">
   <div class="wrap work-grid">
     <div class="work-intro">
-      <h2 class="rise" id="work-h"><span class="line"><span>How it</span></span><span class="line"><span>works.</span></span></h2>
-      <p>We read your policy before you sign anything.</p>
+      <h2 class="rise" id="work-h" data-rise><span class="line"><span>How it</span></span><span class="line"><span>works.</span></span></h2>
+      <p data-rise>We read your policy before you sign anything.</p>
     </div>
     <ol class="work-steps">
-      <li><div><h3>We read it</h3><p>Your policy, forms, and endorsements.</p></div></li>
-      <li><div><h3>We tell you</h3><p>If it's right, we say so.</p></div></li>
-      <li><div><h3>We shop it</h3><p>Only when there's a reason to.</p></div></li>
-      <li><div><h3>We switch it</h3><p>Dates lined up.</p></div></li>
+      <li data-rise><div><h3>We read it</h3><p>Your policy, forms, and endorsements.</p></div></li>
+      <li data-rise><div><h3>We tell you</h3><p>If it's right, we say so.</p></div></li>
+      <li data-rise><div><h3>We shop it</h3><p>Only when there's a reason to.</p></div></li>
+      <li data-rise><div><h3>We switch it</h3><p>Dates lined up.</p></div></li>
     </ol>
   </div>
 </section>
@@ -431,8 +432,8 @@ def home():
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
   <div class="wrap close-inner">
-    <h2 class="rise" id="close-h"><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
-    <p>We'll walk you through it, even if the answer is to keep it.</p>
+    <h2 class="rise" id="close-h" data-rise><span class="line"><span>Bring the policy</span></span><span class="line"><span><em>you have.</em></span></span></h2>
+    <p data-rise>We'll walk you through it, even if the answer is to keep it.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
       <a class="btn btn-line magnet" href="{TEL}">{PHONE}</a>
@@ -1460,8 +1461,8 @@ def contact_page():
     ) + f'''
 <section class="contact-desk only-1024" aria-label="Office">
   <div class="contact-split">
-    <div class="contact-form">{wizard("Contact", "Email this note", short)}</div>
-    <figure class="contact-visual">
+    <div class="contact-form" data-rise>{wizard("Contact", "Email this note", short)}</div>
+    <figure class="contact-visual rise-photo">
       {pic("facade", eager=True, sizes="(min-width: 1024px) 58vw, 100vw")}
       <figcaption>
         <a class="reach-call" href="{TEL}">{PHONE}</a>
@@ -1503,20 +1504,15 @@ def coverage_page():
         )
         bands.append(f'''
 <section class="stage" id="{slug}">
-  <figure class="stage-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
-  <div class="stage-copy">
+  <figure class="stage-photo rise-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 100vw")}</figure>
+  <div class="stage-copy" data-rise>
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
     <p class="lede">{h(ind["lede"])}</p>
     <ul class="stage-lines">{lines}</ul>
     <a class="more" href="/policy-review/">Request a review {ARROW}</a>
   </div>
 </section>''')
-    main = page_head(
-        "Coverage",
-        "Five practices. One account.",
-        "One broker for the business and the household.",
-        cls="cover-head",
-    ) + "".join(bands)
+    main = '''<header class="page-head cover-head"><div class="wrap"><p class="kicker m-only">Coverage</p><h1 class="rise"><span class="line"><span>Five practices.<br class="only-1024"> One account.</span></span></h1><p class="lede">One broker for the business and the household.</p></div></header>''' + "".join(bands)
     return document(
         "Coverage | SimpleINSURE",
         "Commercial and personal insurance for real estate, hospitality, contractors, offices, and the household.",
@@ -1639,7 +1635,7 @@ def policy_hub():
 def _svc(num, title, blurb, subject, button, inner, extra="", claim=False):
     cls = "cc-item cc-claim" if claim else "cc-item"
     hot = f'<a class="cc-hot" href="{TEL}">Call {PHONE}</a>' if claim else ""
-    return f'''<details class="{cls}">
+    return f'''<details class="{cls}" data-rise>
   <summary>
     <span class="cc-n">{num}</span>
     <span class="cc-main"><b>{h(title)}</b><em>{h(blurb)}</em></span>
@@ -1805,8 +1801,8 @@ def about_hub():
     ) + f'''
 <section class="section firm-desk only-1024">
   <div class="wrap firm-split">
-    <div class="firm-panel"><p class="firm-panel-eye">The firm</p><p class="firm-panel-place">Garden City, New York</p></div>
-    <div class="firm-copy">
+    <div class="firm-panel" data-rise><p class="firm-panel-eye">The firm</p><p class="firm-panel-place">Garden City, New York</p></div>
+    <div class="firm-copy" data-rise>
       <p class="firm-role">Principal</p>
       <h2>Remy Mehdizadeh</h2>
       <p>Remy Mehdizadeh, a licensed New York property and casualty broker, founded the firm so owners have one broker who reads the policy and stays after it's bound.</p>
