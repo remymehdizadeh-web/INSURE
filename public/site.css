@@ -855,8 +855,8 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
 /* Desktop cinematic pass. Phone rules above are unchanged. */
 @media (min-width:1024px){
   body.page-home .hero{min-height:100vh;min-height:100dvh;background:#06182f}
-  body.page-home .hero-shade{background:linear-gradient(to bottom,rgba(6,24,47,.62) 0%,rgba(6,24,47,.18) 14%,transparent 32%),linear-gradient(90deg,rgba(6,24,47,.62) 0%,rgba(6,24,47,.22) 38%,transparent 66%),linear-gradient(to top,#06182f 0%,rgba(6,24,47,.55) 5%,rgba(6,24,47,.16) 14%,transparent 28%)}
-  body.page-home .h-pin{margin:0;background:#06182f}
+  body.page-home .hero-shade{background:linear-gradient(to bottom,rgba(6,24,47,.5) 0%,rgba(6,24,47,.1) 12%,transparent 26%),linear-gradient(90deg,rgba(6,24,47,.96) 0%,rgba(6,24,47,.9) 28%,rgba(6,24,47,.72) 46%,rgba(6,24,47,.28) 62%,transparent 76%),linear-gradient(to top,#06182f 0%,rgba(6,24,47,.55) 5%,rgba(6,24,47,.16) 14%,transparent 26%)}
+  body.page-home .h-pin{margin:0;height:100vh !important;height:100dvh !important;background:#06182f}
   body.page-home .h-pin:before{content:"";position:absolute;z-index:3;left:0;right:0;top:0;height:7vh;pointer-events:none;background:linear-gradient(to bottom,#06182f 0%,rgba(6,24,47,0) 100%)}
   .h-track{gap:0}
   .slide{box-shadow:inset -1px 0 0 rgba(6,24,47,.45)}
@@ -868,14 +868,15 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .client-result{display:grid;grid-template-columns:minmax(0,.86fr) minmax(520px,1.14fr);min-height:100vh;min-height:100dvh;margin:0;padding:0;background:#06182f;color:#f4f1ea;overflow:hidden;align-items:stretch}
   .client-result .result-photo{display:block;position:relative;margin:0;min-height:100%;overflow:hidden}
   .client-result .result-photo img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 42%}
-  .client-result .result-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,24,47,0) 42%,rgba(6,24,47,.45) 74%,#06182f 97%)}
+  .client-result .result-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(6,24,47,.94) 0%,rgba(6,24,47,.72) 12%,rgba(6,24,47,0) 32%),linear-gradient(90deg,rgba(6,24,47,0) 42%,rgba(6,24,47,.45) 74%,#06182f 97%)}
+  .result-rep{position:absolute;z-index:2;left:24px;bottom:20px;margin:0;color:#f4f7fb;font-size:13px;line-height:1.45;letter-spacing:0}
   .client-result .wrap{position:relative;z-index:1;width:auto;max-width:none;margin:0;background:transparent;border:0;padding:12vh 64px 12vh 28px;display:flex;flex-direction:column;justify-content:center}
   .client-result .result-label{margin:0 0 18px;color:rgba(247,245,240,.7);font-family:var(--sans);font-size:12px;font-weight:560;letter-spacing:.2em;text-transform:uppercase}
   .client-result h2{color:#fff;font-size:clamp(56px,4.8vw,84px);line-height:.96;letter-spacing:-.03em;max-width:8em}
   .client-result h2 .desk-break{display:block}
   .client-result .result-line{margin-top:32px;max-width:none;color:#e7eef4;font-family:var(--serif);font-weight:500;font-size:clamp(18px,1.35vw,24px);line-height:1.35}
   .client-result .result-line span{display:block;margin-top:14px;white-space:nowrap}
-  .client-result .result-foot{margin-top:40px;max-width:26em;color:rgba(213,224,234,.7);font-size:13px;line-height:1.45}
+  .client-result .result-foot{margin-top:40px;max-width:26em;color:#f4f7fb;font-size:13px;line-height:1.45}
   .work{position:relative;background:#f7f5f0;padding:156px 0 120px}
   .page-home .work:before{content:"";position:absolute;left:0;right:0;top:0;height:56px;pointer-events:none;background:linear-gradient(to bottom,#06182f,rgba(6,24,47,0))}
   .work-grid{align-items:end;gap:64px 80px}
@@ -887,7 +888,9 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .work-steps h3:before{content:counter(step,decimal-leading-zero);display:block;margin-bottom:12px;font-family:var(--sans);font-size:12px;font-weight:560;letter-spacing:.18em;color:var(--soft)}
   .close{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:flex-end;padding:0;overflow:hidden;background:#06182f}
   .close .hero-media{display:block}
-  .close .hero-shade{background:linear-gradient(to top,#06182f 0%,rgba(6,24,47,.92) 18%,rgba(6,24,47,.62) 38%,rgba(6,24,47,.22) 62%,rgba(6,24,47,.28) 100%)}
+  .close .ken img{object-position:center 22%}
+  .close .hero-shade{background:linear-gradient(90deg,#06182f 0%,rgba(6,24,47,.97) 26%,rgba(6,24,47,.9) 44%,rgba(6,24,47,.62) 62%,rgba(6,24,47,.18) 80%),linear-gradient(to top,#06182f 0%,rgba(6,24,47,.94) 28%,rgba(6,24,47,.7) 48%,rgba(6,24,47,.22) 70%)}
+  .close p{color:#f4f7fb}
   .close:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:72px;pointer-events:none;background:linear-gradient(to bottom,#f7f5f0,rgba(247,245,240,0))}
   .close-inner{position:relative;z-index:3;padding:0 0 88px}
   .close h2{font-size:clamp(60px,5.4vw,92px)}
@@ -896,7 +899,7 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .stage{min-height:100vh;min-height:100dvh;margin:0;background:#06182f}
   .cover-head + .stage{min-height:calc(100vh - 300px);min-height:calc(100dvh - 300px)}
   .stage-photo{position:absolute;inset:0;height:auto}
-  .stage-photo:after{background:linear-gradient(to bottom,#06182f 0%,rgba(6,24,47,0) 12%),linear-gradient(to top,rgba(6,24,47,.97) 0%,rgba(6,24,47,.92) 26%,rgba(6,24,47,.62) 46%,rgba(6,24,47,0) 70%)}
+  .stage-photo:after{background:linear-gradient(to bottom,#06182f 0%,rgba(6,24,47,0) 12%),linear-gradient(to top,rgba(6,24,47,.98) 0%,rgba(6,24,47,.96) 36%,rgba(6,24,47,.88) 54%,rgba(6,24,47,.5) 72%,rgba(6,24,47,0) 90%)}
   .stage-copy{bottom:48px}
   .stage h2{font-size:clamp(56px,5vw,84px)}
   .stage .lede{font-size:18px;max-width:26em}

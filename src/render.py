@@ -44,14 +44,15 @@ def photo_src(key, width):
     return f"/photos/{key}-{width}.webp?v={PHOTO_V}"
 
 
-def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw"):
+def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw", alt=None):
     c = CRED[key]
     w, height = DIMS[key]
     load = 'fetchpriority="high" decoding="async"' if eager else 'loading="lazy" decoding="async"'
+    alt_text = c["alt"] if alt is None else alt
     return (
         f'<img src="{photo_src(key, 800)}" '
         f'srcset="{photo_src(key, 800)} 800w, {photo_src(key, 1200)} 1200w, {photo_src(key, 1600)} 1600w" '
-        f'sizes="{sizes}" alt="{h(c["alt"])}" width="{w}" height="{height}" {load}>'
+        f'sizes="{sizes}" alt="{h(alt_text)}" width="{w}" height="{height}" {load}>'
     )
 
 
@@ -259,7 +260,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=21">
+<link rel="stylesheet" href="/site.css?v=22">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -395,7 +396,7 @@ def mobile_home():
 
 def client_result():
     return f'''<section class="client-result" id="case-study" aria-labelledby="result-h">
-  <figure class="result-photo rise-photo only-1024">{pic("hospitality", sizes="(min-width: 1024px) 58vw, 100vw")}</figure>
+  <figure class="result-photo rise-photo only-1024">{pic("hospitality", sizes="(min-width: 1024px) 58vw, 100vw", alt="Representative restaurant interior")}<figcaption class="result-rep">Representative image.</figcaption></figure>
   <div class="wrap">
     <p class="result-label" data-rise>Client result</p>
     <h2 id="result-h" data-rise><span class="desk-break">A Manhattan</span> restaurant</h2>
