@@ -283,7 +283,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=15">
+<link rel="stylesheet" href="/site.css?v=16">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -313,8 +313,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
 <script src="/vendor/gsap.min.js" defer></script>
-<script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/site.js?v=10" defer></script>
+<script src="/site.js?v=11" defer></script>
 </body>
 </html>'''
 
@@ -343,9 +342,8 @@ def cinematic_sections(eager=False):
     <div class="ken">{pic("hero", eager=True, sizes="100vw")}</div>
     <div class="hero-shade" aria-hidden="true"></div>
   </div>
-  {arcs()}
   <div class="hero-copy wrap">
-    <h1 class="rise"><span class="line"><span>Know what you're covered for.</span></span></h1>
+    <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span>made simple.</span></span></h1>
     <p class="lede">Send us your policy. We'll walk you through it in plain English.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
@@ -1491,7 +1489,7 @@ def contact_page():
     <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
     <p class="reach-addr">{ADDR}</p>
   </div>
-  <iframe class="office-map" title="Map of 900 Stewart Ave, Garden City" src="https://www.openstreetmap.org/export/embed.html?bbox=-73.6085%2C40.7287%2C-73.5885%2C40.7387&amp;layer=mapnik&amp;marker=40.7336971%2C-73.5984942" loading="lazy"></iframe>
+  <figure class="reach-photo">{pic("professional", sizes="(min-width: 1024px) 46vw, 100vw")}</figure>
 </div></section>
 <section class="section desk-sheet only-1024"><div class="wrap">{wizard("Contact", "Email this note", short)}</div></section>
 <section class="section hide-1024" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
@@ -1517,20 +1515,15 @@ def not_found():
 
 
 def coverage_page():
-    jumps = []
     bands = []
-    for i, ind in enumerate(INDUSTRIES):
+    for ind in INDUSTRIES:
         slug = ind["slug"]
         name = ind["nav"]
-        on = " is-on" if i == 0 else ""
-        jumps.append(f'<a href="#{slug}" data-prac="{slug}" class="{on.strip()}">{h(name)}</a>')
         lines = "".join(
             f"<li><b>{h(a)}</b></li>" for a, b in ind["coverages"][:4]
         )
-        asks = "".join(f"<p>{h(a)}</p>" for a in ind["asks"][:3])
-        flip = " flip" if i % 2 else ""
         bands.append(f'''
-<section class="stage{flip}" id="{slug}">
+<section class="stage" id="{slug}">
   <figure class="stage-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 58vw")}</figure>
   <div class="stage-copy">
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
@@ -1543,9 +1536,7 @@ def coverage_page():
         "Coverage",
         "Five practices. One account.",
         "One broker for the business and the household.",
-    ) + f'''
-<nav class="prac-nav" aria-label="Practices"><div class="wrap">{"".join(jumps)}</div></nav>
-{"".join(bands)}'''
+    ) + "".join(bands)
     return document(
         "Coverage | SimpleINSURE",
         "Commercial and personal insurance for real estate, hospitality, contractors, offices, and the household.",
@@ -1832,8 +1823,18 @@ def about_hub():
         "We work for you, not for any one insurance company.",
         cls="firm-head",
     ) + f'''
-<section class="section firm-desk only-1024"><div class="wrap firm-grid">
-  <div>
+<section class="section firm-desk only-1024">
+  <div class="wrap firm-split">
+    <figure class="firm-photo">{pic("professional", eager=True, sizes="(min-width: 1024px) 54vw, 100vw")}</figure>
+    <div class="firm-copy">
+      <p class="firm-role">Principal</p>
+      <h2>Remy Mehdizadeh</h2>
+      <p>Remy Mehdizadeh, a licensed New York property and casualty broker, founded the firm so owners have one broker who reads the policy and stays after it's bound.</p>
+      <p class="firm-office">{ADDR}</p>
+      <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
+    </div>
+  </div>
+  <div class="wrap firm-steps">
     <h2>How it works.</h2>
     <ol class="firm-points">
       <li><strong>We read it</strong><span>Your policy, forms, and endorsements.</span></li>
@@ -1843,10 +1844,8 @@ def about_hub():
     </ol>
     <p class="firm-license">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs.</p>
     <p class="firm-law">New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
-    <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
   </div>
-  {figure_block("hero", "(max-width: 980px) 100vw, 46vw")}
-</div></section>
+</section>
 <section class="section hide-1024" style="padding-top:12px"><div class="wrap split">
   <div class="prose">
     <h2>An independent practice</h2>
