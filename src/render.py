@@ -17,7 +17,7 @@ ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h
 CRED = json.load(open(os.path.join(ROOT, "src", "photo_credits.json"), encoding="utf-8"))
 for _c in CRED.values():
     _c["artist"] = _c["artist"].replace("firstdorsal.eu", "").strip()
-    if "unsplash.com" not in _c.get("page", ""):
+    if "unsplash.com" not in _c.get("page", "") and "commons.wikimedia.org" not in _c.get("page", ""):
         _title = _c["title"].replace(" ", "_")
         _c["page"] = "https://commons.wikimedia.org/wiki/File:" + urllib.parse.quote(_title, safe="()'-._~")
 
@@ -29,7 +29,7 @@ DIMS = {
     "professional": (1600, 1067),
     "personal": (1600, 1067),
     "facade": (1600, 1404),
-    "counter": (1600, 1067),
+    "counter": (1600, 2400),
 }
 
 
@@ -261,7 +261,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=23">
+<link rel="stylesheet" href="/site.css?v=24">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -406,7 +406,7 @@ def client_result():
   </div>
 </section>
 <section class="client-result client-result-grays" id="grays" aria-labelledby="grays-h">
-  <figure class="result-photo rise-photo only-1024">{pic("counter", sizes="(min-width: 1024px) 58vw, 100vw", alt="Representative New York food counter")}<figcaption class="result-rep">Representative image.</figcaption></figure>
+  <figure class="result-photo rise-photo only-1024">{pic("counter", sizes="(min-width: 1024px) 58vw, 100vw", alt="Gray's Papaya storefront at 72nd Street and Broadway")}<figcaption class="result-rep">Gray's Papaya, 72nd and Broadway. Photo: Kidfly182 / <a href="https://commons.wikimedia.org/wiki/File:Upper_West_Side_August_2022_073.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, cropped.</figcaption></figure>
   <div class="wrap">
     <p class="result-label" data-rise>Client result</p>
     <p class="result-name" data-rise>Gray's Papaya</p>

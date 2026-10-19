@@ -882,6 +882,10 @@ html.motion .hero .ken{animation:ken 22s ease-out both}
   .client-result .result-name{margin:0 0 16px;color:#f4f7fb;font-size:clamp(22px,1.6vw,28px)}
   .client-result .result-body{margin-top:28px;max-width:28em;color:#e7eef4;font-size:17px;line-height:1.5}
   .client-result-grays h2{font-size:clamp(44px,3.6vw,64px);max-width:12em;line-height:1.02}
+  .client-result-grays .result-photo img{object-position:center center}
+  .client-result-grays .result-photo:after{background:linear-gradient(to top,rgba(6,24,47,.96) 0%,rgba(6,24,47,.88) 16%,rgba(6,24,47,.55) 30%,rgba(6,24,47,0) 46%),linear-gradient(90deg,rgba(6,24,47,0) 42%,rgba(6,24,47,.45) 74%,#06182f 97%)}
+  .client-result-grays .result-rep{right:22px;bottom:18px;line-height:1.4}
+  .client-result-grays .result-rep a{color:inherit;text-decoration:underline;text-underline-offset:2px}
   .work{position:relative;background:#f7f5f0;padding:156px 0 120px}
   .page-home .work:before{content:"";position:absolute;left:0;right:0;top:0;height:56px;pointer-events:none;background:linear-gradient(to bottom,#06182f,rgba(6,24,47,0))}
   .work-grid{align-items:end;gap:64px 80px}
