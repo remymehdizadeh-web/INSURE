@@ -224,9 +224,6 @@
           stage.src = src;
           stage.srcset = a.getAttribute("data-srcset") || "";
           stage.alt = a.getAttribute("data-alt") || "";
-          if (!reduce && window.gsap) {
-            gsap.fromTo(stage, { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" });
-          }
         }
         var cap = d.querySelector(".stage figcaption");
         if (cap) {

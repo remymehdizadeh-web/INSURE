@@ -28,6 +28,7 @@ DIMS = {
     "construction": (1600, 1067),
     "professional": (1600, 1067),
     "personal": (1600, 1067),
+    "facade": (1600, 1067),
 }
 
 
@@ -258,7 +259,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=17">
+<link rel="stylesheet" href="/site.css?v=18">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -287,8 +288,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {header(cur)}
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
-<script src="/vendor/gsap.min.js" defer></script>
-<script src="/site.js?v=12" defer></script>
+<script src="/site.js?v=13" defer></script>
 </body>
 </html>'''
 
@@ -1462,7 +1462,7 @@ def contact_page():
   <div class="contact-split">
     <div class="contact-form">{wizard("Contact", "Email this note", short)}</div>
     <figure class="contact-visual">
-      {pic("hero", eager=True, sizes="(min-width: 1024px) 58vw, 100vw")}
+      {pic("facade", eager=True, sizes="(min-width: 1024px) 58vw, 100vw")}
       <figcaption>
         <a class="reach-call" href="{TEL}">{PHONE}</a>
         <a class="reach-mail" href="{MAIL}">{EMAIL}</a>
@@ -1805,7 +1805,7 @@ def about_hub():
     ) + f'''
 <section class="section firm-desk only-1024">
   <div class="wrap firm-split">
-    <figure class="firm-photo">{pic("professional", eager=True, sizes="(min-width: 1024px) 54vw, 100vw")}</figure>
+    <div class="firm-panel"><p>We work for you, not for any one insurance company.</p></div>
     <div class="firm-copy">
       <p class="firm-role">Principal</p>
       <h2>Remy Mehdizadeh</h2>
@@ -1814,16 +1814,8 @@ def about_hub():
       <p class="firm-reach"><a href="{TEL}">{PHONE}</a> · <a href="{MAIL}">{EMAIL}</a></p>
     </div>
   </div>
-  <div class="wrap firm-steps">
-    <h2>How it works.</h2>
-    <ol class="firm-points">
-      <li><strong>We read it</strong><span>Your policy, forms, and endorsements.</span></li>
-      <li><strong>We tell you</strong><span>If it's right, we say so.</span></li>
-      <li><strong>We shop it</strong><span>Only when there's a reason to.</span></li>
-      <li><strong>We switch it</strong><span>Dates lined up.</span></li>
-    </ol>
-    <p class="firm-license">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs.</p>
-    <p class="firm-law">New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
+  <div class="wrap">
+    <p class="firm-note">© 2026 SimpleINSURE Brokerage LLC, licensed New York property and casualty insurance broker, NY DFS License No. BR-1984615. Coverage descriptions are general summaries. The issued policy governs. New York Insurance Law section 2116 limits referral fees and commission sharing to licensed persons.</p>
   </div>
 </section>
 <section class="section hide-1024" style="padding-top:12px"><div class="wrap split">
