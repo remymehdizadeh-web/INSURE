@@ -261,7 +261,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=24">
+<link rel="stylesheet" href="/site.css?v=25">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
