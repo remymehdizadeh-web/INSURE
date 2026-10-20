@@ -136,10 +136,7 @@ def nav_links(items, current):
 
 
 def sheet_links(current):
-    parts = ['<a href="/coverage/">Coverage</a>', '<div class="sheet-subs">']
-    for href, title, _sub, *_r in COVER:
-        parts.append(f'<a class="sub" href="{href}">{h(title)}</a>')
-    parts.append("</div>")
+    parts = ['<a href="/coverage/">Coverage</a>']
     for href, label in (
         ("/client-center/", "Client Center"),
         ("/about/", "Firm"),
@@ -280,7 +277,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=13">
+<link rel="stylesheet" href="/mobile.css?v=14">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
