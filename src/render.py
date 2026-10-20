@@ -396,16 +396,7 @@ def mobile_home():
 
 
 def client_result():
-    return f'''<section class="client-result" id="case-study" aria-labelledby="result-h">
-  <figure class="result-photo rise-photo only-1024">{pic("hospitality", sizes="(min-width: 1024px) 58vw, 100vw", alt="Representative restaurant interior")}<figcaption class="result-rep">Representative image.</figcaption></figure>
-  <div class="wrap">
-    <p class="result-label" data-rise>Client result</p>
-    <h2 id="result-h" data-rise><span class="desk-break">A Manhattan</span> restaurant</h2>
-    <p class="result-line" data-rise><span>Same liability limits.</span> <span>Umbrella raised from $1 million to $5 million.</span> <span>Employment practices coverage added.</span></p>
-    <p class="result-foot" data-rise>Every account is different. Terms depend on underwriting.</p>
-  </div>
-</section>
-<section class="client-result client-result-grays" id="grays" aria-labelledby="grays-h">
+    return f'''<section class="client-result client-result-grays" id="grays" aria-labelledby="grays-h">
   <figure class="result-photo rise-photo only-1024">{pic("counter", sizes="(min-width: 1024px) 58vw, 100vw", alt="Gray's Papaya storefront at 72nd Street and Broadway")}<figcaption class="result-rep">Gray's Papaya, 72nd and Broadway. Photo: Kidfly182 / <a href="https://commons.wikimedia.org/wiki/File:Upper_West_Side_August_2022_073.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, cropped.</figcaption></figure>
   <div class="wrap">
     <p class="result-label" data-rise>Client result</p>
@@ -564,7 +555,7 @@ def done_block():
 
 
 def wizard(subject, final, steps):
-    return f'''<form class="wizard" data-subject="{h(subject)}" data-final="{h(final)}" novalidate>
+    return f'''<form class="wizard" method="post" data-subject="{h(subject)}" data-final="{h(final)}" novalidate>
       <p class="progress"><span data-steplabel>Start</span><span data-stepcount></span></p>
       <div class="meter" aria-hidden="true"><i></i></div>
       {steps}
