@@ -6,12 +6,9 @@
   var header = d.querySelector(".site-header");
   var menuBtn = d.querySelector(".nav-btn");
   var sheet = d.getElementById("sheet");
-  var lenis = null;
   var scrollLock = 0;
 
-  function closeSheet() {
-    if (!sheet || sheet.hidden) return;
-    sheet.hidden = true;
+  function releasePage() {
     d.documentElement.classList.remove("nav-open");
     d.body.classList.remove("nav-open");
     d.body.style.position = "";
@@ -19,8 +16,14 @@
     d.body.style.left = "";
     d.body.style.right = "";
     d.body.style.width = "";
+  }
+  if (!sheet || sheet.hidden) releasePage();
+
+  function closeSheet() {
+    if (!sheet || sheet.hidden) return;
+    sheet.hidden = true;
+    releasePage();
     window.scrollTo(0, scrollLock || 0);
-    if (lenis) lenis.start();
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
     pinHeader();
   }
@@ -36,7 +39,6 @@
     d.body.style.width = "100%";
     headerShift = 0;
     d.documentElement.style.setProperty("--header-shift", "0px");
-    if (lenis) lenis.stop();
     menuBtn.setAttribute("aria-expanded", "true");
     var first = sheet.querySelector("nav a, button");
     if (first) first.focus();
@@ -167,11 +169,6 @@
   if (mobileQ.addEventListener) {
     mobileQ.addEventListener("change", function () {
       flattenRail();
-      if (mobileQ.matches && window.ScrollTrigger) {
-        ScrollTrigger.getAll().forEach(function (st) {
-          if (st.trigger && st.trigger.classList && st.trigger.classList.contains("h-pin")) st.kill();
-        });
-      }
       pinHeader();
     });
   }
@@ -631,5 +628,5 @@
     });
   });
 
-  // Native scrolling only. No scroll library, no pinning, no scroll-linked transforms.
+  // Native document scrolling. Wheel, trackpad, keys, and touch are not intercepted.
 })();

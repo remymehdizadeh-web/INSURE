@@ -1,0 +1,157 @@
+# Apply this to github.com/SimpleCOMPANIES/SimpleINSURE.
+# Do not open a pull request there.
+#
+# Measured on https://www.simpleinsure.co/ (20 Oct 2026), Chromium 141, 1440x900:
+#   html class includes "lenis lenis-smooth"
+#   window has a non-passive wheel listener and a non-passive touchmove listener
+#   mouse.wheel deltaY 800 moves window.scrollY to 12 immediately and 96 after 700ms
+#   .h-pin is 3704px tall and .h-sticky is position:sticky, so that distance
+#   is a pinned horizontal slide of the practices rail
+#
+# The published files below are the ones to edit. Paths match the live site root.
+
+diff --git a/index.html b/index.html
+--- a/index.html
++++ b/index.html
+@@ -213,7 +213,4 @@
+   </div>
+ </footer>
+-<script src="vendor/gsap.min.js" defer></script>
+-<script src="vendor/ScrollTrigger.min.js" defer></script>
+-<script src="vendor/lenis.min.js" defer></script>
+-<script src="site.js?v=5" defer></script>
++<script src="site.js?v=6" defer></script>
+ </body>
+ </html>
+
+# Remove the same three vendor script tags from every other page template.
+# Delete vendor/gsap.min.js, vendor/ScrollTrigger.min.js, and vendor/lenis.min.js.
+# They are what register the non-passive wheel and touchmove listeners.
+
+diff --git a/site.css b/site.css
+--- a/site.css
++++ b/site.css
+@@ -27,1 +27,1 @@
+-html{scroll-behavior:smooth}
++html{scroll-behavior:auto}
+@@ -496,3 +496,3 @@
+-.hero-media{position:absolute;inset:0;overflow:hidden}
+-.ken{position:absolute;inset:-8%}
++.hero-media{position:absolute;inset:0;overflow:clip}
++.ken{position:absolute;inset:0}
+@@ -515,7 +515,7 @@
+-.h-pin{position:relative;height:280vh;background:#fff}
+-.h-sticky{position:sticky;top:0;height:100vh;display:flex;overflow:hidden;background:#fff}
+-.h-intro{width:min(500px,40vw);flex:none;display:flex;flex-direction:row;align-items:flex-end;padding:0 36px 64px 32px;position:relative;z-index:2;background:#fff}
++.h-pin{position:relative;height:auto;background:#fff;padding:112px 0 120px;overflow:visible}
++.h-sticky{position:static;top:auto;width:min(1120px,calc(100% - 48px));margin:0 auto;height:auto;display:block;overflow:visible;background:#fff}
++.h-intro{width:auto;flex:none;display:block;padding:0 0 40px;position:relative;z-index:2;background:transparent}
+ .h-intro h2{font-size:clamp(68px,5.4vw,80px);line-height:1.02;color:var(--navy);letter-spacing:-.03em}
+ .h-intro p{margin:32px 0 0;color:var(--muted);max-width:16em}
+-.h-track{display:flex;height:100%;flex:none}
+-.slide{position:relative;flex:0 0 52vw;min-width:0;height:100%;overflow:hidden;color:#fff;text-decoration:none;display:block}
++.h-track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;height:auto;transform:none}
++.slide{position:relative;flex:none;width:auto;min-width:0;height:min(64vh,600px);min-height:420px;overflow:clip;color:#fff;text-decoration:none;display:block}
+
+# overflow:clip clips the photograph the same way overflow:hidden did, but it
+# does not create a scroll container. The old .ken { inset:-8% } made
+# .hero-media about 130px taller than the viewport, so a wheel over the hero
+# could be swallowed by that box. Keep any existing max-width:980px rules that
+# already set .h-sticky { position:static }.
+
+diff --git a/site.js b/site.js
+--- a/site.js
++++ b/site.js
+@@ -9,1 +9,0 @@
+-  var lenis = null;
+@@ -23,1 +22,0 @@
+-    if (lenis) lenis.start();
+@@ -36,1 +34,0 @@
+-    if (lenis) lenis.stop();
+@@ -163,5 +160,0 @@
+-      if (mobileQ.matches && window.ScrollTrigger) {
+-        ScrollTrigger.getAll().forEach(function (st) {
+-          if (st.trigger && st.trigger.classList && st.trigger.classList.contains("h-pin")) st.kill();
+-        });
+-      }
+@@ -615,79 +607,1 @@
+-  if (!reduce && window.gsap && window.ScrollTrigger) {
+-    gsap.registerPlugin(ScrollTrigger);
+-    gsap.utils.toArray(".rise").forEach(function (block) {
+-      var lines = block.querySelectorAll(".line > span");
+-      if (!lines.length) return;
+-      var vars = { y: 0, opacity: 1, duration: 1.15, stagger: 0.1, ease: "power2.out" };
+-      if (!block.closest(".hero")) vars.scrollTrigger = { trigger: block, start: "top 86%" };
+-      gsap.fromTo(lines, { y: 14, opacity: 0 }, vars);
+-    });
+-    var heroImg = d.querySelector(".hero .ken img");
+-    if (heroImg) {
+-      gsap.fromTo(heroImg, { yPercent: -8, scale: 1.06 }, {
+-        yPercent: 12,
+-        scale: 1.14,
+-        ease: "none",
+-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
+-      });
+-    }
+-    var pin = d.querySelector(".h-pin");
+-    var track = d.querySelector(".h-track");
+-    var sticky = d.querySelector(".h-sticky");
+-    var intro = d.querySelector(".h-intro");
+-    if (pin && track && sticky && intro && matchMedia("(min-width: 981px)").matches && !mobileQ.matches) {
+-      var dist = function () {
+-        return Math.max(0, track.scrollWidth - (sticky.clientWidth - intro.offsetWidth));
+-      };
+-      var fit = function () { pin.style.height = (innerHeight + dist()) + "px"; };
+-      fit();
+-      ScrollTrigger.addEventListener("refreshInit", fit);
+-      gsap.to(track, {
+-        x: function () { return -dist(); },
+-        ease: "none",
+-        scrollTrigger: {
+-          trigger: pin,
+-          start: "top top",
+-          end: "bottom bottom",
+-          scrub: 0.6,
+-          invalidateOnRefresh: true
+-        }
+-      });
+-      addEventListener("load", function () { ScrollTrigger.refresh(); });
+-    }
+-    gsap.utils.toArray(".case-bleed img, .close .ken img, .slide img").forEach(function (img) {
+-      gsap.fromTo(img, { scale: 1.12 }, {
+-        scale: 1,
+-        ease: "none",
+-        scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: true }
+-      });
+-    });
+-    gsap.utils.toArray(".case-photo img, .stage img").forEach(function (img) {
+-      gsap.fromTo(img, { clipPath: "inset(16% 0 0 0)" }, {
+-        clipPath: "inset(0% 0 0 0)",
+-        duration: 1.15,
+-        ease: "power3.out",
+-        scrollTrigger: { trigger: img, start: "top 86%" }
+-      });
+-    });
+-    var steps = d.querySelector(".work-steps");
+-    if (steps) {
+-      ScrollTrigger.create({
+-        trigger: steps,
+-        start: "top 75%",
+-        end: "bottom 55%",
+-        scrub: true,
+-        onUpdate: function (self) { steps.style.setProperty("--p", self.progress.toFixed(3)); }
+-      });
+-    }
+-    if (window.Lenis && matchMedia("(pointer: fine)").matches) {
+-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+-      lenis.on("scroll", function () {
+-        ScrollTrigger.update();
+-        syncHeader();
+-      });
+-      gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+-      gsap.ticker.lagSmoothing(0);
+-    }
+-  } else {
+-    d.querySelectorAll(".rise .line > span").forEach(function (el) { el.style.transform = "none"; });
+-  }
++  // Native document scrolling. Do not start Lenis or ScrollTrigger.
