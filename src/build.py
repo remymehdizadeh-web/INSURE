@@ -188,6 +188,117 @@ def assert_retired(out_dir):
         raise SystemExit("links to removed pages:\n" + "\n".join(bad[:40]))
 
 
+def assert_seo(out_dir):
+    import html as html_lib
+    from html.parser import HTMLParser
+
+    class Collector(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.title = []
+            self.in_title = False
+            self.h1 = 0
+            self.metas = {}
+            self.ogs = {}
+            self.canonical = False
+            self.imgs = []
+            self.img = None
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            if tag == "title":
+                self.in_title = True
+            elif tag == "h1":
+                self.h1 += 1
+            elif tag == "meta":
+                if a.get("name"):
+                    self.metas[a["name"]] = a.get("content", "")
+                if a.get("property"):
+                    self.ogs[a["property"]] = a.get("content", "")
+            elif tag == "link" and a.get("rel") == "canonical":
+                self.canonical = bool(a.get("href"))
+            elif tag == "img":
+                self.imgs.append(a.get("alt"))
+
+        def handle_endtag(self, tag):
+            if tag == "title":
+                self.in_title = False
+
+        def handle_data(self, data):
+            if self.in_title:
+                self.title.append(data)
+
+    titles = {}
+    descs = {}
+    bad = []
+    required = [
+        "restaurant-insurance/index.html",
+        "contractor-insurance/index.html",
+        "building-owner-insurance/index.html",
+    ]
+    for rel in required:
+        if not os.path.isfile(os.path.join(out_dir, rel)):
+            bad.append("missing " + rel)
+    for dirpath, _, files in os.walk(out_dir):
+        for name in files:
+            if not name.endswith(".html"):
+                continue
+            fp = os.path.join(dirpath, name)
+            rel = os.path.relpath(fp, out_dir).replace("\\", "/")
+            text = open(fp, encoding="utf-8").read()
+            parser = Collector()
+            parser.feed(text)
+            title = "".join(parser.title).strip()
+            desc = parser.metas.get("description", "")
+            if not title:
+                bad.append(rel + ": missing title")
+            elif title in titles:
+                bad.append(f"{rel}: title repeats {titles[title]}")
+            else:
+                titles[title] = rel
+            if not desc:
+                bad.append(rel + ": missing description")
+            elif desc in descs:
+                bad.append(f"{rel}: description repeats {descs[desc]}")
+            else:
+                descs[desc] = rel
+            if parser.h1 != 1:
+                bad.append(f"{rel}: h1 count {parser.h1}")
+            if not parser.canonical:
+                bad.append(rel + ": missing canonical")
+            if parser.metas.get("twitter:card") != "summary_large_image":
+                bad.append(rel + ": twitter card")
+            if parser.ogs.get("og:image:width") != "1200" or parser.ogs.get("og:image:height") != "630":
+                bad.append(rel + ": og image size")
+            for key in ("og:title", "og:description", "og:url", "og:image"):
+                if not parser.ogs.get(key):
+                    bad.append(rel + ": missing " + key)
+            for alt in parser.imgs:
+                if alt is None:
+                    bad.append(rel + ": img without alt")
+            if "\u2014" in text or "\u2013" in text:
+                bad.append(rel + ": dash")
+    home = open(os.path.join(out_dir, "index.html"), encoding="utf-8").read()
+    m = re.search(r'<meta name="description" content="([^"]*)"', home)
+    if not m or len(html_lib.unescape(m.group(1))) > 160:
+        bad.append("home description length")
+    robots = open(os.path.join(out_dir, "robots.txt"), encoding="utf-8").read()
+    if "Sitemap:" not in robots:
+        bad.append("robots missing sitemap")
+    sitemap = open(os.path.join(out_dir, "sitemap.xml"), encoding="utf-8").read()
+    for loc in (
+        "/restaurant-insurance/",
+        "/contractor-insurance/",
+        "/building-owner-insurance/",
+        "/coverage/",
+        "/legal/",
+    ):
+        if SITE + loc not in sitemap:
+            bad.append("sitemap missing " + loc)
+    if bad:
+        raise SystemExit("seo check failed:\n" + "\n".join(bad[:80]))
+
+
 def write_sitemap(built):
     locs = []
     for rel in built:
@@ -226,8 +337,15 @@ def main():
         fp = os.path.join(OUT, rel)
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         open(fp, "w", encoding="utf-8").write(relativize_urls(doc, rel.count("/")))
-    open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write("User-agent: *\nDisallow: /\n")
+    robots = (
+        "User-agent: *\n"
+        "Disallow: /\n"
+        "\n"
+        f"Sitemap: {SITE}/sitemap.xml\n"
+    )
+    open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(robots)
     write_sitemap(built)
+    assert_seo(OUT)
     assert_portable(OUT)
     assert_links(OUT)
     assert_retired(OUT)

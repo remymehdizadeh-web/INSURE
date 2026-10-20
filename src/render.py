@@ -38,11 +38,11 @@ def h(value):
 
 
 # Same file family at every width. The query busts a cached estate-800 that was a different photograph.
-PHOTO_V = "5"
+PHOTO_V = "6"
 
 
-def photo_src(key, width):
-    return f"/photos/{key}-{width}.webp?v={PHOTO_V}"
+def photo_src(key, width, ext="webp"):
+    return f"/photos/{key}-{width}.{ext}?v={PHOTO_V}"
 
 
 def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw", alt=None):
@@ -50,10 +50,12 @@ def pic(key, eager=False, sizes="(max-width: 860px) 100vw, 46vw", alt=None):
     w, height = DIMS[key]
     load = 'fetchpriority="high" decoding="async"' if eager else 'loading="lazy" decoding="async"'
     alt_text = c["alt"] if alt is None else alt
+    srcset = ", ".join(f"{photo_src(key, width)} {width}w" for width in (800, 1200, 1600))
+    avif = ", ".join(f"{photo_src(key, width, 'avif')} {width}w" for width in (800, 1200, 1600))
     return (
-        f'<img src="{photo_src(key, 800)}" '
-        f'srcset="{photo_src(key, 800)} 800w, {photo_src(key, 1200)} 1200w, {photo_src(key, 1600)} 1600w" '
-        f'sizes="{sizes}" alt="{h(alt_text)}" width="{w}" height="{height}" {load}>'
+        f'<picture><source type="image/avif" srcset="{avif}" sizes="{sizes}">'
+        f'<img src="{photo_src(key, 800)}" srcset="{srcset}" sizes="{sizes}" '
+        f'alt="{h(alt_text)}" width="{w}" height="{height}" {load}></picture>'
     )
 
 
@@ -94,11 +96,23 @@ def schema(path):
         "email": EMAIL,
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "900 Stewart Ave Ste 210",
+            "streetAddress": "900 Stewart Ave, Ste 210",
             "addressLocality": "Garden City",
             "addressRegion": "NY",
             "postalCode": "11530",
             "addressCountry": "US",
+        },
+        "areaServed": [
+            {"@type": "AdministrativeArea", "name": "Nassau County"},
+            {"@type": "AdministrativeArea", "name": "Suffolk County"},
+            {"@type": "City", "name": "New York City"},
+            {"@type": "State", "name": "New York"},
+        ],
+        "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "09:00",
+            "closes": "17:00",
         },
     }
     if path == "/legal/":
@@ -117,6 +131,11 @@ COVER = [
     ("/coverage/#construction", "Contractors", "Trades and job sites", "construction"),
     ("/coverage/#professional", "Offices", "Professional firms", "professional"),
     ("/coverage/#personal", "Personal", "Household, home, and auto", "personal"),
+]
+INDUSTRY_NAV = [
+    ("/restaurant-insurance/", "Restaurant insurance"),
+    ("/contractor-insurance/", "Contractor insurance"),
+    ("/building-owner-insurance/", "Building insurance"),
 ]
 FIRM = [
     ("/about/", "The firm", "The practice"),
@@ -140,6 +159,8 @@ def sheet_links(current):
     for href, title, _sub, *_r in COVER:
         parts.append(f'<a class="sub" href="{href}">{h(title)}</a>')
     parts.append("</div>")
+    for href, label in INDUSTRY_NAV:
+        parts.append(f'<a class="sub" href="{href}">{h(label)}</a>')
     for href, label in (
         ("/client-center/", "Client Center"),
         ("/about/", "Firm"),
@@ -179,6 +200,7 @@ def header(current):
 
 def footer():
     cov = "".join(f'<li><a href="{href}">{h(title)}</a></li>' for href, title, _s, *_r in COVER)
+    cov += "".join(f'<li><a href="{href}">{h(title)}</a></li>' for href, title in INDUSTRY_NAV)
     return f'''<footer class="site-footer">
   <div class="wrap foot-grid">
     <div>
@@ -237,7 +259,10 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
     preload = '<link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>'
     if cinematic:
         preload += f'''
-<link rel="preload" as="image" href="{photo_src("hero", 1600)}" imagesrcset="{photo_src("hero", 800)} 800w, {photo_src("hero", 1200)} 1200w, {photo_src("hero", 1600)} 1600w" imagesizes="100vw" fetchpriority="high">'''
+<link rel="preload" as="image" href="{photo_src("hero", 800)}" imagesrcset="{photo_src("hero", 800)} 800w, {photo_src("hero", 1200)} 1200w, {photo_src("hero", 1600)} 1600w" imagesizes="100vw" fetchpriority="high">'''
+    if path == "/coverage/":
+        preload += f'''
+<link rel="preload" as="image" href="{photo_src("estate", 800)}" imagesrcset="{photo_src("estate", 800)} 800w, {photo_src("estate", 1200)} 1200w, {photo_src("estate", 1600)} 1600w" imagesizes="100vw" fetchpriority="high">'''
     body = "page-home" if cinematic else "page-inner"
     return f'''<!doctype html>
 <html lang="en">
@@ -260,8 +285,11 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{h(title)}">
+<meta name="twitter:description" content="{h(desc)}">
+<meta name="twitter:image" content="{SITE}/img/og.png">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=25">
+<link rel="stylesheet" href="/site.css?v=26">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -291,6 +319,18 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
 <script src="/site.js?v=14" defer></script>
+<script>
+addEventListener("load",function(){{
+  var s=document.createElement("script");
+  s.async=true;
+  s.src="https://www.googletagmanager.com/gtag/js?id=G-ZQH2G4PPLQ";
+  document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag("js",new Date());
+  gtag("config","G-ZQH2G4PPLQ");
+}});
+</script>
 </body>
 </html>'''
 
@@ -321,6 +361,7 @@ def cinematic_sections(eager=False):
   </div>
   <div class="hero-copy wrap">
     <h1 class="rise"><span class="line"><span>Insurance,</span></span><span class="line"><span>made simple.</span></span></h1>
+    <h2 class="place-line">Commercial and personal insurance. Garden City, Long Island, and New York City.</h2>
     <p class="lede">Send us your policy. We'll walk you through it in plain English.</p>
     <div class="cta-row">
       <a class="btn btn-light magnet" href="/policy-review/">Request a review {ARROW}</a>
@@ -412,8 +453,8 @@ def client_result():
 def home():
     m_top, m_steps = mobile_home()
     return document(
-        "Commercial and Personal Insurance | SimpleINSURE",
-        "SimpleINSURE Brokerage LLC places commercial and personal insurance in New York. Send the policy you have. We read it, approach other insurers only when there is a reason, and stay after it is bound.",
+        "Commercial Insurance Broker in Garden City | SimpleINSURE",
+        "Commercial and personal insurance broker in Garden City, for Long Island, Nassau, and New York City.",
         "/",
         cinematic_sections() + m_top + client_result() + m_steps + f'''
 <section class="section work" id="work" aria-labelledby="work-h">
@@ -575,12 +616,13 @@ def aside():
     </aside>'''
 
 
-def page_head(kicker, title, lede="", cls="", lede_cls=""):
+def page_head(kicker, title, lede="", cls="", lede_cls="", place=""):
     lead_cls = "lede" + (f" {lede_cls}" if lede_cls else "")
+    place_html = f'<h2 class="place-line">{h(place)}</h2>' if place else ""
     lead = f'<p class="{lead_cls}">{h(lede)}</p>' if lede else ""
     eye = f'<p class="kicker m-only">{h(kicker)}</p>' if kicker else ""
     extra = f" {cls}" if cls else ""
-    return f'<header class="page-head{extra}"><div class="wrap">{eye}<h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{lead}</div></header>'
+    return f'<header class="page-head{extra}"><div class="wrap">{eye}<h1 class="rise"><span class="line"><span>{h(title)}</span></span></h1>{place_html}{lead}</div></header>'
 
 
 def continue_to(links):
@@ -1404,8 +1446,8 @@ def legal_page():
   <p>We collect nonpublic personal information about you from your applications and other forms; your transactions with us and with insurance companies; and, with your authorization where required, consumer reporting agencies and motor vehicle records. We do not disclose nonpublic personal information about our customers or former customers to anyone except as permitted by law, for example to insurance companies and others as needed to place, service or process your insurance, to comply with law, or with your consent. We do not share it with nonaffiliated third parties for their own marketing. We restrict access to nonpublic personal information to those who need it to provide services to you, and we maintain physical, electronic and procedural safeguards that comply with applicable New York requirements to protect it. A copy of this notice is provided when you obtain personal insurance through us, and annually as required.</p>
 </div></section>'''
     return document(
-        "Licenses and Disclosures | SimpleINSURE",
-        "New York DFS license BR-1984615, compensation disclosure, and privacy notice for SimpleINSURE Brokerage LLC.",
+        "Licenses and Disclosures | NY DFS BR-1984615 | SimpleINSURE",
+        "NY DFS License No. BR-1984615. SimpleINSURE Brokerage LLC is a commercial and personal broker in Garden City.",
         "/legal/",
         main,
     )
@@ -1462,6 +1504,7 @@ def contact_page():
         "A broker replies by phone or email. If it's urgent, call.",
         cls="contact-head",
         lede_cls="hide-1024",
+        place="Garden City, Long Island, and New York City.",
     ) + f'''
 <section class="contact-desk only-1024" aria-label="Office">
   <div class="contact-split">
@@ -1478,8 +1521,8 @@ def contact_page():
 </section>
 <section class="section hide-1024" style="padding-top:28px"><div class="wrap layout">{wizard("Contact", "Email this note", steps)}{aside()}</div></section>'''
     return document(
-        "Contact | SimpleINSURE",
-        "Call SimpleINSURE or send a note. The form opens an email to the brokerage. Nothing is stored on the website.",
+        "Contact Our Garden City Office | SimpleINSURE",
+        "Call (516) 226-7969 or write SimpleINSURE Brokerage, 900 Stewart Ave Ste 210, Garden City, NY 11530.",
         "/contact/",
         main,
     )
@@ -1495,10 +1538,20 @@ def not_found():
       <a href="/policy-review/"><h3>Policy review</h3><p>A second reading of a current policy.</p></a>
       <a href="/contact/"><h3>Contact</h3><p>Call, or send a note.</p></a>
     </div></section>'''
-    return document("Page not found | SimpleINSURE", "That page is not on the SimpleINSURE site.", "/404.html", main)
+    return document(
+        "Page Not Found | SimpleINSURE",
+        "That address is not a page on this site. Start from the home page or call the Garden City office.",
+        "/404.html",
+        main,
+    )
 
 
 def coverage_page():
+    page_for = {
+        "real-estate": ("/building-owner-insurance/", "Building insurance"),
+        "hospitality": ("/restaurant-insurance/", "Restaurant insurance"),
+        "construction": ("/contractor-insurance/", "Contractor insurance"),
+    }
     bands = []
     for ind in INDUSTRIES:
         slug = ind["slug"]
@@ -1506,20 +1559,26 @@ def coverage_page():
         lines = "".join(
             f"<li><b>{h(a)}</b></li>" for a, b in ind["coverages"][:4]
         )
+        first = ind["key"] == "estate"
+        photo_cls = "stage-photo is-estate" if first else "stage-photo rise-photo"
+        more = f'<a class="more" href="/policy-review/">Request a review {ARROW}</a>'
+        if slug in page_for:
+            href, label = page_for[slug]
+            more += f'<a class="more" href="{href}">{h(label)} {ARROW}</a>'
         bands.append(f'''
 <section class="stage" id="{slug}">
-  <figure class="stage-photo rise-photo{' is-estate' if ind['key'] == 'estate' else ''}">{pic(ind["key"], sizes="(max-width: 768px) 100vw, 100vw")}</figure>
+  <figure class="{photo_cls}">{pic(ind["key"], eager=first, sizes="100vw")}</figure>
   <div class="stage-copy" data-rise>
     <h2 class="rise"><span class="line"><span>{h(name)}</span></span></h2>
     <p class="lede">{h(ind["lede"])}</p>
     <ul class="stage-lines">{lines}</ul>
-    <a class="more" href="/policy-review/">Request a review {ARROW}</a>
+    {more}
   </div>
 </section>''')
-    main = '''<header class="page-head cover-head"><div class="wrap"><p class="kicker m-only">Coverage</p><h1 class="rise"><span class="line"><span>Five practices.<br class="only-1024"> One account.</span></span></h1><p class="lede">One broker for the business and the household.</p></div></header>''' + "".join(bands)
+    main = '''<header class="page-head cover-head"><div class="wrap"><p class="kicker m-only">Coverage</p><h1 class="rise"><span class="line"><span>Five practices.<br class="only-1024"> One account.</span></span></h1><h2 class="place-line">Commercial and personal insurance for Nassau, Long Island, and New York City.</h2><p class="lede">One broker for the business and the household.</p></div></header>''' + "".join(bands)
     return document(
-        "Coverage | SimpleINSURE",
-        "Commercial and personal insurance for real estate, hospitality, contractors, offices, and the household.",
+        "Insurance Coverage in New York City and Long Island | SimpleINSURE",
+        "Commercial and personal coverage for real estate, restaurants, contractors, and offices, from a Garden City broker.",
         "/coverage/",
         main,
     )
@@ -1606,9 +1665,10 @@ def policy_hub():
     main = page_head(
         "Policy review",
         "Send the policy you have.",
-        "We read it first. If it's right, we say so.",
+        "Commercial and personal accounts. We read it first. If it's right, we say so.",
         cls="policy-head",
         lede_cls="hide-1024",
+        place="A Garden City broker, for commercial and personal insurance.",
     ) + f'''
 <section class="section desk-sheet only-1024"><div class="wrap">
   {wizard("Policy review", "Email this review", desk_steps)}
@@ -1629,8 +1689,8 @@ def policy_hub():
   </div>
 </div></section>'''
     return document(
-        "Policy Review | SimpleINSURE",
-        "Send a current policy for a second reading, or start a review from the account. The form opens an email. Nothing is stored on the website.",
+        "Policy Review for Commercial and Personal Insurance | SimpleINSURE",
+        "Send a current policy. A Garden City broker reads the commercial or personal forms. Nothing is stored on the website.",
         "/policy-review/",
         main,
     )
@@ -1765,6 +1825,7 @@ def client_center():
   <div class="hero-media"><div class="ken">{pic("hero", eager=True, sizes="100vw")}</div><div class="hero-shade" aria-hidden="true"></div></div>
   <div class="wrap">
     <h1 class="rise"><span class="line"><span>Already a client?</span></span></h1>
+    <h2 class="place-line">Client service from the Garden City office.</h2>
     <p class="lede">Certificates, ID cards, changes, claims, bills, and renewals.</p>
   </div>
 </header>
@@ -1778,8 +1839,8 @@ def client_center():
   </div></div>
 </section>'''
     return document(
-        "Client Center | SimpleINSURE",
-        "Request a certificate, ID cards, a policy change, or help with a claim, a bill, or a renewal. The forms open an email to SimpleINSURE.",
+        "Client Center | Garden City Insurance Broker | SimpleINSURE",
+        "Certificates, ID cards, changes, and claims for clients of SimpleINSURE Brokerage in Garden City.",
         "/client-center/",
         main,
     )
@@ -1802,6 +1863,7 @@ def about_hub():
         "An independent brokerage.",
         "We work for you, not for any one insurance company.",
         cls="firm-head",
+        place="Garden City, Long Island, and New York City.",
     ) + f'''
 <section class="section firm-desk only-1024">
   <div class="wrap firm-split">
@@ -1834,11 +1896,81 @@ def about_hub():
   <p><a href="/contact/">Introduce a client</a></p>
 </div></section>'''
     return document(
-        "About SimpleINSURE",
-        "SimpleINSURE places commercial and personal insurance and stays with the account after it is bound.",
+        "About Our Garden City Insurance Brokerage | SimpleINSURE",
+        "An independent commercial and personal insurance broker in Garden City, for Long Island and New York City.",
         "/about/",
         main,
     )
+
+
+SERVICES = [
+    {
+        "path": "/restaurant-insurance/",
+        "key": "hospitality",
+        "kicker": "Restaurants",
+        "title": "Restaurant Insurance in NYC and Long Island | SimpleINSURE",
+        "desc": "Restaurant and hospitality insurance for New York City and Long Island, from a Garden City broker.",
+        "h1": "Restaurant insurance.",
+        "place": "New York City and Long Island.",
+        "overlay_h": "What we place",
+        "overlay_p": "Property, liability, and liquor liability when alcohol is served. Workers compensation where the law requires it.",
+        "help_h": "How we help",
+        "help_p": "We read the lease and the policy you already have, then tell you what is in place.",
+        "next_h": "The next step",
+        "next_p": "Send the policy. A broker in Garden City walks you through it.",
+    },
+    {
+        "path": "/contractor-insurance/",
+        "key": "construction",
+        "kicker": "Contractors",
+        "title": "Contractor Insurance in New York | SimpleINSURE",
+        "desc": "Contractor insurance for trades in New York City and on Long Island. We read the contract first.",
+        "h1": "Contractor insurance.",
+        "place": "New York City and Long Island.",
+        "overlay_h": "What we place",
+        "overlay_p": "Liability, workers compensation, and auto, lined up with the contract.",
+        "help_h": "How we help",
+        "help_p": "We start with the insurance exhibit and say what the current policy can support.",
+        "next_h": "The next step",
+        "next_p": "Send the contract or the policy you have.",
+    },
+    {
+        "path": "/building-owner-insurance/",
+        "key": "estate",
+        "kicker": "Real estate",
+        "title": "Building Owner Insurance in Garden City and NYC | SimpleINSURE",
+        "desc": "Insurance for building owners and real estate in Garden City, Nassau, Long Island, and New York City.",
+        "h1": "Building owner insurance.",
+        "place": "Real estate in New York.",
+        "overlay_h": "What we place",
+        "overlay_p": "Property, liability, and umbrella for a building or a schedule of buildings.",
+        "help_h": "How we help",
+        "help_p": "We start with the address, the loan wording, and the policy you have.",
+        "next_h": "The next step",
+        "next_p": "Send the policy, or the insurance section of the loan.",
+    },
+]
+
+
+def service_page(spec):
+    main = f'''<header class="photo-hero service-hero">
+  <div class="hero-media"><div class="ken">{pic(spec["key"], eager=True, sizes="100vw")}</div><div class="hero-shade" aria-hidden="true"></div></div>
+  <div class="wrap">
+    <p class="kicker m-only">{h(spec["kicker"])}</p>
+    <h1 class="rise"><span class="line"><span>{h(spec["h1"])}</span></span></h1>
+    <h2 class="place-line">{h(spec["place"])}</h2>
+  </div>
+</header>
+<section class="service-rest"><div class="wrap">
+  <h2>{h(spec["overlay_h"])}</h2>
+  <p>{h(spec["overlay_p"])}</p>
+  <h2>{h(spec["help_h"])}</h2>
+  <p>{h(spec["help_p"])}</p>
+  <h2>{h(spec["next_h"])}</h2>
+  <p>{h(spec["next_p"])}</p>
+  <a class="btn" href="/policy-review/">Request a review {ARROW}</a>
+</div></section>'''
+    return document(spec["title"], spec["desc"], spec["path"], main, current="/coverage/")
 
 
 def redirect_page(from_key, target):
@@ -1855,41 +1987,64 @@ def redirect_page(from_key, target):
     else:
         rel = ("../" * depth) + path.lstrip("/")
     rel += frag
-    canon = SITE + (path if path != "/" else "/") + frag
+    canon = SITE + (path if path != "/" else "/")
+    label = from_key[: -len("/index.html")].replace("/", " ")
+    title = f"Moved: {label} | SimpleINSURE"
+    desc = f"The {label} page now lives at {path}."
     return f'''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Continue | SimpleINSURE</title>
-<meta name="description" content="This page has moved.">
+<title>{h(title)}</title>
+<meta name="description" content="{h(desc)}">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="{h(canon)}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{h(title)}">
+<meta property="og:description" content="{h(desc)}">
+<meta property="og:url" content="{h(canon)}">
+<meta property="og:image" content="{SITE}/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{h(title)}">
+<meta name="twitter:description" content="{h(desc)}">
+<meta name="twitter:image" content="{SITE}/img/og.png">
 <meta http-equiv="refresh" content="0; url={h(rel)}">
 </head>
 <body>
+<h1>This page has moved.</h1>
 <p><a href="{h(rel)}">Continue</a></p>
 </body>
 </html>'''
 
 
 REDIRECTS = {
-    "coverage/real-estate/index.html": "/coverage/#real-estate",
-    "coverage/hospitality/index.html": "/coverage/#hospitality",
-    "coverage/construction/index.html": "/coverage/#construction",
-    "coverage/professional/index.html": "/coverage/#professional",
-    "coverage/personal/index.html": "/coverage/#personal",
+    "coverage/real-estate/index.html": "/building-owner-insurance/",
+    "coverage/hospitality/index.html": "/restaurant-insurance/",
+    "coverage/construction/index.html": "/contractor-insurance/",
+    "coverage/professional/index.html": "/coverage/",
+    "coverage/personal/index.html": "/coverage/",
+    "coverage/auto/index.html": "/coverage/",
+    "coverage/home/index.html": "/coverage/",
+    "coverage/umbrella/index.html": "/coverage/",
+    "coverage/business/index.html": "/coverage/",
+    "coverage/excess-and-surplus-lines/index.html": "/coverage/",
+    "coverage/general-liability/index.html": "/coverage/",
+    "coverage/workers-compensation/index.html": "/coverage/",
     "checklists/index.html": "/coverage/",
     "needs/index.html": "/coverage/",
     "quote/index.html": "/policy-review/",
-    "resources/index.html": "/about/#glossary",
-    "partners/index.html": "/about/#partners",
-    "switching/index.html": "/policy-review/#handover",
+    "resources/index.html": "/about/",
+    "partners/index.html": "/about/",
+    "switching/index.html": "/policy-review/",
+    "articles/index.html": "/about/",
     "photo-credits/index.html": "/",
     "style-preview/index.html": "/",
-    "new-york-building-insurance/index.html": "/coverage/#real-estate",
-    "new-york-contractor-insurance/index.html": "/coverage/#construction",
-    "new-york-restaurant-insurance/index.html": "/coverage/#hospitality",
+    "new-york-building-insurance/index.html": "/building-owner-insurance/",
+    "new-york-contractor-insurance/index.html": "/contractor-insurance/",
+    "new-york-restaurant-insurance/index.html": "/restaurant-insurance/",
 }
 
 
@@ -1904,6 +2059,8 @@ def pages():
         "legal/index.html": legal_page(),
         "404.html": not_found(),
     }
+    for spec in SERVICES:
+        out[spec["path"].strip("/") + "/index.html"] = service_page(spec)
     for key, target in REDIRECTS.items():
         out[key] = redirect_page(key, target)
     return out
