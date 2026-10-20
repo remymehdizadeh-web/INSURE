@@ -1,0 +1,10 @@
+{
+  "name": "simpleinsure",
+  "private": true,
+  "scripts": {
+    "test:scroll": "playwright test tests/scroll.spec.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

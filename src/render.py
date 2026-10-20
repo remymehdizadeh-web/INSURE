@@ -261,7 +261,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/fonts/franklin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/site.css?v=25">
+<link rel="stylesheet" href="/site.css?v=26">
 <style>
 .m-only{{display:none}}
 @media (max-width:980px){{
@@ -272,7 +272,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .h-sticky{{position:static !important;height:auto !important;display:block !important;overflow:visible !important}}
   .h-intro{{width:auto !important;display:block !important;padding:48px 20px 16px !important;box-sizing:border-box !important}}
   .h-track{{display:block !important;transform:none !important;height:auto !important;width:auto !important}}
-  .slide{{position:relative !important;display:block !important;width:100% !important;height:72vh !important;min-height:420px !important;overflow:hidden !important;color:#fff !important;flex:none !important}}
+  .slide{{position:relative !important;display:block !important;width:100% !important;height:72vh !important;min-height:420px !important;overflow:clip !important;color:#fff !important;flex:none !important}}
   .slide img{{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;max-width:none !important;object-fit:cover !important}}
   .slide-shade{{position:absolute !important;inset:0 !important}}
   .slide-copy{{position:absolute !important;left:20px !important;right:20px !important;bottom:22px !important;z-index:2 !important;color:#fff !important}}
@@ -280,7 +280,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=10">
+<link rel="stylesheet" href="/mobile.css?v=11">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
@@ -290,7 +290,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
 {header(cur)}
 <main id="main">{main}</main>
 {footer() if show_footer else ""}
-<script src="/site.js?v=14" defer></script>
+<script src="/site.js?v=15" defer></script>
 </body>
 </html>'''
 
