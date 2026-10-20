@@ -3,6 +3,7 @@
 import os
 import re
 import shutil
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -230,6 +231,10 @@ def main():
     assert_portable(OUT)
     assert_links(OUT)
     assert_retired(OUT)
+    script = os.path.join(ROOT, "scripts", "check.mjs")
+    proc = subprocess.run(["node", script], cwd=ROOT)
+    if proc.returncode != 0:
+        raise SystemExit("banned phrase check failed")
     print("built", len(built), "pages")
 
 

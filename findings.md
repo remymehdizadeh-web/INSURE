@@ -21,5 +21,5 @@ Screenshots: ../website_preview_v4_research/, Oct 15 2026. Desktop 1440 and mobi
 ## Apply to v4
 1. Short serif headline, one-line subhead, quote start above the fold.
 2. One sticky Call / Quote bar on mobile only. Hide header Call and hero Call on mobile.
-3. Anonymized Manhattan restaurant case study with the verified figures from Remy's emails.
+3. Do not publish an unnamed restaurant result beside a named client. A dollar umbrella limit on the unnamed panel reads as the named client's limit.
 4. Five line cards as a rail, three steps, one closing band. No invented stats.
