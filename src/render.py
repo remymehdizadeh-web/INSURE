@@ -171,6 +171,7 @@ def header(current):
 <div class="sheet" id="sheet" hidden>
   <nav aria-label="Mobile">{sheet_links(current)}</nav>
   <div class="sheet-cta"><a class="btn" href="/policy-review/">Request a review</a><a href="{TEL}">{PHONE}</a><a href="{MAIL}">{EMAIL}</a></div>
+  <p class="sheet-meta"><span>Garden City, New York</span><span>NY License BR-1984615</span></p>
 </div>'''
 
 
@@ -277,7 +278,7 @@ def document(title, desc, path, main, current=None, canonical=None, extra="", sh
   .slide-copy small{{margin-top:8px !important}}
 }}
 </style>
-<link rel="stylesheet" href="/mobile.css?v=14">
+<link rel="stylesheet" href="/mobile.css?v=15">
 <script>document.documentElement.classList.toggle("scrolled",(window.scrollY||0)>8);if(matchMedia("(max-width:980px)").matches)document.documentElement.classList.add("is-mobile");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 {preload}
 <script type="application/ld+json">{schema(path)}</script>
